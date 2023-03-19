@@ -26,6 +26,10 @@
 ;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html
 
 ;;; Code:
+;;;; Flags
+
+(defcustom enable-vertico t  "Set 'nil' to 't' to enable vertical completion")
+
 ;;;; Startup
 
 (add-hook 'emacs-startup-hook
@@ -53,6 +57,12 @@
   :custom
   (use-package-always-ensure t))
 
+;(use-package benchmark-init
+;  :ensure t
+;  :config
+  ;; To disable collection of benchmark data after init is done.
+;  (add-hook 'after-init-hook 'benchmark-init/deactivate))
+
 ;;;; Defaults
 
 (setq tab-width 2)
@@ -71,18 +81,19 @@
 
 ;;;;; Vertico
 
-(use-package vertico
-  :custom
-  (vertico-cycle t)
-  :config
-  (vertico-mode))
+(when enable-vertico
+  (use-package vertico
+    :custom
+    (vertico-cycle t)
+    :config
+    (vertico-mode))
 
-(use-package marginalia
-  :after vertico
-  :custom
-  (marginalia-align 'right)
-  :config
-  (marginalia-mode))
+  (use-package marginalia
+    :after vertico
+    :custom
+    (marginalia-align 'right)
+    :config
+    (marginalia-mode)))
 
 ;;;;; Rainbow delimiters
 
@@ -103,7 +114,7 @@
 ;;;; Other
 
 ;; Variables configured via the interactive customize interface
-(when (file-exists-p custom-file)
-  (load custom-file))
+;(when (file-exists-p custom-file)
+;  (load custom-file))
 
 ;;; init.el ends here
