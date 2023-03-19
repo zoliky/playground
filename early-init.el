@@ -27,4 +27,7 @@
 
 ;;; Code:
 
+;; Maximize the Emacs frame on startup
+(push '(fullscreen . maximized) default-frame-alist)
+
 ;;; early-init.el ends here
