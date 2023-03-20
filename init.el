@@ -58,6 +58,11 @@
 (setq tab-width 2)
 
 ;;;; Packages
+;;;;; Avy
+
+(use-package avy
+  :bind ("M-s" . avy-goto-char))
+
 ;;;;; Ef themes
 
 (use-package ef-themes
@@ -81,7 +86,7 @@
   :ensure nil
   :after vertico
   :bind (:map vertico-map
-	      ("RET" . vertico-directory-enter)
+("RET" . vertico-directory-enter)
 	      ("DEL" . vertico-directory-delete-char)
 	      ("M-DEL" . vertico-directory-delete-word))
   :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
@@ -110,12 +115,62 @@
 (use-package outshine
   :defer t)
 
+;;;;; Olivetti
+
+(use-package olivetti
+  :hook (org-mode . olivetti-mode)
+  :custom
+  (olivetti-body-width 80))
+
+;;;;; Try
+
+(use-package try
+  :defer t)
+
+;;;;; Dired
+
+(use-package dired
+  :ensure nil
+  :bind ("C-x C-j" . dired-jump)
+  :custom
+  (dired-auto-revert-buffer t)
+  (dired-listing-switches "-agho --group-directories-first"))
+
+(use-package dired-narrow
+  :after dired
+  :bind (:map dired-mode-map
+              ("/" . dired-narrow)))
+
+(use-package dired-subtree
+  :after dired
+  :bind (:map dired-mode-map
+              ("<backtab>" . dired-subtree-cycle)
+              ("<tab>"     . dired-subtree-toggle)))
+
+;;;;; Ibuffer
+
+(use-package ibuffer
+  :ensure nil
+  :bind ("C-x C-b" . ibuffer))
+
+;;;;; Lua
+
+;; Major mode for editing Lua files
+(use-package lua-mode
+  :mode "\\.lua\\'")
+
 ;;;; Other
 
-(use-package try)
-
 ;; Variables configured via the interactive customize interface
-(when (file-exists-p custom-file)
-  (load custom-file))
+;(when (file-exists-p custom-file)
+;  (load custom-file))
+
+;;;; Org mode
+;;;;; Appear
+
+(setq org-hide-emphasis-markers t)
+
+(use-package org-appear
+  :hook (org-mode . org-appear-mode))
 
 ;;; init.el ends here
