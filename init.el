@@ -26,10 +26,6 @@
 ;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html
 
 ;;; Code:
-;;;; Flags
-
-(defcustom enable-vertico t  "Set 'nil' to 't' to enable vertical completion")
-
 ;;;; Startup
 
 (add-hook 'emacs-startup-hook
@@ -38,12 +34,6 @@
 		     (emacs-init-time))))
 
 (setq custom-file (locate-user-emacs-file "custom.el"))
-
-;; Default
-(set-face-attribute 'default nil :family "Hack" :height 180)
-
-;; Fixed-pitch
-(set-face-attribute 'fixed-pitch nil :family "Hack")
 
 ;;;; Package system
 
@@ -63,18 +53,7 @@
   :custom
   (use-package-always-ensure t))
 
-(use-package benchmark-init
-  :ensure t
-  :config
-  ;; To disable collection of benchmark data after init is done.
-  (add-hook 'after-init-hook 'benchmark-init/deactivate))
-
 ;;;; Defaults
-
-
-(prefer-coding-system 'utf-8)         ; Set default encoding to UTF-8
-(set-language-environment 'utf-8)     ; Set default language environment to UTF-8
-
 
 (setq tab-width 2)
 
@@ -92,19 +71,18 @@
 
 ;;;;; Vertico
 
-(when enable-vertico
-  (use-package vertico
-    :custom
-    (vertico-cycle t)
-    :config
-    (vertico-mode))
+(use-package vertico
+  :custom
+  (vertico-cycle t)
+  :config
+  (vertico-mode))
 
-  (use-package marginalia
-    :after vertico
-    :custom
-    (marginalia-align 'right)
-    :config
-    (marginalia-mode)))
+(use-package marginalia
+  :after vertico
+  :custom
+  (marginalia-align 'right)
+  :config
+  (marginalia-mode))
 
 ;;;;; Rainbow delimiters
 
@@ -115,29 +93,15 @@
 
 ;;;;; Outshine
 
-(use-package outshine)
-
-(use-package outline-minor-faces
-  :after outline
-  :config (add-hook 'outline-minor-mode-hook
-		    #'outline-minor-faces-mode))
-
-;;;; Org mode
-;;;;; Superstar
-
-(use-package org-superstar
-  :hook (org-mode . org-superstar-mode)
-  :config
-  (org-superstar-configure-like-org-bullets))
-
-;(use-package org-bullets
-;  :after org
-;  :hook (org-mode . org-bullets-mode))
+(use-package outshine
+  :defer t)
 
 ;;;; Other
 
+(use-package try)
+
 ;; Variables configured via the interactive customize interface
-;(when (file-exists-p custom-file)
-;  (load custom-file))
+(when (file-exists-p custom-file)
+  (load custom-file))
 
 ;;; init.el ends here
