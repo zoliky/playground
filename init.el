@@ -39,6 +39,12 @@
 
 (setq custom-file (locate-user-emacs-file "custom.el"))
 
+;; Default
+(set-face-attribute 'default nil :family "Hack" :height 180)
+
+;; Fixed-pitch
+(set-face-attribute 'fixed-pitch nil :family "Hack")
+
 ;;;; Package system
 
 ;; Initialize the package system
@@ -57,13 +63,18 @@
   :custom
   (use-package-always-ensure t))
 
-;(use-package benchmark-init
-;  :ensure t
-;  :config
+(use-package benchmark-init
+  :ensure t
+  :config
   ;; To disable collection of benchmark data after init is done.
-;  (add-hook 'after-init-hook 'benchmark-init/deactivate))
+  (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
 ;;;; Defaults
+
+
+(prefer-coding-system 'utf-8)         ; Set default encoding to UTF-8
+(set-language-environment 'utf-8)     ; Set default language environment to UTF-8
+
 
 (setq tab-width 2)
 
@@ -110,6 +121,18 @@
   :after outline
   :config (add-hook 'outline-minor-mode-hook
 		    #'outline-minor-faces-mode))
+
+;;;; Org mode
+;;;;; Superstar
+
+(use-package org-superstar
+  :hook (org-mode . org-superstar-mode)
+  :config
+  (org-superstar-configure-like-org-bullets))
+
+;(use-package org-bullets
+;  :after org
+;  :hook (org-mode . org-bullets-mode))
 
 ;;;; Other
 
