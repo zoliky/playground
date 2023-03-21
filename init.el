@@ -86,7 +86,7 @@
   :ensure nil
   :after vertico
   :bind (:map vertico-map
-("RET" . vertico-directory-enter)
+	      ("RET" . vertico-directory-enter)
 	      ("DEL" . vertico-directory-delete-char)
 	      ("M-DEL" . vertico-directory-delete-word))
   :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
@@ -134,6 +134,9 @@
   :bind ("C-x C-j" . dired-jump)
   :custom
   (dired-auto-revert-buffer t)
+  (delete-by-moving-to-trash t)
+  (dired-recursive-copies 'always)
+  (dired-recursive-deletes 'always)
   (dired-listing-switches "-agho --group-directories-first"))
 
 (use-package dired-narrow
@@ -147,6 +150,15 @@
               ("<backtab>" . dired-subtree-cycle)
               ("<tab>"     . dired-subtree-toggle)))
 
+;; Hide hidden files
+(use-package dired-hide-dotfiles
+  :after dired
+  :hook (dired-mode . dired-hide-dotfiles-mode)
+  :bind (:map dired-mode-map
+	      ("." . dired-hide-dotfiles-mode))
+  :custom
+  (dired-hide-dotfiles-verbose nil))
+
 ;;;;; Ibuffer
 
 (use-package ibuffer
@@ -159,6 +171,43 @@
 (use-package lua-mode
   :mode "\\.lua\\'")
 
+;;;;; Helpful
+
+(use-package helpful
+  :bind
+  ([remap describe-key]      . helpful-key)
+  ([remap describe-command]  . helpful-command)
+  ([remap describe-variable] . helpful-variable)
+  ([remap describe-function] . helpful-callable))
+
+;;;;; Magit
+
+(use-package magit
+  :bind ("C-c g" . magit-status))
+
+;;;;; Which key
+
+(use-package which-key
+  :custom
+  (which-key-idle-delay 1)
+  :config
+  (which-key-mode))
+
+;;;;; Gruvbox
+
+(use-package gruvbox-theme
+  :defer t)
+
+;;;;; TOML
+
+(use-package toml-mode
+  :mode "\\.toml\\'")
+
+;;;;; YAML
+
+(use-package yaml-mode
+  :mode "\\.yml\\'")
+
 ;;;; Other
 
 ;; Variables configured via the interactive customize interface
@@ -166,6 +215,9 @@
 ;  (load custom-file))
 
 ;;;; Org mode
+
+(setq org-modules '())
+
 ;;;;; Appear
 
 (setq org-hide-emphasis-markers t)
