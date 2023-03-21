@@ -33,6 +33,7 @@
 	    (message "Emacs loaded in %s."
 		     (emacs-init-time))))
 
+;; File used for storing customization information
 (setq custom-file (locate-user-emacs-file "custom.el"))
 
 ;;;; Package system
