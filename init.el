@@ -63,69 +63,21 @@
 (use-package avy
   :bind ("M-s" . avy-goto-char))
 
-;;;;; Ef themes
+;;;;; Corfu
 
-(use-package ef-themes
-  :config
-  (load-theme 'ef-summer t))
+;; (use-package corfu
+;;   :hook (prog-mode . corfu-mode)
+;;   :custom
+;;   (corfu-auto t)
+;;   (corfu-cycle t)
+;;   (corfu-auto-prefix 1)
+;;   (corfu-auto-delay 0.1)
+;;   (corfu-quit-no-match 'separator))
 
-;;;;; Modus themes
-
-(use-package modus-themes
-  :defer t)
-
-;;;;; Vertico
-
-(use-package vertico
-  :custom
-  (vertico-cycle t)
-  :config
-  (vertico-mode))
-
-(use-package vertico-directory
-  :ensure nil
-  :after vertico
-  :bind (:map vertico-map
-	      ("RET" . vertico-directory-enter)
-	      ("DEL" . vertico-directory-delete-char)
-	      ("M-DEL" . vertico-directory-delete-word))
-  :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
-
-(use-package orderless
-  :custom
-  (completion-styles '(orderless basic))
-  (completion-category-overrides '((file (styles basic partial-completion)))))
-
-(use-package marginalia
-  :after vertico
-  :custom
-  (marginalia-align 'right)
-  :config
-  (marginalia-mode))
-
-;;;;; Rainbow delimiters
-
-;; Rainbow delimiters highlights delimiters such as parentheses,
-;; brackets or braces according to their depth.
-(use-package rainbow-delimiters
-  :hook (prog-mode . rainbow-delimiters-mode))
-
-;;;;; Outshine
-
-(use-package outshine
-  :defer t)
-
-;;;;; Olivetti
-
-(use-package olivetti
-  :hook (org-mode . olivetti-mode)
-  :custom
-  (olivetti-body-width 80))
-
-;;;;; Try
-
-(use-package try
-  :defer t)
+;; (use-package cape
+;;   :init
+;;   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+;;   (add-to-list 'completion-at-point-functions #'cape-file))
 
 ;;;;; Dired
 
@@ -159,17 +111,16 @@
   :custom
   (dired-hide-dotfiles-verbose nil))
 
-;;;;; Ibuffer
+;;;;; Ef themes
 
-(use-package ibuffer
-  :ensure nil
-  :bind ("C-x C-b" . ibuffer))
+(use-package ef-themes
+  :config
+  (load-theme 'ef-summer t))
 
-;;;;; Lua
+;;;;; Gruvbox
 
-;; Major mode for editing Lua files
-(use-package lua-mode
-  :mode "\\.lua\\'")
+(use-package gruvbox-theme
+  :defer t)
 
 ;;;;; Helpful
 
@@ -180,10 +131,79 @@
   ([remap describe-variable] . helpful-variable)
   ([remap describe-function] . helpful-callable))
 
+;;;;; Ibuffer
+
+(use-package ibuffer
+  :ensure nil
+  :bind ("C-x C-b" . ibuffer))
+
 ;;;;; Magit
 
 (use-package magit
   :bind ("C-c g" . magit-status))
+
+;;;;; Modus themes
+
+(use-package modus-themes
+  :defer t)
+
+;;;;; Olivetti
+
+(use-package olivetti
+  :hook (org-mode . olivetti-mode)
+  :custom
+  (olivetti-body-width 80))
+
+;;;;; Outshine
+
+(use-package outshine
+  :defer t)
+
+;;;;; Rainbow delimiters
+
+;; Rainbow delimiters highlights delimiters such as parentheses,
+;; brackets or braces according to their depth.
+(use-package rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode))
+
+;;;;; Try
+
+(use-package try
+  :defer t)
+
+;;;;; TOML
+
+(use-package toml-mode
+  :mode "\\.toml\\'")
+
+;;;;; Vertico
+
+(use-package vertico
+  :custom
+  (vertico-cycle t)
+  :config
+  (vertico-mode))
+
+(use-package vertico-directory
+  :ensure nil
+  :after vertico
+  :bind (:map vertico-map
+	      ("RET" . vertico-directory-enter)
+	      ("DEL" . vertico-directory-delete-char)
+	      ("M-DEL" . vertico-directory-delete-word))
+  :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
+
+(use-package orderless
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
+
+(use-package marginalia
+  :after vertico
+  :custom
+  (marginalia-align 'right)
+  :config
+  (marginalia-mode))
 
 ;;;;; Which key
 
@@ -193,15 +213,11 @@
   :config
   (which-key-mode))
 
-;;;;; Gruvbox
+;;;;; Lua
 
-(use-package gruvbox-theme
-  :defer t)
-
-;;;;; TOML
-
-(use-package toml-mode
-  :mode "\\.toml\\'")
+;; Major mode for editing Lua files
+(use-package lua-mode
+  :mode "\\.lua\\'")
 
 ;;;;; YAML
 
@@ -224,5 +240,15 @@
 
 (use-package org-appear
   :hook (org-mode . org-appear-mode))
+
+;;;;; Denote
+
+(use-package denote
+  :bind ("C-c d" . denote)
+  :hook (dired-mode . denote-dired-mode)
+  :custom
+  (denote-sort-keywords t)
+  (denote-allow-multi-word-keywords nil)
+  (denote-directory "~/tmp"))
 
 ;;; init.el ends here
