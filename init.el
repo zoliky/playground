@@ -28,7 +28,6 @@
 ;;; Code:
 ;;;; Startup
 
-;; TOREMOVE
 (add-hook 'emacs-startup-hook
 	  (lambda ()
 	    (message "Emacs loaded in %s."
@@ -62,7 +61,7 @@
 
 ;(use-package benchmark-init
 ;  :config
-;  ;; To disable collection of benchmark data after init is done.
+  ;; To disable collection of benchmark data after init is done.
 ;  (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
 ;;;; Spell checking
@@ -407,6 +406,40 @@
   (denote-sort-keywords t)
   (denote-allow-multi-word-keywords nil)
   (denote-directory "~/tmp"))
+
+;;;; Emms
+
+(use-package emms
+  :bind (("C-c u"  . emms)
+         ("C-c U"  . emms-browser)
+         ("<C-f1>" . emms-show)
+         ("<C-f2>" . emms-volume-lower)
+         ("<C-f3>" . emms-volume-raise)
+         ("<C-f5>" . emms-previous)
+         ("<C-f6>" . emms-next)
+         ("<C-f7>" . emms-pause)
+         ("<C-f8>" . emms-stop)
+         :map emms-playlist-mode-map
+         ("p" . previous-line)
+         ("n" . next-line))
+  :custom
+  (emms-info-asynchronously t)
+  (emms-volume-amixer-card 1)
+  (emms-volume-amixer-control "PCM")
+  (emms-playlist-buffer-name "*Music*")
+  (emms-player-list '(emms-player-mpv))
+  (emms-source-file-default-directory "/run/media/zoliky/Lara/Music")
+  (emms-source-file-directory-tree-function
+   'emms-source-file-directory-tree-find)
+  :config
+  (require 'emms-setup)
+  (require 'emms-history)
+  (require 'emms-volume)
+  (require 'emms-volume-amixer)
+  (require 'emms-mode-line)
+  (emms-all)
+  (emms-history-load)
+  (emms-mode-line nil))
 
 ;;;; Other
 
