@@ -28,6 +28,7 @@
 ;;; Code:
 ;;;; Startup
 
+;; TOREMOVE
 (add-hook 'emacs-startup-hook
 	  (lambda ()
 	    (message "Emacs loaded in %s."
@@ -36,9 +37,14 @@
 ;; File used for storing customization information
 (setq custom-file (locate-user-emacs-file "custom.el"))
 
-;;;; Package system
+;; Default
+(set-face-attribute 'default nil :family "Hack" :height 180)
 
-;; Initialize the package system
+(setq tab-width 2)
+
+;;;; Package system (or Installing Packages)
+
+;; Configure package sources
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 (setq package-archive-priorities '(("melpa"  . 100)
@@ -54,13 +60,38 @@
   :custom
   (use-package-always-ensure t))
 
-;;;; Defaults
+;(use-package benchmark-init
+;  :config
+;  ;; To disable collection of benchmark data after init is done.
+;  (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
-(setq tab-width 2)
+;;;; Spell checking
+
+(use-package ispell
+  :ensure nil
+  :custom
+  (ispell-program-name "hunspell")
+  ;; English (US), Hungarian, and Romanian
+  (ispell-dictionary "en_US,hu_HU,ro_RO")
+  :config
+  (ispell-set-spellchecker-params)
+  (ispell-hunspell-add-multi-dic "en_US,hu_HU,ro_RO"))
+
+(use-package flyspell
+  :ensure nil
+  :after ispell
+  :bind ("C-c s" . flyspell-mode))
+
+(use-package flyspell-correct
+  :after flyspell
+  :bind (:map flyspell-mode-map
+              ("C-;" . flyspell-correct-wrapper)))
 
 ;;;; Packages
 ;;;;; Avy
 
+;; Avy provides an interface to quickly jump to any position in a buffer
+;; Avy allows to quickly jump to any position in a buffer
 (use-package avy
   :bind ("M-s" . avy-goto-char))
 
@@ -79,6 +110,24 @@
 ;;   :init
 ;;   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
 ;;   (add-to-list 'completion-at-point-functions #'cape-file))
+
+;;;;; Consult
+
+(use-package consult
+  :bind (("C-s"   . consult-line)
+	 ("C-x b" . consult-buffer)))
+
+;;;;; Dashboard
+
+(use-package dashboard
+  :custom
+  (dashboard-items '((recents  . 5)))
+  (dashboard-set-footer nil)
+  (dashboard-set-init-info t)
+  (dashboard-center-content t)
+  (dashboard-startup-banner 'logo)
+  :config
+  (dashboard-setup-startup-hook))
 
 ;;;;; Dired
 
@@ -118,6 +167,15 @@
   :config
   (load-theme 'ef-summer t))
 
+;;;;; Exec path
+
+;; (use-package exec-path-from-shell
+;;   :init
+;;   (setq exec-path-from-shell-arguments nil)
+;;   :config
+;;   (setq exec-path-from-shell-debug t)
+;;   (exec-path-from-shell-initialize))
+
 ;;;;; Gruvbox
 
 (use-package gruvbox-theme
@@ -138,6 +196,14 @@
   :ensure nil
   :bind ("C-x C-b" . ibuffer))
 
+;;;;; Indent guides
+
+(use-package highlight-indent-guides
+  :hook (prog-mode . highlight-indent-guides-mode)
+  :custom
+  (highlight-indent-guides-responsive 'top)
+  (highlight-indent-guides-method 'character))
+
 ;;;;; Magit
 
 (use-package magit
@@ -147,6 +213,14 @@
 
 (use-package modus-themes
   :defer t)
+
+;;;;; Move text
+
+(use-package move-text
+  :bind (("M-p" . move-text-up)
+	 ("M-n" . move-text-down))
+  :config
+  (move-text-default-bindings))
 
 ;;;;; Olivetti
 
@@ -159,6 +233,13 @@
 
 (use-package outshine
   :defer t)
+
+;;;;; Projectile
+
+;; (use-package projectile
+;;   :init
+;;   (projectile-mode)
+;;   :bind ("C-c p" . projectile-command-map))
 
 ;;;;; Rainbow delimiters
 
@@ -225,15 +306,90 @@
 (use-package yaml-mode
   :mode "\\.yml\\'")
 
-;;;; Other
-
-;; Variables configured via the interactive customize interface
-;(when (file-exists-p custom-file)
-;  (load custom-file))
-
 ;;;; Org mode
 
 (setq org-modules '())
+
+;;;;; Org
+
+(use-package org
+  :ensure nil
+  :hook (org-mode . (lambda ()
+                      (org-indent-mode)))
+  :bind ("C-c l" . org-store-link)
+  :custom
+  (org-ellipsis " ▾")
+  (org-tags-column 0)
+  (org-log-done 'time)
+  (org-startup-folded t)
+  (org-log-into-drawer t)
+  (org-clock-into-drawer t)
+  (org-log-reschedule 'time)
+  (org-image-actual-width nil)
+  (org-src-fontify-natively t)
+  (org-src-tab-acts-natively t)
+  (org-hide-emphasis-markers t)
+  (org-directory "~/orgfiles")
+  (org-export-with-tags nil)
+  (org-export-headline-levels 5)
+  (org-export-backends '(html latex))
+  (org-startup-with-inline-images t)
+  (org-modules '(org-crypt org-habit))
+  (org-tag-alist '(("crypt"    . ?c)
+                   ("temp"     . ?t)
+                   ("home"     . ?h)
+                   ("work"     . ?w)
+                   ("urgent"   . ?u)
+                   ("export"   . ?e)
+                   ("noexport" . ?n)
+                   ("expired"  . ?x)
+                   ("TOC"      . ?T)))
+  (org-tags-sort-function 'org-string-collate-lessp)
+  (org-tags-exclude-from-inheritance '("crypt"))
+  (org-todo-keywords '((sequence "TODO(t)"
+                                 "NEXT(n)"
+                                 "REPEAT(r)"
+                                 "WAITING(w)"
+                                 "POSTPONED(e)"
+                                 "SOMEDAY(s)"
+                                 "DELEGATED(o)"
+                                 "PROJECT(p)" "|"
+                                 "DONE(d)"
+                                 "FORWARDED(f)"
+                                 "CANCELLED(c)")
+                       (sequence "GOAL(g)" "|"
+                                 "ACHIEVED(a)"
+                                 "FAILED(x)")))
+  (org-todo-repeat-to-state "REPEAT")
+  (org-refile-allow-creating-parent-nodes 'confirm)
+  (org-refile-targets '((org-agenda-files . (:maxlevel . 4)))))
+
+;;;;; Agenda
+
+(use-package org-agenda
+  :ensure nil
+  :bind ("C-c a" . org-agenda)
+  :custom
+  (org-agenda-files
+   (seq-filter #'file-exists-p
+               (mapcar #'(lambda (file) (file-name-concat org-directory file))
+                       '("bookmarks.org"
+                         "calendar.org"
+                         "contacts.org"
+                         "personal.org"
+                         "work.org"
+                         "misc.org"
+                         "notes.org"
+                         "people.org"
+                         "refile.org"
+                         "elfeed.org"
+                         "english.org"
+                         "spanish.org"
+                         "private.org"))))
+  (org-agenda-include-diary t)
+  (org-habit-graph-column 80)
+  (org-habit-today-glyph ?⧖)
+  (org-habit-completed-glyph ?✓))
 
 ;;;;; Appear
 
@@ -251,5 +407,16 @@
   (denote-sort-keywords t)
   (denote-allow-multi-word-keywords nil)
   (denote-directory "~/tmp"))
+
+;;;; Other
+
+;; Variables configured via the interactive customize interface
+;(when (file-exists-p custom-file)
+;  (load custom-file))
+
+(add-hook 'after-init-hook
+          `(lambda ()
+             (setq gc-cons-threshold 800000)
+             (garbage-collect)) t)
 
 ;;; init.el ends here

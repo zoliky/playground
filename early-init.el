@@ -33,4 +33,15 @@
 ;; Maximize the Emacs frame on startup
 (push '(fullscreen . maximized) default-frame-alist)
 
+;; Remove host name from titlebar information
+(setq frame-title-format '(multiple-frames "%b" ("" "%b - GNU Emacs")))
+
+;; Turn off mouse interface early in startup to avoid momentary display
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+
+;; Suppress warnings and errors during asynchronous native compilation
+(setq native-comp-async-report-warnings-errors nil)
+
 ;;; early-init.el ends here
