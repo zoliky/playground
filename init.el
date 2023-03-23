@@ -40,8 +40,10 @@
 (set-face-attribute 'default nil :family "Hack" :height 180)
 
 (setq tab-width 2)
+(prefer-coding-system 'utf-8)         ; Set default encoding to UTF-8
+(set-language-environment 'utf-8)     ; Set default language environment to UTF-8
 
-;;;; Package system (or Installing Packages)
+;;;; Installing Packages
 
 ;; Configure package sources
 (require 'package)
@@ -68,6 +70,7 @@
 
 (use-package ispell
   :ensure nil
+  :defer 0.2
   :custom
   (ispell-program-name "hunspell")
   ;; English (US), Hungarian, and Romanian
@@ -85,6 +88,27 @@
   :after flyspell
   :bind (:map flyspell-mode-map
               ("C-;" . flyspell-correct-wrapper)))
+
+;;;; File
+
+(use-package files
+  :ensure nil
+  :custom
+  (backup-directory-alist '(("." . "~/.emacs.d/backups")))
+  (backup-by-copying t)               ; Always use copying to create backup files
+  (delete-old-versions t)             ; Delete excess backup versions
+  (kept-new-versions 6)               ; Number of newest versions to keep when a new backup is made
+  (kept-old-versions 2)               ; Number of oldest versions to keep when a new backup is made
+  (version-control t)                 ; Make numeric backup versions unconditionally
+  (auto-save-default nil)             ; Stop creating #autosave# files
+  (mode-require-final-newline nil)    ; Don't add newlines at the end of files
+  (large-file-warning-threshold nil)) ; Open large files without requesting confirmation
+
+;;;; Other Defaults
+
+(use-package display-line-numbers
+  :ensure nil
+  :hook ((text-mode prog-mode conf-mode) . display-line-numbers-mode))
 
 ;;;; Packages
 ;;;;; Avy
@@ -150,7 +174,7 @@
               ("<backtab>" . dired-subtree-cycle)
               ("<tab>"     . dired-subtree-toggle)))
 
-;; Hide hidden files
+;; Hide dotfiles
 (use-package dired-hide-dotfiles
   :after dired
   :hook (dired-mode . dired-hide-dotfiles-mode)
@@ -335,17 +359,159 @@
 (use-package yaml-mode
   :mode "\\.yml\\'")
 
-;;;;; Simple modeline
+;;;;; Doom modeline
 
-;; (use-package doom-modeline
-;;   :init
-;;   (doom-modeline-mode)
-;;   :custom
-;;   (doom-modeline-mu4e t)
-;;   (doom-modeline-height 38))
+(use-package doom-modeline
+  :init
+  (doom-modeline-mode)
+  :custom
+  (doom-modeline-mu4e t)
+  (doom-modeline-height 38))
 
-(use-package simple-modeline
-  :hook (after-init . simple-modeline-mode))
+;;;; Email
+
+(use-package mu4e
+  :ensure nil
+  ;:ensure-system-package mu
+  :load-path "/usr/share/emacs/site-lisp/mu4e"
+  :bind (("C-c m" . mu4e)
+         :map mu4e-view-mode-map
+         ("n"         . next-line)
+         ("p"         . previous-line)
+         ("<tab>"     . org-next-link)
+         ("<backtab>" . org-previous-link)
+         ("<RET>"     . mu4e~view-browse-url-from-binding))
+  :hook (mu4e-compose-mode
+         . (lambda ()
+             (flyspell-mode)
+             (auto-fill-mode -1)
+             (display-line-numbers-mode -1)))
+  :custom
+  (mail-user-agent 'mu4e-user-agent)
+  (mu4e-get-mail-command "mbsync -c ~/.mbsyncrc -a")
+  (mu4e-update-interval 600)
+  (mu4e-split-view nil)
+  (mu4e-confirm-quit nil)
+  (mu4e-use-fancy-chars t)
+  (mu4e-view-show-images t)
+  (mu4e-view-prefer-html t)
+  (mu4e-view-show-addresses t)
+  (mu4e-hide-index-messages t)
+  (mu4e-attachment-dir "~/Downloads")
+  (mu4e-compose-dont-reply-to-self t)
+  (mu4e-change-filenames-when-moving t)
+  (mu4e-sent-messages-behavior 'delete)
+  (mu4e-index-update-error-warning nil)
+  (mu4e-html2text-command "w3m -dump -I utf-8 -O utf-8 -T text/html"))
+
+(use-package mu4e-headers
+  :ensure nil
+  :after mu4e
+  :hook (mu4e-headers-mode . (lambda () (eldoc-mode -1)))
+  :custom
+  (mu4e-headers-auto-update t)
+  (mu4e-headers-fields `((:human-date . 12)
+                         (:flags      .  6)
+                         (:from       . 22)
+                         (:subject)))
+;  (mu4e-headers-fields `((:human-date . 12)
+;                         (:flags      .  6)
+;                         (:from       . 22)
+;                         (:subject    . ,(- (window-body-width) 50))))
+  :config
+  (setq mu4e-headers-attach-mark '("a" . "📎")))
+
+(use-package message
+  :ensure nil
+  :after mu4e
+  :custom
+  (message-kill-buffer-on-exit t)
+  (message-send-mail-function 'smtpmail-send-it))
+
+(use-package smtpmail
+  :ensure nil
+  :after mu4e
+  :custom
+  (smtpmail-smtp-service 587)
+  (smtpmail-smtp-server "smtp.gmail.com")
+  (smtpmail-auth-credentials "~/.authinfo.gpg")
+  (smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))))
+
+(use-package org-mime
+  :defer t
+  :config
+  (setq org-mime-export-options '(:section-numbers nil
+                                  :with-author nil
+                                  :with-toc nil)))
+
+(use-package mu4e-context
+  :ensure nil
+  :after mu4e
+  :custom
+  (mu4e-context-policy 'pick-first)
+  (mu4e-compose-context-policy 'always-ask)
+  :config
+  (setq mu4e-contexts
+        (list
+         (make-mu4e-context
+          ;; Personal context
+          :name "personal"
+          :enter-func (lambda () (mu4e-message "Entering personal context"))
+          :match-func (lambda (msg)
+                        (when msg
+                          (mu4e-message-contact-field-matches
+                           msg '(:from :to :cc :bcc) "zoliky@gmail.com")))
+          :vars '((user-mail-address  . "zoliky@gmail.com")
+                  (user-full-name     . "Zoltan Kiraly")
+                  (mu4e-sent-folder   . "/gmail-zoliky/[Gmail].Sent Mail")
+                  (mu4e-drafts-folder . "/gmail-zoliky/[Gmail].Drafts")
+                  (mu4e-trash-folder  . "/gmail-zoliky/[Gmail].Trash")
+                  (smtpmail-queue-dir . "~/Maildir/gmail-zoliky/queue/cur")
+                  (smtpmail-smtp-user . "zoliky")
+                  (mu4e-maildir-shortcuts
+                   . ((:maildir "/gmail-zoliky/INBOX"             :key ?i)
+                      (:maildir "/gmail-zoliky/[Gmail].Starred"   :key ?r)
+                      (:maildir "/gmail-zoliky/[Gmail].Sent Mail" :key ?s)
+                      (:maildir "/gmail-zoliky/[Gmail].Drafts"    :key ?d)
+                      (:maildir "/gmail-zoliky/[Gmail].Trash"     :key ?t)))))
+         (make-mu4e-context
+          ;; Work context
+          :name "work"
+          :enter-func (lambda () (mu4e-message "Entering work context"))
+          :match-func (lambda (msg)
+                        (when msg
+                          (mu4e-message-contact-field-matches
+                           msg '(:from :to :cc :bcc) "zolikydev@gmail.com")))
+          :vars '((user-mail-address  . "zolikydev@gmail.com")
+                  (user-full-name     . "Zoltan Kiraly")
+                  (mu4e-sent-folder   . "/gmail-zolikydev/[Gmail].Sent Mail")
+                  (mu4e-drafts-folder . "/gmail-zolikydev/[Gmail].Drafts")
+                  (mu4e-trash-folder  . "/gmail-zolikydev/[Gmail].Trash")
+                  (smtpmail-queue-dir . "~/Maildir/gmail-zolikydev/queue/cur")
+                  (smtpmail-smtp-user . "zolikydev")
+                  (mu4e-maildir-shortcuts
+                   . ((:maildir "/gmail-zolikydev/INBOX"             :key ?i)
+                      (:maildir "/gmail-zolikydev/[Gmail].Starred"   :key ?r)
+                      (:maildir "/gmail-zolikydev/[Gmail].Sent Mail" :key ?s)
+                      (:maildir "/gmail-zolikydev/[Gmail].Drafts"    :key ?d)
+                      (:maildir "/gmail-zolikydev/[Gmail].Trash"     :key ?t))))))))
+
+;; Load mu4e in the background when Emacs starts
+;(run-at-time
+; "0.2 sec" nil (lambda ()
+;                (let ((current-prefix-arg '(4)))
+;                  (call-interactively 'mu4e)
+;                  (message nil))))
+
+(use-package mu4e-alert
+  :after mu4e
+;  :hook ((after-init . mu4e-alert-enable-mode-line-display))
+  :custom
+  ;; Notify only of unread emails in the inbox
+  (mu4e-alert-interesting-mail-query "flag:unread maildir:/INBOX/")
+  :config
+  (mu4e-alert-enable-mode-line-display)
+  (mu4e-alert-set-default-style 'libnotify))
 
 ;;;; Org mode
 
@@ -438,6 +604,14 @@
 
 (use-package org-appear
   :hook (org-mode . org-appear-mode))
+
+;;;;; Bullets
+
+(use-package org-superstar
+  :after org
+  :hook (org-mode . org-superstar-mode)
+  :config
+  (org-superstar-configure-like-org-bullets))
 
 ;;;;; Denote
 
