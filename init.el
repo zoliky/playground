@@ -186,8 +186,9 @@
 ;;;;; Ef themes
 
 (use-package ef-themes
-  :config
-  (load-theme 'ef-summer t))
+  :init
+  (load-theme 'ef-summer t)
+  :bind ("<f9>" . ef-themes-select))
 
 ;;;;; Exec path
 
@@ -273,10 +274,10 @@
 
 ;;;;; Projectile
 
-;; (use-package projectile
-;;   :init
-;;   (projectile-mode)
-;;   :bind ("C-c p" . projectile-command-map))
+;(use-package projectile
+;  :init
+;  (projectile-mode)
+;  :bind ("C-c p" . projectile-command-map))
 
 ;;;;; Rainbow delimiters
 
