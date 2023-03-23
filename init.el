@@ -59,10 +59,10 @@
   :custom
   (use-package-always-ensure t))
 
-;(use-package benchmark-init
-;  :config
+(use-package benchmark-init
+  :config
   ;; To disable collection of benchmark data after init is done.
-;  (add-hook 'after-init-hook 'benchmark-init/deactivate))
+  (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
 ;;;; Spell checking
 
@@ -89,26 +89,25 @@
 ;;;; Packages
 ;;;;; Avy
 
-;; Avy provides an interface to quickly jump to any position in a buffer
 ;; Avy allows to quickly jump to any position in a buffer
 (use-package avy
   :bind ("M-s" . avy-goto-char))
 
 ;;;;; Corfu
 
-;; (use-package corfu
-;;   :hook (prog-mode . corfu-mode)
-;;   :custom
-;;   (corfu-auto t)
-;;   (corfu-cycle t)
-;;   (corfu-auto-prefix 1)
-;;   (corfu-auto-delay 0.1)
-;;   (corfu-quit-no-match 'separator))
+(use-package corfu
+  :hook (prog-mode . corfu-mode)
+  :custom
+  (corfu-auto t)
+  (corfu-cycle t)
+  (corfu-auto-prefix 1)
+  (corfu-auto-delay 0.1)
+  (corfu-quit-no-match 'separator))
 
-;; (use-package cape
-;;   :init
-;;   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-;;   (add-to-list 'completion-at-point-functions #'cape-file))
+(use-package cape
+  :init
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  (add-to-list 'completion-at-point-functions #'cape-file))
 
 ;;;;; Consult
 
@@ -180,6 +179,11 @@
 (use-package gruvbox-theme
   :defer t)
 
+;;;;; JavaScript
+
+(use-package js2-mode
+  :mode "\\.jsx?\\'")
+
 ;;;;; Helpful
 
 (use-package helpful
@@ -207,6 +211,16 @@
 
 (use-package magit
   :bind ("C-c g" . magit-status))
+
+;;;;; Markdown
+
+(use-package markdown-mode
+  :init
+  (setq markdown-command "multimarkdown")
+  :hook (markdown-mode . (lambda () (display-line-numbers-mode -1)))
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'"       . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode)))
 
 ;;;;; Modus themes
 
@@ -286,6 +300,22 @@
   :config
   (marginalia-mode))
 
+;;;;; Web mode
+
+(use-package web-mode
+  :mode "\\.html\\'"
+  :custom
+  (web-mode-attr-indent-offset 2)
+  (web-mode-enable-css-colorization t)
+  (web-mode-enable-auto-closing t)
+  (web-mode-markup-indent-offset 2)
+  (web-mode-css-indent-offset 2)
+  (web-mode-code-indent-offset 2)
+  (web-mode-enable-current-element-highlight t))
+
+(use-package auto-rename-tag
+  :hook (web-mode . auto-rename-tag-mode))
+
 ;;;;; Which key
 
 (use-package which-key
@@ -304,6 +334,18 @@
 
 (use-package yaml-mode
   :mode "\\.yml\\'")
+
+;;;;; Simple modeline
+
+;; (use-package doom-modeline
+;;   :init
+;;   (doom-modeline-mode)
+;;   :custom
+;;   (doom-modeline-mu4e t)
+;;   (doom-modeline-height 38))
+
+(use-package simple-modeline
+  :hook (after-init . simple-modeline-mode))
 
 ;;;; Org mode
 
