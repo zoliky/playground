@@ -26,26 +26,9 @@
 ;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html
 
 ;;; Code:
-;;;; Startup
+;;;; Package management
 
-(add-hook 'emacs-startup-hook
-	  (lambda ()
-	    (message "Emacs loaded in %s."
-		     (emacs-init-time))))
-
-;; File used for storing customization information
-(setq custom-file (locate-user-emacs-file "custom.el"))
-
-;; Default
-(set-face-attribute 'default nil :family "Hack" :height 180)
-
-(setq tab-width 2)
-(prefer-coding-system 'utf-8)         ; Set default encoding to UTF-8
-(set-language-environment 'utf-8)     ; Set default language environment to UTF-8
-
-;;;; Installing Packages
-
-;; Configure package sources
+;; Configure the package system
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 (setq package-archive-priorities '(("melpa"  . 100)
@@ -61,10 +44,62 @@
   :custom
   (use-package-always-ensure t))
 
+;; TOREMOVE
 (use-package benchmark-init
   :config
   ;; To disable collection of benchmark data after init is done.
   (add-hook 'after-init-hook 'benchmark-init/deactivate))
+
+;;;; Defaults
+
+(add-hook 'emacs-startup-hook
+	  (lambda ()
+	    (message "Emacs loaded in %s."
+		     (emacs-init-time))))
+
+;; File used for storing customization information
+(setq custom-file (locate-user-emacs-file "custom.el"))
+
+;; Default
+(set-face-attribute 'default nil :family "Hack" :height 180)
+
+(setq-default
+ inhibit-startup-screen t             ; Disable the startup screen
+ ;indent-tabs-mode nil                 ; Insert space characters instead of tabs
+ ;tab-width 2                          ; The number of spaces a tab is equal to
+ fill-column 78                       ; Line length above which to break a line
+ cursor-type 'bar                     ; Display the cursor as a vertical bar
+ column-number-mode t                 ; Display the column number in the mode line
+ vc-follow-symlinks t                 ; Follow symlinks without requesting confirmation
+ ;major-mode 'text-mode                ; Set the default major mode to text-mode
+ ring-bell-function 'ignore)          ; Disable the error beep sound
+(savehist-mode t)                     ; Save the minibuffer history
+(show-paren-mode t)                   ; Enable visualization of matching parens
+(save-place-mode t)                   ; Jump to the last known position when reopening a file
+(electric-pair-mode t)                ; Enable automatic brackets pairing
+(global-hl-line-mode t)               ; Enable line highlighting in all buffers
+(delete-selection-mode t)             ; Replace selected text when typing
+(global-auto-revert-mode t)           ; Automatically reload externally modified files
+(fset 'yes-or-no-p 'y-or-n-p)         ; Replace "yes/no" prompts with "y/n"
+(prefer-coding-system 'utf-8)         ; Set default encoding to UTF-8
+(set-language-environment 'utf-8)     ; Set default language environment to UTF-8
+
+(use-package files
+  :ensure nil
+  :custom
+  (backup-directory-alist '(("." . "~/.emacs.d/backups")))
+  (backup-by-copying t)               ; Always use copying to create backup files
+  (delete-old-versions t)             ; Delete excess backup versions
+  (kept-new-versions 6)               ; Number of newest versions to keep when a new backup is made
+  (kept-old-versions 2)               ; Number of oldest versions to keep when a new backup is made
+  (version-control t)                 ; Make numeric backup versions unconditionally
+  (auto-save-default nil)             ; Stop creating #autosave# files
+  (mode-require-final-newline nil)    ; Don't add newlines at the end of files
+  (large-file-warning-threshold nil)) ; Open large files without requesting confirmation
+
+(use-package display-line-numbers
+  :ensure nil
+  :hook ((prog-mode conf-mode) . display-line-numbers-mode))
 
 ;;;; Spell checking
 
@@ -89,36 +124,16 @@
   :bind (:map flyspell-mode-map
               ("C-;" . flyspell-correct-wrapper)))
 
-;;;; File
-
-(use-package files
-  :ensure nil
-  :custom
-  (backup-directory-alist '(("." . "~/.emacs.d/backups")))
-  (backup-by-copying t)               ; Always use copying to create backup files
-  (delete-old-versions t)             ; Delete excess backup versions
-  (kept-new-versions 6)               ; Number of newest versions to keep when a new backup is made
-  (kept-old-versions 2)               ; Number of oldest versions to keep when a new backup is made
-  (version-control t)                 ; Make numeric backup versions unconditionally
-  (auto-save-default nil)             ; Stop creating #autosave# files
-  (mode-require-final-newline nil)    ; Don't add newlines at the end of files
-  (large-file-warning-threshold nil)) ; Open large files without requesting confirmation
-
-;;;; Other Defaults
-
-(use-package display-line-numbers
-  :ensure nil
-  :hook ((text-mode prog-mode conf-mode) . display-line-numbers-mode))
-
 ;;;; Packages
 ;;;;; Avy
 
-;; Avy allows to quickly jump to any position in a buffer
+;; Avy allows to quickly jump to any visible position in a buffer
 (use-package avy
   :bind ("M-s" . avy-goto-char))
 
 ;;;;; Corfu
 
+;; Corfu is a completion UI for Emacs
 (use-package corfu
   :hook (prog-mode . corfu-mode)
   :custom
@@ -141,21 +156,25 @@
 
 ;;;;; Dashboard
 
-(use-package dashboard
-  :custom
-  (dashboard-items '((recents  . 5)))
-  (dashboard-set-footer nil)
-  (dashboard-set-init-info t)
-  (dashboard-center-content t)
-  (dashboard-startup-banner 'logo)
-  :config
-  (dashboard-setup-startup-hook))
+;(use-package dashboard
+;  :custom
+;  (dashboard-items '((recents  . 5)))
+;  (dashboard-set-footer nil)
+;  (dashboard-set-init-info t)
+;  (dashboard-center-content t)
+;  (dashboard-set-file-icons t)
+;  (dashboard-set-heading-icons t)
+;  (dashboard-startup-banner 'logo)
+;  :config
+;  (dashboard-setup-startup-hook))
 
 ;;;;; Dired
 
 (use-package dired
   :ensure nil
+  ;:after all-the-icons-dired
   :bind ("C-x C-j" . dired-jump)
+  ;:hook (dired-mode . all-the-icons-dired-mode)
   :custom
   (dired-auto-revert-buffer t)
   (delete-by-moving-to-trash t)
@@ -183,6 +202,9 @@
   :custom
   (dired-hide-dotfiles-verbose nil))
 
+(use-package all-the-icons-dired
+  :after all-the-icons)
+
 ;;;;; Ef themes
 
 (use-package ef-themes
@@ -192,12 +214,11 @@
 
 ;;;;; Exec path
 
-;; (use-package exec-path-from-shell
-;;   :init
-;;   (setq exec-path-from-shell-arguments nil)
-;;   :config
-;;   (setq exec-path-from-shell-debug t)
-;;   (exec-path-from-shell-initialize))
+;(use-package exec-path-from-shell
+;  :init
+;  (setq exec-path-from-shell-arguments nil)
+;  :config
+;  (exec-path-from-shell-initialize))
 
 ;;;;; Gruvbox
 
@@ -217,6 +238,14 @@
   ([remap describe-command]  . helpful-command)
   ([remap describe-variable] . helpful-variable)
   ([remap describe-function] . helpful-callable))
+
+;;;;; Icons
+
+;(use-package all-the-icons
+;  :config
+;  (unless (find-font (font-spec :name "all-the-icons"))
+;    (all-the-icons-install-fonts t))
+;  (setq all-the-icons-scale-factor 1))
 
 ;;;;; Ibuffer
 
@@ -263,7 +292,9 @@
 ;;;;; Olivetti
 
 (use-package olivetti
-  :hook (org-mode . olivetti-mode)
+  :hook ((org-mode . olivetti-mode)
+	 (mu4e-view-mode    . olivetti-mode)
+	 (mu4e-compose-mode . olivetti-mode))
   :custom
   (olivetti-body-width 80))
 
@@ -360,20 +391,20 @@
 (use-package yaml-mode
   :mode "\\.yml\\'")
 
-;;;;; Doom modeline
+;;;;; JSON
 
-(use-package doom-modeline
-  :init
-  (doom-modeline-mode)
-  :custom
-  (doom-modeline-mu4e t)
-  (doom-modeline-height 38))
+(use-package json-mode
+  :mode "\\.json\\'"
+  :preface
+  (defun king/json-mode-before-save-hook ()
+    (when (eq major-mode 'json-mode)
+      (json-pretty-print-buffer)))
+  :hook (before-save . king/json-mode-before-save-hook))
 
 ;;;; Email
 
 (use-package mu4e
   :ensure nil
-  ;:ensure-system-package mu
   :load-path "/usr/share/emacs/site-lisp/mu4e"
   :bind (("C-c m" . mu4e)
          :map mu4e-view-mode-map
@@ -497,9 +528,8 @@
                       (:maildir "/gmail-zolikydev/[Gmail].Drafts"    :key ?d)
                       (:maildir "/gmail-zolikydev/[Gmail].Trash"     :key ?t))))))))
 
-;; Load mu4e in the background when Emacs starts
 ;(run-at-time
-; "0.2 sec" nil (lambda ()
+; "5 sec" nil (lambda ()
 ;                (let ((current-prefix-arg '(4)))
 ;                  (call-interactively 'mu4e)
 ;                  (message nil))))
@@ -515,9 +545,6 @@
   (mu4e-alert-set-default-style 'libnotify))
 
 ;;;; Org mode
-
-(setq org-modules '())
-
 ;;;;; Org
 
 (use-package org
@@ -617,7 +644,8 @@
 ;;;;; Denote
 
 (use-package denote
-  :bind ("C-c d" . denote)
+  :bind (("C-c d" . denote)
+	 ("C-c j" . denote-rename-file))
   :hook (dired-mode . denote-dired-mode)
   :custom
   (denote-sort-keywords t)
@@ -667,6 +695,7 @@
 (add-hook 'after-init-hook
           `(lambda ()
              (setq gc-cons-threshold 800000)
+	     (message "ok")
              (garbage-collect)) t)
 
 ;;; init.el ends here
