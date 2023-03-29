@@ -32,8 +32,8 @@
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 (setq package-archive-priorities '(("melpa"  . 100)
-				   ("gnu"    .  50)
-				   ("nongnu" .  25)))
+                                   ("gnu"    .  50)
+                                   ("nongnu" .  25)))
 
 ;; Ensure that the use-package macro is installed
 (unless (package-installed-p 'use-package)
@@ -43,12 +43,6 @@
 (use-package use-package
   :custom
   (use-package-always-ensure t))
-
-;; TOREMOVE
-(use-package benchmark-init
-  :config
-  ;; To disable collection of benchmark data after init is done.
-  (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
 ;;;; Defaults
 
@@ -60,19 +54,19 @@
 ;; File used for storing customization information
 (setq custom-file (locate-user-emacs-file "custom.el"))
 
-;; Default
-(set-face-attribute 'default nil :family "Hack" :height 180)
-
+;; Better Defaults
 (setq-default
  inhibit-startup-screen t             ; Disable the startup screen
- ;indent-tabs-mode nil                 ; Insert space characters instead of tabs
- ;tab-width 2                          ; The number of spaces a tab is equal to
+ initial-scratch-message nil          ; Empty the initial *scratch* buffer
+ indent-tabs-mode nil                 ; Insert space characters instead of tabs
+ tab-width 2                          ; The number of spaces a tab is equal to
  fill-column 78                       ; Line length above which to break a line
  cursor-type 'bar                     ; Display the cursor as a vertical bar
  column-number-mode t                 ; Display the column number in the mode line
  vc-follow-symlinks t                 ; Follow symlinks without requesting confirmation
- ;major-mode 'text-mode                ; Set the default major mode to text-mode
- ring-bell-function 'ignore)          ; Disable the error beep sound
+ major-mode 'text-mode                ; Set the default major mode to text-mode
+ ring-bell-function 'ignore           ; Disable the error beep sound
+ inhibit-compacting-font-caches nil)  ; Prevent compacting font caches during garbage collection
 (savehist-mode t)                     ; Save the minibuffer history
 (show-paren-mode t)                   ; Enable visualization of matching parens
 (save-place-mode t)                   ; Jump to the last known position when reopening a file
@@ -84,10 +78,11 @@
 (prefer-coding-system 'utf-8)         ; Set default encoding to UTF-8
 (set-language-environment 'utf-8)     ; Set default language environment to UTF-8
 
+;; File-related customizations
 (use-package files
   :ensure nil
   :custom
-  (backup-directory-alist '(("." . "~/.emacs.d/backups")))
+  (backup-directory-alist '(("." . "~/.emacs.d/backup")))
   (backup-by-copying t)               ; Always use copying to create backup files
   (delete-old-versions t)             ; Delete excess backup versions
   (kept-new-versions 6)               ; Number of newest versions to keep when a new backup is made
@@ -97,15 +92,19 @@
   (mode-require-final-newline nil)    ; Don't add newlines at the end of files
   (large-file-warning-threshold nil)) ; Open large files without requesting confirmation
 
+;; Enable line numbering
 (use-package display-line-numbers
   :ensure nil
   :hook ((prog-mode conf-mode) . display-line-numbers-mode))
+
+;; Default
+(set-face-attribute 'default nil :family "Hack" :height 180)
 
 ;;;; Spell checking
 
 (use-package ispell
   :ensure nil
-  :defer 0.2
+  :defer 0.5
   :custom
   (ispell-program-name "hunspell")
   ;; English (US), Hungarian, and Romanian
@@ -122,7 +121,7 @@
 (use-package flyspell-correct
   :after flyspell
   :bind (:map flyspell-mode-map
-              ("C-;" . flyspell-correct-wrapper)))
+	      ("C-;" . flyspell-correct-wrapper)))
 
 ;;;; Packages
 ;;;;; Avy
@@ -135,13 +134,15 @@
 
 ;; Corfu is a completion UI for Emacs
 (use-package corfu
-  :hook (prog-mode . corfu-mode)
+  :init
+  (global-corfu-mode)
   :custom
   (corfu-auto t)
   (corfu-cycle t)
   (corfu-auto-prefix 1)
   (corfu-auto-delay 0.1)
-  (corfu-quit-no-match 'separator))
+  (corfu-quit-no-match 'separator)
+  (corfu-excluded-modes '(org-mode mu4e-compose-mode)))
 
 (use-package cape
   :init
@@ -152,29 +153,17 @@
 
 (use-package consult
   :bind (("C-s"   . consult-line)
-	 ("C-x b" . consult-buffer)))
+         ("C-x b" . consult-buffer)))
 
-;;;;; Dashboard
-
-;(use-package dashboard
-;  :custom
-;  (dashboard-items '((recents  . 5)))
-;  (dashboard-set-footer nil)
-;  (dashboard-set-init-info t)
-;  (dashboard-center-content t)
-;  (dashboard-set-file-icons t)
-;  (dashboard-set-heading-icons t)
-;  (dashboard-startup-banner 'logo)
-;  :config
-;  (dashboard-setup-startup-hook))
+(use-package consult-notes
+  :config
+  (consult-notes-denote-mode))
 
 ;;;;; Dired
 
 (use-package dired
   :ensure nil
-  ;:after all-the-icons-dired
   :bind ("C-x C-j" . dired-jump)
-  ;:hook (dired-mode . all-the-icons-dired-mode)
   :custom
   (dired-auto-revert-buffer t)
   (delete-by-moving-to-trash t)
@@ -193,17 +182,12 @@
               ("<backtab>" . dired-subtree-cycle)
               ("<tab>"     . dired-subtree-toggle)))
 
-;; Hide dotfiles
 (use-package dired-hide-dotfiles
-  :after dired
   :hook (dired-mode . dired-hide-dotfiles-mode)
   :bind (:map dired-mode-map
 	      ("." . dired-hide-dotfiles-mode))
   :custom
   (dired-hide-dotfiles-verbose nil))
-
-(use-package all-the-icons-dired
-  :after all-the-icons)
 
 ;;;;; Ef themes
 
@@ -211,14 +195,6 @@
   :init
   (load-theme 'ef-summer t)
   :bind ("<f9>" . ef-themes-select))
-
-;;;;; Exec path
-
-;(use-package exec-path-from-shell
-;  :init
-;  (setq exec-path-from-shell-arguments nil)
-;  :config
-;  (exec-path-from-shell-initialize))
 
 ;;;;; Gruvbox
 
@@ -238,14 +214,6 @@
   ([remap describe-command]  . helpful-command)
   ([remap describe-variable] . helpful-variable)
   ([remap describe-function] . helpful-callable))
-
-;;;;; Icons
-
-;(use-package all-the-icons
-;  :config
-;  (unless (find-font (font-spec :name "all-the-icons"))
-;    (all-the-icons-install-fonts t))
-;  (setq all-the-icons-scale-factor 1))
 
 ;;;;; Ibuffer
 
@@ -292,9 +260,11 @@
 ;;;;; Olivetti
 
 (use-package olivetti
-  :hook ((org-mode . olivetti-mode)
-	 (mu4e-view-mode    . olivetti-mode)
-	 (mu4e-compose-mode . olivetti-mode))
+  :hook ((org-mode          . olivetti-mode)
+         (markdown-mode     . olivetti-mode)
+         (mu4e-view-mode    . olivetti-mode)
+         (elfeed-show-mode  . olivetti-mode)
+         (mu4e-compose-mode . olivetti-mode))
   :custom
   (olivetti-body-width 80))
 
@@ -302,13 +272,6 @@
 
 (use-package outshine
   :defer t)
-
-;;;;; Projectile
-
-;(use-package projectile
-;  :init
-;  (projectile-mode)
-;  :bind ("C-c p" . projectile-command-map))
 
 ;;;;; Rainbow delimiters
 
@@ -339,8 +302,8 @@
   :ensure nil
   :after vertico
   :bind (:map vertico-map
-	      ("RET" . vertico-directory-enter)
-	      ("DEL" . vertico-directory-delete-char)
+	      ("RET"   . vertico-directory-enter)
+	      ("DEL"   . vertico-directory-delete-char)
 	      ("M-DEL" . vertico-directory-delete-word))
   :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
 
@@ -359,18 +322,18 @@
 ;;;;; Web mode
 
 (use-package web-mode
-  :mode "\\.html\\'"
-  :custom
-  (web-mode-attr-indent-offset 2)
-  (web-mode-enable-css-colorization t)
-  (web-mode-enable-auto-closing t)
-  (web-mode-markup-indent-offset 2)
-  (web-mode-css-indent-offset 2)
-  (web-mode-code-indent-offset 2)
-  (web-mode-enable-current-element-highlight t))
+   :mode "\\.html\\'"
+   :custom
+   (web-mode-attr-indent-offset 2)
+   (web-mode-enable-css-colorization t)
+   (web-mode-enable-auto-closing t)
+   (web-mode-markup-indent-offset 2)
+   (web-mode-css-indent-offset 2)
+   (web-mode-code-indent-offset 2)
+   (web-mode-enable-current-element-highlight t))
 
 (use-package auto-rename-tag
-  :hook (web-mode . auto-rename-tag-mode))
+   :hook (web-mode . auto-rename-tag-mode))
 
 ;;;;; Which key
 
@@ -536,13 +499,71 @@
 
 (use-package mu4e-alert
   :after mu4e
-;  :hook ((after-init . mu4e-alert-enable-mode-line-display))
   :custom
   ;; Notify only of unread emails in the inbox
   (mu4e-alert-interesting-mail-query "flag:unread maildir:/INBOX/")
   :config
   (mu4e-alert-enable-mode-line-display)
   (mu4e-alert-set-default-style 'libnotify))
+
+;;;; Custom input methods
+
+;; (quail-define-package
+;;    "custom-input-method" "" "" t
+;;    "Custom input method
+
+;;   Documentation goes here."
+;;    nil t nil nil nil nil nil nil nil nil t)
+
+;;   (quail-define-rules
+;;    ;; Phonetic symbols
+;;    ("\\uh" ?ə) ; UNSTRESSED SCHWA VOWEL
+;;    ("\\uH" ?ʌ) ; STRESSED SCHWA VOWEL
+;;    ("\\ii" ?ɪ) ; NEAR-CLOSE NEAR-FRONT UNROUNDED VOWEL
+;;    ("\\uu" ?ʊ) ; NEAR-CLOSE NEAR-BACK ROUNDED VOWEL
+;;    ("\\ee" ?ɛ) ; OPEN-MID FRONT UNROUNDED VOWEL
+;;    ("\\er" ?ɜ) ; OPEN-MID CENTRAL UNROUNDED VOWEL
+;;    ("\\oh" ?ɔ) ; OPEN-MID BACK ROUNDED VOWEL
+;;    ("\\ae" ?æ) ; NEAR-OPEN FRONT UNROUNDED VOWEL
+;;    ("\\ah" ?ɑ) ; OPEN BACK UNROUNDED VOWEL
+;;    ("\\th" ?θ) ; VOICELESS DENTAL FRICATIVE
+;;    ("\\tH" ?ð) ; VOICED DENTAL FRICATIVE
+;;    ("\\sh" ?ʃ) ; VOICELESS POSTALVEOLAR FRICATIVE
+;;    ("\\zs" ?ʒ) ; VOICED POSTALVEOLAR FRICATIVE
+;;    ("\\be" ?β) ; VOICED BILABIAL FRICATIVE
+;;    ("\\vv" ?ɣ) ; VOICED VELAR FRICATIVE
+;;    ("\\hh" ?ɥ) ; VOICED LABIAL-PALATAL APPROXIMANT
+;;    ("\\la" ?ʎ) ; VOICED PALATAL LATERAL APPROXIMANT
+;;    ("\\jj" ?ʝ) ; VOICED PALATAL FRICATIVE
+;;    ("\\mm" ?ɱ) ; VOICED LABIODENTAL NASAL
+;;    ("\\ts" ?ʧ) ; VOICELESS POSTALVEOLAR AFFRICATE
+;;    ("\\dz" ?ʤ) ; VOICED POSTALVEOLAR AFFRICATE
+;;    ("\\ny" ?ɲ) ; VOICED PALATAL NASAL
+;;    ("\\ng" ?ŋ) ; VOICED VELAR NASAL
+;;    ("\\rr" ?ɹ) ; VOICED ALVEOLAR APPROXIMANT
+;;    ("\\ta" ?ɾ) ; VOICED ALVEOLAR TAP
+;;    ("\\ir" ?ʁ) ; VOICED UVULAR FRICATIVE
+;;    ("\\dl" ?ɫ) ; VELARIZED ALVEOLAR LATERAL APPROXIMANT
+;;    ("\\as" ?ʰ) ; ASPIRATED
+;;    ("\\ps" ?ˈ) ; PRIMARY STRESS
+;;    ("\\ss" ?ˌ) ; SECONDARY STRESS
+;;    ("\\li" ?‿) ; LIAISON
+;;    ("\\ri" ?↗) ; RISING INFLECTION
+;;    ("\\fi" ?↘) ; FALLING INFLECTION
+;;    ("\\lw" ?ʷ) ; LABIAL HIGH ROUNDED
+;;    ("\\ly" ?ʸ) ; PALATAL HIGH UNROUNDED
+;;    ("\\st" ?̚) ; NO AUDIBLE RELEASE
+
+;;    ;; Common symbols
+;;    ("\\copy"   ?©)  ; COPYRIGHT
+;;    ("\\tm"     ?™)  ; TRADEMARK
+;;    ("\\mdot"   ?·)  ; INTERPUNCT
+;;    ("\\ha"     ?á)  ; A-ACUTE
+;;    ("\\endash" ?–)  ; EN DASH
+;;    ("\\emdash" ?—)  ; EM DASH
+;;    ("\\female" ?♀)  ; FEMALE
+;;    ("\\male"   ?♂)  ; MALE
+;;    ("\\eur"    ?€)) ; EURO
 
 ;;;; Org mode
 ;;;;; Org
@@ -628,15 +649,12 @@
 
 ;;;;; Appear
 
-(setq org-hide-emphasis-markers t)
-
 (use-package org-appear
   :hook (org-mode . org-appear-mode))
 
 ;;;;; Bullets
 
 (use-package org-superstar
-  :after org
   :hook (org-mode . org-superstar-mode)
   :config
   (org-superstar-configure-like-org-bullets))
@@ -651,6 +669,63 @@
   (denote-sort-keywords t)
   (denote-allow-multi-word-keywords nil)
   (denote-directory "~/tmp"))
+
+;;;;; Calendar
+
+;; (use-package holidays
+;;   :ensure nil
+;;   :after org
+;;   :custom
+;;   (holiday-bahai-holidays nil)
+;;   (holiday-christian-holidays
+;;    '((holiday-fixed  1  6     "Epiphany (Vízkereszt)")
+;;      (holiday-easter-etc -46  "Ash Wednesday (Hamvazószerda)")
+;;      (holiday-easter-etc -7   "Palm Sunday (Virágvasárnap)")
+;;      (holiday-easter-etc -2   "Holy Friday (Nagypéntek)")
+;;      (holiday-easter-etc  0   "Easter Sunday (Húsvétvasárnap)")
+;;      (holiday-easter-etc  1   "Easter Monday (Húsvéthétfő)")
+;;      (holiday-easter-etc 39   "Ascension (Áldozócsütörtök)")
+;;      (holiday-easter-etc 49   "Pentecost (Pünkösd)")
+;;      (holiday-easter-etc 56   "Trinity Sunday (Szentháromság Vasárnapja)")
+;;      (holiday-easter-etc 60   "Corpus Christi (Úrnapja)")
+;;      (holiday-greek-orthodox-easter)
+;;      (holiday-fixed  8 15     "Assumption (Nagyboldogasszony)")
+;;      (holiday-fixed 11  1     "All Saints' Day (Mindenszentek Napja)")
+;;      (holiday-fixed 11  2     "Day of the Dead (Hallotak Napja)")
+;;      (holiday-fixed 12 25     "Christmas Day (Karácsony Napja)")))
+;;   (holiday-general-holidays
+;;    '((holiday-fixed  1  1     "New Year's Day (Újév)")
+;;      (holiday-fixed  2 14     "Valentine's Day (Valentin Nap)")
+;;      (holiday-fixed  3  8     "International Women's Day (Nemzetközi Nőnap)")
+;;      (holiday-fixed 10 31     "Halloween (Észak-Amerikai Ünnep)")
+;;      (holiday-float 11  4  4  "Thanksgiving (Észak-Amerikai Ünnep)")))
+;;   (holiday-local-holidays
+;;    '((holiday-fixed  5  1     "Labor Day (A Munka Ünnepe)")
+;;      (holiday-float  5  0  1  "Mother's Day (Anyák Napja)")))
+;;   (holiday-hebrew-holidays nil)
+;;   (holiday-islamic-holidays nil)
+;;   (holiday-oriental-holidays nil))
+
+;;;;; Export
+
+;; (use-package ox-latex
+;;   :ensure nil
+;;   :after org
+;;   :custom
+;;   (org-latex-compiler "xelatex")
+;;   :config
+;;   (add-to-list
+;;    'org-latex-classes
+;;    '("org-plain-latex"
+;;      "\\documentclass{article}
+;;      [NO-DEFAULT-PACKAGES]
+;;      [PACKAGES]
+;;      [EXTRA]"
+;;      ("\\section{%s}"       . "\\section*{%s}")
+;;      ("\\subsection{%s}"    . "\\subsection*{%s}")
+;;      ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+;;      ("\\paragraph{%s}"     . "\\paragraph*{%s}")
+;;      ("\\subparagraph{%s}"  . "\\subparagraph*{%s}"))))
 
 ;;;; Emms
 
@@ -695,7 +770,6 @@
 (add-hook 'after-init-hook
           `(lambda ()
              (setq gc-cons-threshold 800000)
-	     (message "ok")
              (garbage-collect)) t)
 
 ;;; init.el ends here
