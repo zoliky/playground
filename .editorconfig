@@ -1,8 +1,3 @@
 # This file is for unifying the coding style for different editors and IDEs
 # More information at https://editorconfig.org
 
-[*.el]
-indent_style = unset
-indent_size = unset
-end_of_line = unset
-charset = unset
