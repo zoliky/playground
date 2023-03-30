@@ -28,14 +28,14 @@
 ;;; Code:
 ;;;; Package management
 
-;; Configure the package system
+;; Initialize the package system
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 (setq package-archive-priorities '(("melpa"  . 100)
                                    ("gnu"    .  50)
                                    ("nongnu" .  25)))
 
-;; Ensure that the use-package macro is installed
+;; Ensure that use-package is installed
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
@@ -43,6 +43,13 @@
 (use-package use-package
   :custom
   (use-package-always-ensure t))
+
+(use-package benchmark-init
+  :config
+  ;; To disable collection of benchmark data after init is done.
+  (add-hook 'after-init-hook 'benchmark-init/deactivate))
+
+;(setq garbage-collection-messages t)
 
 ;;;; Defaults
 
@@ -54,10 +61,10 @@
 ;; File used for storing customization information
 (setq custom-file (locate-user-emacs-file "custom.el"))
 
-;; Better Defaults
+;; Better defaults
 (setq-default
  inhibit-startup-screen t             ; Disable the startup screen
- initial-scratch-message nil          ; Empty the initial *scratch* buffer
+ ;initial-scratch-message nil          ; Empty the initial *scratch* buffer
  indent-tabs-mode nil                 ; Insert space characters instead of tabs
  tab-width 2                          ; The number of spaces a tab is equal to
  fill-column 78                       ; Line length above which to break a line
@@ -99,6 +106,9 @@
 
 ;; Default
 (set-face-attribute 'default nil :family "Hack" :height 180)
+
+;; Variable-pitch
+(set-face-attribute 'variable-pitch nil :family "DejaVu Sans" :height 160)
 
 ;;;; Spell checking
 
@@ -156,6 +166,7 @@
          ("C-x b" . consult-buffer)))
 
 (use-package consult-notes
+  :bind ("<f5>" . consult-notes)
   :config
   (consult-notes-denote-mode))
 
@@ -195,6 +206,13 @@
   :init
   (load-theme 'ef-summer t)
   :bind ("<f9>" . ef-themes-select))
+
+;;;;; Editorconfig
+
+(use-package editorconfig
+  :defer 0.5
+  :config
+  (editorconfig-mode))
 
 ;;;;; Gruvbox
 
@@ -253,7 +271,7 @@
 
 (use-package move-text
   :bind (("M-p" . move-text-up)
-	 ("M-n" . move-text-down))
+         ("M-n" . move-text-down))
   :config
   (move-text-default-bindings))
 
@@ -409,10 +427,6 @@
                          (:flags      .  6)
                          (:from       . 22)
                          (:subject)))
-;  (mu4e-headers-fields `((:human-date . 12)
-;                         (:flags      .  6)
-;                         (:from       . 22)
-;                         (:subject    . ,(- (window-body-width) 50))))
   :config
   (setq mu4e-headers-attach-mark '("a" . "📎")))
 
@@ -491,12 +505,6 @@
                       (:maildir "/gmail-zolikydev/[Gmail].Drafts"    :key ?d)
                       (:maildir "/gmail-zolikydev/[Gmail].Trash"     :key ?t))))))))
 
-;(run-at-time
-; "5 sec" nil (lambda ()
-;                (let ((current-prefix-arg '(4)))
-;                  (call-interactively 'mu4e)
-;                  (message nil))))
-
 (use-package mu4e-alert
   :after mu4e
   :custom
@@ -508,62 +516,62 @@
 
 ;;;; Custom input methods
 
-;; (quail-define-package
-;;    "custom-input-method" "" "" t
-;;    "Custom input method
+(quail-define-package
+   "custom-input-method" "" "" t
+   "Custom input method
 
-;;   Documentation goes here."
-;;    nil t nil nil nil nil nil nil nil nil t)
+  Documentation goes here."
+   nil t nil nil nil nil nil nil nil nil t)
 
-;;   (quail-define-rules
-;;    ;; Phonetic symbols
-;;    ("\\uh" ?ə) ; UNSTRESSED SCHWA VOWEL
-;;    ("\\uH" ?ʌ) ; STRESSED SCHWA VOWEL
-;;    ("\\ii" ?ɪ) ; NEAR-CLOSE NEAR-FRONT UNROUNDED VOWEL
-;;    ("\\uu" ?ʊ) ; NEAR-CLOSE NEAR-BACK ROUNDED VOWEL
-;;    ("\\ee" ?ɛ) ; OPEN-MID FRONT UNROUNDED VOWEL
-;;    ("\\er" ?ɜ) ; OPEN-MID CENTRAL UNROUNDED VOWEL
-;;    ("\\oh" ?ɔ) ; OPEN-MID BACK ROUNDED VOWEL
-;;    ("\\ae" ?æ) ; NEAR-OPEN FRONT UNROUNDED VOWEL
-;;    ("\\ah" ?ɑ) ; OPEN BACK UNROUNDED VOWEL
-;;    ("\\th" ?θ) ; VOICELESS DENTAL FRICATIVE
-;;    ("\\tH" ?ð) ; VOICED DENTAL FRICATIVE
-;;    ("\\sh" ?ʃ) ; VOICELESS POSTALVEOLAR FRICATIVE
-;;    ("\\zs" ?ʒ) ; VOICED POSTALVEOLAR FRICATIVE
-;;    ("\\be" ?β) ; VOICED BILABIAL FRICATIVE
-;;    ("\\vv" ?ɣ) ; VOICED VELAR FRICATIVE
-;;    ("\\hh" ?ɥ) ; VOICED LABIAL-PALATAL APPROXIMANT
-;;    ("\\la" ?ʎ) ; VOICED PALATAL LATERAL APPROXIMANT
-;;    ("\\jj" ?ʝ) ; VOICED PALATAL FRICATIVE
-;;    ("\\mm" ?ɱ) ; VOICED LABIODENTAL NASAL
-;;    ("\\ts" ?ʧ) ; VOICELESS POSTALVEOLAR AFFRICATE
-;;    ("\\dz" ?ʤ) ; VOICED POSTALVEOLAR AFFRICATE
-;;    ("\\ny" ?ɲ) ; VOICED PALATAL NASAL
-;;    ("\\ng" ?ŋ) ; VOICED VELAR NASAL
-;;    ("\\rr" ?ɹ) ; VOICED ALVEOLAR APPROXIMANT
-;;    ("\\ta" ?ɾ) ; VOICED ALVEOLAR TAP
-;;    ("\\ir" ?ʁ) ; VOICED UVULAR FRICATIVE
-;;    ("\\dl" ?ɫ) ; VELARIZED ALVEOLAR LATERAL APPROXIMANT
-;;    ("\\as" ?ʰ) ; ASPIRATED
-;;    ("\\ps" ?ˈ) ; PRIMARY STRESS
-;;    ("\\ss" ?ˌ) ; SECONDARY STRESS
-;;    ("\\li" ?‿) ; LIAISON
-;;    ("\\ri" ?↗) ; RISING INFLECTION
-;;    ("\\fi" ?↘) ; FALLING INFLECTION
-;;    ("\\lw" ?ʷ) ; LABIAL HIGH ROUNDED
-;;    ("\\ly" ?ʸ) ; PALATAL HIGH UNROUNDED
-;;    ("\\st" ?̚) ; NO AUDIBLE RELEASE
+  (quail-define-rules
+   ;; Phonetic symbols
+   ("\\uh" ?ə) ; UNSTRESSED SCHWA VOWEL
+   ("\\uH" ?ʌ) ; STRESSED SCHWA VOWEL
+   ("\\ii" ?ɪ) ; NEAR-CLOSE NEAR-FRONT UNROUNDED VOWEL
+   ("\\uu" ?ʊ) ; NEAR-CLOSE NEAR-BACK ROUNDED VOWEL
+   ("\\ee" ?ɛ) ; OPEN-MID FRONT UNROUNDED VOWEL
+   ("\\er" ?ɜ) ; OPEN-MID CENTRAL UNROUNDED VOWEL
+   ("\\oh" ?ɔ) ; OPEN-MID BACK ROUNDED VOWEL
+   ("\\ae" ?æ) ; NEAR-OPEN FRONT UNROUNDED VOWEL
+   ("\\ah" ?ɑ) ; OPEN BACK UNROUNDED VOWEL
+   ("\\th" ?θ) ; VOICELESS DENTAL FRICATIVE
+   ("\\tH" ?ð) ; VOICED DENTAL FRICATIVE
+   ("\\sh" ?ʃ) ; VOICELESS POSTALVEOLAR FRICATIVE
+   ("\\zs" ?ʒ) ; VOICED POSTALVEOLAR FRICATIVE
+   ("\\be" ?β) ; VOICED BILABIAL FRICATIVE
+   ("\\vv" ?ɣ) ; VOICED VELAR FRICATIVE
+   ("\\hh" ?ɥ) ; VOICED LABIAL-PALATAL APPROXIMANT
+   ("\\la" ?ʎ) ; VOICED PALATAL LATERAL APPROXIMANT
+   ("\\jj" ?ʝ) ; VOICED PALATAL FRICATIVE
+   ("\\mm" ?ɱ) ; VOICED LABIODENTAL NASAL
+   ("\\ts" ?ʧ) ; VOICELESS POSTALVEOLAR AFFRICATE
+   ("\\dz" ?ʤ) ; VOICED POSTALVEOLAR AFFRICATE
+   ("\\ny" ?ɲ) ; VOICED PALATAL NASAL
+   ("\\ng" ?ŋ) ; VOICED VELAR NASAL
+   ("\\rr" ?ɹ) ; VOICED ALVEOLAR APPROXIMANT
+   ("\\ta" ?ɾ) ; VOICED ALVEOLAR TAP
+   ("\\ir" ?ʁ) ; VOICED UVULAR FRICATIVE
+   ("\\dl" ?ɫ) ; VELARIZED ALVEOLAR LATERAL APPROXIMANT
+   ("\\as" ?ʰ) ; ASPIRATED
+   ("\\ps" ?ˈ) ; PRIMARY STRESS
+   ("\\ss" ?ˌ) ; SECONDARY STRESS
+   ("\\li" ?‿) ; LIAISON
+   ("\\ri" ?↗) ; RISING INFLECTION
+   ("\\fi" ?↘) ; FALLING INFLECTION
+   ("\\lw" ?ʷ) ; LABIAL HIGH ROUNDED
+   ("\\ly" ?ʸ) ; PALATAL HIGH UNROUNDED
+   ("\\st" ?̚) ; NO AUDIBLE RELEASE
 
-;;    ;; Common symbols
-;;    ("\\copy"   ?©)  ; COPYRIGHT
-;;    ("\\tm"     ?™)  ; TRADEMARK
-;;    ("\\mdot"   ?·)  ; INTERPUNCT
-;;    ("\\ha"     ?á)  ; A-ACUTE
-;;    ("\\endash" ?–)  ; EN DASH
-;;    ("\\emdash" ?—)  ; EM DASH
-;;    ("\\female" ?♀)  ; FEMALE
-;;    ("\\male"   ?♂)  ; MALE
-;;    ("\\eur"    ?€)) ; EURO
+   ;; Common symbols
+   ("\\copy"   ?©)  ; COPYRIGHT
+   ("\\tm"     ?™)  ; TRADEMARK
+   ("\\mdot"   ?·)  ; INTERPUNCT
+   ("\\ha"     ?á)  ; A-ACUTE
+   ("\\endash" ?–)  ; EN DASH
+   ("\\emdash" ?—)  ; EM DASH
+   ("\\female" ?♀)  ; FEMALE
+   ("\\male"   ?♂)  ; MALE
+   ("\\eur"    ?€)) ; EURO
 
 ;;;; Org mode
 ;;;;; Org
@@ -730,8 +738,8 @@
 ;;;; Emms
 
 (use-package emms
-  :bind (("C-c u"  . emms)
-         ("C-c U"  . emms-browser)
+  :bind (("C-c p"  . emms)
+         ("C-c P"  . emms-browser)
          ("<C-f1>" . emms-show)
          ("<C-f2>" . emms-volume-lower)
          ("<C-f3>" . emms-volume-raise)
@@ -769,7 +777,8 @@
 
 (add-hook 'after-init-hook
           `(lambda ()
-             (setq gc-cons-threshold 800000)
+             ;(setq gc-cons-threshold 800000)
+             (setq gc-cons-threshold (* 20 1024 1024))
              (garbage-collect)) t)
 
 ;;; init.el ends here
