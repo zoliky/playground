@@ -112,26 +112,34 @@
 
 ;;;; Spell checking
 
-(use-package ispell
-  :ensure nil
-  :defer 0.5
-  :custom
-  (ispell-program-name "hunspell")
+;(use-package ispell
+;  :ensure nil
+;  :defer 0.5
+;  :custom
+;  (ispell-program-name "hunspell")
   ;; English (US), Hungarian, and Romanian
-  (ispell-dictionary "en_US,hu_HU,ro_RO")
-  :config
-  (ispell-set-spellchecker-params)
-  (ispell-hunspell-add-multi-dic "en_US,hu_HU,ro_RO"))
+;  (ispell-dictionary "en_US,hu_HU,ro_RO")
+;  :config
+;  (ispell-set-spellchecker-params)
+;  (ispell-hunspell-add-multi-dic "en_US,hu_HU,ro_RO"))
 
-(use-package flyspell
-  :ensure nil
-  :after ispell
-  :bind ("C-c s" . flyspell-mode))
+;(use-package flyspell
+;  :ensure nil
+;  :after ispell
+;  :bind ("C-c s" . flyspell-mode))
 
-(use-package flyspell-correct
-  :after flyspell
-  :bind (:map flyspell-mode-map
-	      ("C-;" . flyspell-correct-wrapper)))
+;(use-package flyspell-correct
+;  :after flyspell
+;  :bind (:map flyspell-mode-map
+;              ("C-;" . flyspell-correct-wrapper)))
+
+;(use-package jinx
+  ;:custom
+  ;(jinx-languages "en_US,hu_HU,ro_RO")
+ ; :bind (("C-c s" . jinx-mode)
+ ;        ("C-;"   . jinx-correct)
+ ;        ([remap ispell-word] . jinx-correct)))
+
 
 ;;;; Packages
 ;;;;; Avy
@@ -152,7 +160,7 @@
   (corfu-auto-prefix 1)
   (corfu-auto-delay 0.1)
   (corfu-quit-no-match 'separator)
-  (corfu-excluded-modes '(org-mode mu4e-compose-mode)))
+  (corfu-exclude-modes '(org-mode mu4e-compose-mode)))
 
 (use-package cape
   :init
@@ -214,6 +222,14 @@
   :config
   (editorconfig-mode))
 
+;;;;; Exec path
+
+;(use-package exec-path-from-shell
+;  :init
+;  (setq exec-path-from-shell-arguments nil)
+;  :config
+;  (exec-path-from-shell-initialize))
+
 ;;;;; Gruvbox
 
 (use-package gruvbox-theme
@@ -238,6 +254,13 @@
 (use-package ibuffer
   :ensure nil
   :bind ("C-x C-b" . ibuffer))
+
+(use-package ibuffer-project
+  :after ibuffer
+  :hook (ibuffer . (lambda ()
+                     (setq ibuffer-filter-groups (ibuffer-project-generate-filter-groups))
+                     (unless (eq ibuffer-sorting-mode 'project-file-relative)
+                       (ibuffer-do-sort-by-project-file-relative)))))
 
 ;;;;; Indent guides
 
@@ -514,6 +537,77 @@
   (mu4e-alert-enable-mode-line-display)
   (mu4e-alert-set-default-style 'libnotify))
 
+;;;; Elfeed
+
+(use-package elfeed
+  :preface
+  ;; Mark all feeds as read
+  (defun king/elfeed-search-mark-all-read ()
+    (interactive)
+    (mark-whole-buffer)
+    (elfeed-search-untag-all-unread))
+
+  ;; Open selected feeds in a browser
+  (defun king/elfeed-search-browse-url (&optional use-generic-p)
+    (interactive "P")
+    (let ((entries (elfeed-search-selected)))
+      (cl-loop for entry in entries
+               when (elfeed-entry-link entry)
+               do (if use-generic-p
+                      (browse-url-generic (elfeed-entry-link entry))
+                    (browse-url (elfeed-entry-link entry))))
+      (mapc #'elfeed-search-update-entry entries)
+      (unless (or elfeed-search-remain-on-entry (use-region-p)))))
+
+  ;; Play podcasts and YouTube videos
+  (defun king/elfeed-search-open-enclosure (&optional use-generic-p)
+    (interactive "P")
+    (let ((entries (elfeed-search-selected)))
+      (cl-loop for entry in entries
+               when (elfeed-entry-link entry)
+               do (call-process-shell-command
+                   (format "mpv --force-window '%s'" (elfeed-entry-link entry)) nil 0))
+      (mapc #'elfeed-search-update-entry entries)
+      (unless (or elfeed-search-remain-on-entry (use-region-p))))
+    (message "Loading...")
+    (add-hook 'focus-out-hook (lambda () (message nil))))
+  :bind (("C-c e" . elfeed)
+         :map elfeed-search-mode-map
+         ("M" . elfeed-toggle-starred)
+         ("b" . king/elfeed-search-browse-url)
+         ("R" . king/elfeed-search-mark-all-read)
+         ("P" . king/elfeed-search-open-enclosure))
+  :custom
+  (elfeed-feeds '("https://www.phoronix.com/rss.php"))
+  (elfeed-db-directory "~/.emacs.d/elfeed/")
+  :config
+  (setq shr-width 80))
+
+(use-package elfeed-search
+  :ensure nil
+  :after elfeed
+  :custom
+  (elfeed-search-title-max-width 100)
+  (elfeed-search-filter "@3-months-ago +unread ")
+  :config
+  ;; Star and unstar feeds
+  (defalias 'elfeed-toggle-starred
+    (elfeed-expose #'elfeed-search-toggle-all 'starred))
+  ;; Custom tag faces
+  (defface elfeed-search-starred-title-face nil "Starred feeds")
+  (push '(starred elfeed-search-starred-title-face) elfeed-search-face-alist)
+  (defface elfeed-search-podcast-title-face nil "Podcast entries")
+  (push '(podcast elfeed-search-podcast-title-face) elfeed-search-face-alist)
+  (defface elfeed-search-youtube-title-face nil "YouTube entries")
+  (push '(youtube elfeed-search-youtube-title-face) elfeed-search-face-alist))
+
+;(use-package elfeed-org
+;  :after elfeed
+;  :init
+;  (elfeed-org)
+;  :custom
+;  (rmh-elfeed-org-files '("~/orgfiles/elfeed.org")))
+
 ;;;; Custom input methods
 
 (quail-define-package
@@ -680,60 +774,60 @@
 
 ;;;;; Calendar
 
-;; (use-package holidays
-;;   :ensure nil
-;;   :after org
-;;   :custom
-;;   (holiday-bahai-holidays nil)
-;;   (holiday-christian-holidays
-;;    '((holiday-fixed  1  6     "Epiphany (Vízkereszt)")
-;;      (holiday-easter-etc -46  "Ash Wednesday (Hamvazószerda)")
-;;      (holiday-easter-etc -7   "Palm Sunday (Virágvasárnap)")
-;;      (holiday-easter-etc -2   "Holy Friday (Nagypéntek)")
-;;      (holiday-easter-etc  0   "Easter Sunday (Húsvétvasárnap)")
-;;      (holiday-easter-etc  1   "Easter Monday (Húsvéthétfő)")
-;;      (holiday-easter-etc 39   "Ascension (Áldozócsütörtök)")
-;;      (holiday-easter-etc 49   "Pentecost (Pünkösd)")
-;;      (holiday-easter-etc 56   "Trinity Sunday (Szentháromság Vasárnapja)")
-;;      (holiday-easter-etc 60   "Corpus Christi (Úrnapja)")
-;;      (holiday-greek-orthodox-easter)
-;;      (holiday-fixed  8 15     "Assumption (Nagyboldogasszony)")
-;;      (holiday-fixed 11  1     "All Saints' Day (Mindenszentek Napja)")
-;;      (holiday-fixed 11  2     "Day of the Dead (Hallotak Napja)")
-;;      (holiday-fixed 12 25     "Christmas Day (Karácsony Napja)")))
-;;   (holiday-general-holidays
-;;    '((holiday-fixed  1  1     "New Year's Day (Újév)")
-;;      (holiday-fixed  2 14     "Valentine's Day (Valentin Nap)")
-;;      (holiday-fixed  3  8     "International Women's Day (Nemzetközi Nőnap)")
-;;      (holiday-fixed 10 31     "Halloween (Észak-Amerikai Ünnep)")
-;;      (holiday-float 11  4  4  "Thanksgiving (Észak-Amerikai Ünnep)")))
-;;   (holiday-local-holidays
-;;    '((holiday-fixed  5  1     "Labor Day (A Munka Ünnepe)")
-;;      (holiday-float  5  0  1  "Mother's Day (Anyák Napja)")))
-;;   (holiday-hebrew-holidays nil)
-;;   (holiday-islamic-holidays nil)
-;;   (holiday-oriental-holidays nil))
+(use-package holidays
+  :ensure nil
+  :after org
+  :custom
+  (holiday-bahai-holidays nil)
+  (holiday-christian-holidays
+   '((holiday-fixed  1  6     "Epiphany (Vízkereszt)")
+     (holiday-easter-etc -46  "Ash Wednesday (Hamvazószerda)")
+     (holiday-easter-etc -7   "Palm Sunday (Virágvasárnap)")
+     (holiday-easter-etc -2   "Holy Friday (Nagypéntek)")
+     (holiday-easter-etc  0   "Easter Sunday (Húsvétvasárnap)")
+     (holiday-easter-etc  1   "Easter Monday (Húsvéthétfő)")
+     (holiday-easter-etc 39   "Ascension (Áldozócsütörtök)")
+     (holiday-easter-etc 49   "Pentecost (Pünkösd)")
+     (holiday-easter-etc 56   "Trinity Sunday (Szentháromság Vasárnapja)")
+     (holiday-easter-etc 60   "Corpus Christi (Úrnapja)")
+     (holiday-greek-orthodox-easter)
+     (holiday-fixed  8 15     "Assumption (Nagyboldogasszony)")
+     (holiday-fixed 11  1     "All Saints' Day (Mindenszentek Napja)")
+     (holiday-fixed 11  2     "Day of the Dead (Hallotak Napja)")
+     (holiday-fixed 12 25     "Christmas Day (Karácsony Napja)")))
+  (holiday-general-holidays
+   '((holiday-fixed  1  1     "New Year's Day (Újév)")
+     (holiday-fixed  2 14     "Valentine's Day (Valentin Nap)")
+     (holiday-fixed  3  8     "International Women's Day (Nemzetközi Nőnap)")
+     (holiday-fixed 10 31     "Halloween (Észak-Amerikai Ünnep)")
+     (holiday-float 11  4  4  "Thanksgiving (Észak-Amerikai Ünnep)")))
+  (holiday-local-holidays
+   '((holiday-fixed  5  1     "Labor Day (A Munka Ünnepe)")
+     (holiday-float  5  0  1  "Mother's Day (Anyák Napja)")))
+  (holiday-hebrew-holidays nil)
+  (holiday-islamic-holidays nil)
+  (holiday-oriental-holidays nil))
 
 ;;;;; Export
 
-;; (use-package ox-latex
-;;   :ensure nil
-;;   :after org
-;;   :custom
-;;   (org-latex-compiler "xelatex")
-;;   :config
-;;   (add-to-list
-;;    'org-latex-classes
-;;    '("org-plain-latex"
-;;      "\\documentclass{article}
-;;      [NO-DEFAULT-PACKAGES]
-;;      [PACKAGES]
-;;      [EXTRA]"
-;;      ("\\section{%s}"       . "\\section*{%s}")
-;;      ("\\subsection{%s}"    . "\\subsection*{%s}")
-;;      ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-;;      ("\\paragraph{%s}"     . "\\paragraph*{%s}")
-;;      ("\\subparagraph{%s}"  . "\\subparagraph*{%s}"))))
+(use-package ox-latex
+  :ensure nil
+  :after org
+  :custom
+  (org-latex-compiler "xelatex")
+  :config
+  (add-to-list
+   'org-latex-classes
+   '("org-plain-latex"
+     "\\documentclass{article}
+     [NO-DEFAULT-PACKAGES]
+     [PACKAGES]
+     [EXTRA]"
+     ("\\section{%s}"       . "\\section*{%s}")
+     ("\\subsection{%s}"    . "\\subsection*{%s}")
+     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+     ("\\paragraph{%s}"     . "\\paragraph*{%s}")
+     ("\\subparagraph{%s}"  . "\\subparagraph*{%s}"))))
 
 ;;;; Emms
 
