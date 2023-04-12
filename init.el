@@ -51,7 +51,8 @@
 
 ;(setq garbage-collection-messages t)
 
-;;;; Defaults
+;;;; General configuration
+;;;;; Defaults
 
 (add-hook 'emacs-startup-hook
 	  (lambda ()
@@ -64,7 +65,7 @@
 ;; Better defaults
 (setq-default
  inhibit-startup-screen t             ; Disable the startup screen
- ;initial-scratch-message nil          ; Empty the initial *scratch* buffer
+ initial-scratch-message nil          ; Empty the initial *scratch* buffer
  indent-tabs-mode nil                 ; Insert space characters instead of tabs
  tab-width 2                          ; The number of spaces a tab is equal to
  fill-column 78                       ; Line length above which to break a line
@@ -102,46 +103,51 @@
 ;; Enable line numbering
 (use-package display-line-numbers
   :ensure nil
-  :hook ((prog-mode conf-mode) . display-line-numbers-mode))
+  :hook ((text-mode prog-mode conf-mode) . display-line-numbers-mode))
 
 ;; Default
 (set-face-attribute 'default nil :family "Hack" :height 180)
 
 ;; Variable-pitch
-(set-face-attribute 'variable-pitch nil :family "DejaVu Sans" :height 160)
+;(set-face-attribute 'variable-pitch nil :family "Charis SIL Compact" :height 180)
 
-;;;; Spell checking
+;;;;; Spell checking
 
-;(use-package ispell
-;  :ensure nil
-;  :defer 0.5
-;  :custom
-;  (ispell-program-name "hunspell")
+(use-package ispell
+  :ensure nil
+  :defer 0.5
+  :custom
+  (ispell-program-name "hunspell")
   ;; English (US), Hungarian, and Romanian
-;  (ispell-dictionary "en_US,hu_HU,ro_RO")
-;  :config
-;  (ispell-set-spellchecker-params)
-;  (ispell-hunspell-add-multi-dic "en_US,hu_HU,ro_RO"))
+  (ispell-dictionary "en_US,hu_HU,ro_RO")
+  :config
+  (ispell-set-spellchecker-params)
+  (ispell-hunspell-add-multi-dic "en_US,hu_HU,ro_RO"))
 
-;(use-package flyspell
-;  :ensure nil
-;  :after ispell
-;  :bind ("C-c s" . flyspell-mode))
+(use-package flyspell
+  :ensure nil
+  :after ispell
+  :bind ("C-c s" . flyspell-mode))
 
-;(use-package flyspell-correct
-;  :after flyspell
-;  :bind (:map flyspell-mode-map
-;              ("C-;" . flyspell-correct-wrapper)))
-
-;(use-package jinx
-  ;:custom
-  ;(jinx-languages "en_US,hu_HU,ro_RO")
- ; :bind (("C-c s" . jinx-mode)
- ;        ("C-;"   . jinx-correct)
- ;        ([remap ispell-word] . jinx-correct)))
-
+(use-package flyspell-correct
+  :after flyspell
+  :bind (:map flyspell-mode-map
+              ("C-;" . flyspell-correct-wrapper)))
 
 ;;;; Packages
+;;;;; Color schemes
+;;;;;; Ef themes
+
+(use-package ef-themes
+  :init
+  (load-theme 'ef-summer t)
+  :bind ("<f9>" . ef-themes-select))
+
+;;;;;; Modus themes
+
+(use-package modus-themes
+  :defer t)
+
 ;;;;; Avy
 
 ;; Avy allows to quickly jump to any visible position in a buffer
@@ -175,6 +181,8 @@
 
 (use-package consult-notes
   :bind ("<f5>" . consult-notes)
+  :custom
+  (consult-notes-denote-files-function (denote-directory-text-only-files))
   :config
   (consult-notes-denote-mode))
 
@@ -208,13 +216,6 @@
   :custom
   (dired-hide-dotfiles-verbose nil))
 
-;;;;; Ef themes
-
-(use-package ef-themes
-  :init
-  (load-theme 'ef-summer t)
-  :bind ("<f9>" . ef-themes-select))
-
 ;;;;; Editorconfig
 
 (use-package editorconfig
@@ -222,13 +223,18 @@
   :config
   (editorconfig-mode))
 
+;;;;; Eglot
+
+(use-package eglot
+  :defer t)
+
 ;;;;; Exec path
 
-;(use-package exec-path-from-shell
-;  :init
-;  (setq exec-path-from-shell-arguments nil)
-;  :config
-;  (exec-path-from-shell-initialize))
+(use-package exec-path-from-shell
+  :init
+  (setq exec-path-from-shell-arguments nil)
+  :config
+  (exec-path-from-shell-initialize))
 
 ;;;;; Gruvbox
 
@@ -284,11 +290,6 @@
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'"       . markdown-mode)
          ("\\.markdown\\'" . markdown-mode)))
-
-;;;;; Modus themes
-
-(use-package modus-themes
-  :defer t)
 
 ;;;;; Move text
 
@@ -578,7 +579,13 @@
          ("R" . king/elfeed-search-mark-all-read)
          ("P" . king/elfeed-search-open-enclosure))
   :custom
-  (elfeed-feeds '("https://www.phoronix.com/rss.php"))
+  (elfeed-feeds '(("https://www.phoronix.com/rss.php")
+                  ("https://fedoramagazine.org/feed")
+                  ("https://hup.hu/feedburner")
+                  ("https://www.indieretronews.com/feeds/posts/default")
+                  ("https://www.osnews.com/feed")
+                  ("https://pragmaticemacs.wordpress.com/feed")
+                  ("https://www.youtube.com/feeds/videos.xml?channel_id=UC8uT9cgJorJPWu7ITLGo9Ww")))
   (elfeed-db-directory "~/.emacs.d/elfeed/")
   :config
   (setq shr-width 80))
@@ -667,6 +674,18 @@
    ("\\male"   ?♂)  ; MALE
    ("\\eur"    ?€)) ; EURO
 
+;;;; Custom functions
+
+;; Move the cursor to the first non-whitespace character of the line.
+;; If the cursor is already there, then move it to the beginning of the line.
+
+(defun king/smarter-beginning-of-line ()
+  (interactive)
+  (if (= (point) (progn (back-to-indentation) (point)))
+      (beginning-of-line)))
+
+(keymap-global-set "C-a" 'king/smarter-beginning-of-line)
+
 ;;;; Org mode
 ;;;;; Org
 
@@ -674,7 +693,7 @@
   :ensure nil
   :hook (org-mode . (lambda ()
                       (org-indent-mode)))
-  :bind ("C-c l" . org-store-link)
+  :bind (("C-c l" . org-store-link))
   :custom
   (org-ellipsis " ▾")
   (org-tags-column 0)
