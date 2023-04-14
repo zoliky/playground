@@ -103,7 +103,7 @@
 ;; Enable line numbering
 (use-package display-line-numbers
   :ensure nil
-  :hook ((text-mode prog-mode conf-mode) . display-line-numbers-mode))
+  :hook ((prog-mode conf-mode) . display-line-numbers-mode))
 
 ;; Default
 (set-face-attribute 'default nil :family "Hack" :height 180)
@@ -143,18 +143,24 @@
   (load-theme 'ef-summer t)
   :bind ("<f9>" . ef-themes-select))
 
+;;;;;; Gruvbox
+
+(use-package gruvbox-theme
+  :defer t)
+
 ;;;;;; Modus themes
 
 (use-package modus-themes
   :defer t)
 
-;;;;; Avy
+;;;;; General enhancements
+;;;;;; Avy
 
 ;; Avy allows to quickly jump to any visible position in a buffer
 (use-package avy
   :bind ("M-s" . avy-goto-char))
 
-;;;;; Corfu
+;;;;;; Corfu
 
 ;; Corfu is a completion UI for Emacs
 (use-package corfu
@@ -173,7 +179,7 @@
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
   (add-to-list 'completion-at-point-functions #'cape-file))
 
-;;;;; Consult
+;;;;;; Consult
 
 (use-package consult
   :bind (("C-s"   . consult-line)
@@ -186,7 +192,7 @@
   :config
   (consult-notes-denote-mode))
 
-;;;;; Dired
+;;;;;; Dired
 
 (use-package dired
   :ensure nil
@@ -216,37 +222,37 @@
   :custom
   (dired-hide-dotfiles-verbose nil))
 
-;;;;; Editorconfig
+;;;;;; Doom modeline
+
+(use-package doom-modeline
+  :after all-the-icons
+  :init
+  (doom-modeline-mode)
+  :custom
+  (doom-modeline-mu4e t)
+  (doom-modeline-height 38))
+
+;;;;;; Editorconfig
 
 (use-package editorconfig
   :defer 0.5
   :config
   (editorconfig-mode))
 
-;;;;; Eglot
+;;;;;; Eglot
 
 (use-package eglot
   :defer t)
 
-;;;;; Exec path
+;;;;;; Exec path
 
-(use-package exec-path-from-shell
-  :init
-  (setq exec-path-from-shell-arguments nil)
-  :config
-  (exec-path-from-shell-initialize))
+;; (use-package exec-path-from-shell
+;;   :init
+;;   (setq exec-path-from-shell-arguments nil)
+;;   :config
+;;   (exec-path-from-shell-initialize))
 
-;;;;; Gruvbox
-
-(use-package gruvbox-theme
-  :defer t)
-
-;;;;; JavaScript
-
-(use-package js2-mode
-  :mode "\\.jsx?\\'")
-
-;;;;; Helpful
+;;;;;; Helpful
 
 (use-package helpful
   :bind
@@ -255,7 +261,13 @@
   ([remap describe-variable] . helpful-variable)
   ([remap describe-function] . helpful-callable))
 
-;;;;; Ibuffer
+;;;;;; Icons
+
+(use-package all-the-icons
+  :custom
+  (all-the-icons-scale-factor 1))
+
+;;;;;; Ibuffer
 
 (use-package ibuffer
   :ensure nil
@@ -268,7 +280,7 @@
                      (unless (eq ibuffer-sorting-mode 'project-file-relative)
                        (ibuffer-do-sort-by-project-file-relative)))))
 
-;;;;; Indent guides
+;;;;;; Indent guides
 
 (use-package highlight-indent-guides
   :hook (prog-mode . highlight-indent-guides-mode)
@@ -276,22 +288,12 @@
   (highlight-indent-guides-responsive 'top)
   (highlight-indent-guides-method 'character))
 
-;;;;; Magit
+;;;;;; Magit
 
 (use-package magit
   :bind ("C-c g" . magit-status))
 
-;;;;; Markdown
-
-(use-package markdown-mode
-  :init
-  (setq markdown-command "multimarkdown")
-  :hook (markdown-mode . (lambda () (display-line-numbers-mode -1)))
-  :mode (("README\\.md\\'" . gfm-mode)
-         ("\\.md\\'"       . markdown-mode)
-         ("\\.markdown\\'" . markdown-mode)))
-
-;;;;; Move text
+;;;;;; Move text
 
 (use-package move-text
   :bind (("M-p" . move-text-up)
@@ -299,7 +301,7 @@
   :config
   (move-text-default-bindings))
 
-;;;;; Olivetti
+;;;;;; Olivetti
 
 (use-package olivetti
   :hook ((org-mode          . olivetti-mode)
@@ -310,29 +312,24 @@
   :custom
   (olivetti-body-width 80))
 
-;;;;; Outshine
+;;;;;; Outshine
 
 (use-package outshine
   :defer t)
 
-;;;;; Rainbow delimiters
+;;;;;; Rainbow delimiters
 
 ;; Rainbow delimiters highlights delimiters such as parentheses,
 ;; brackets or braces according to their depth.
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
-;;;;; Try
+;;;;;; Try
 
 (use-package try
   :defer t)
 
-;;;;; TOML
-
-(use-package toml-mode
-  :mode "\\.toml\\'")
-
-;;;;; Vertico
+;;;;;; Vertico
 
 (use-package vertico
   :custom
@@ -361,7 +358,12 @@
   :config
   (marginalia-mode))
 
-;;;;; Web mode
+(use-package all-the-icons-completion
+  :after all-the-icons
+  :config
+  (all-the-icons-completion-mode))
+
+;;;;;; Web mode
 
 (use-package web-mode
    :mode "\\.html\\'"
@@ -377,7 +379,7 @@
 (use-package auto-rename-tag
    :hook (web-mode . auto-rename-tag-mode))
 
-;;;;; Which key
+;;;;;; Which key
 
 (use-package which-key
   :custom
@@ -385,18 +387,40 @@
   :config
   (which-key-mode))
 
-;;;;; Lua
+;;;;; Languages
+;;;;;; JavaScript
+
+(use-package js2-mode
+  :mode "\\.jsx?\\'")
+;;;;;; Lua
 
 ;; Major mode for editing Lua files
 (use-package lua-mode
   :mode "\\.lua\\'")
 
-;;;;; YAML
+
+;;;;;; YAML
 
 (use-package yaml-mode
   :mode "\\.yml\\'")
 
-;;;;; JSON
+;;;;;; TOML
+
+(use-package toml-mode
+  :mode "\\.toml\\'")
+
+
+;;;;;; Markdown
+
+(use-package markdown-mode
+  :init
+  (setq markdown-command "multimarkdown")
+  :hook (markdown-mode . (lambda () (display-line-numbers-mode -1)))
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'"       . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode)))
+
+;;;;;; JSON
 
 (use-package json-mode
   :mode "\\.json\\'"
@@ -406,7 +430,8 @@
       (json-pretty-print-buffer)))
   :hook (before-save . king/json-mode-before-save-hook))
 
-;;;; Email
+;;;; Applications
+;;;;; Email
 
 (use-package mu4e
   :ensure nil
@@ -538,7 +563,8 @@
   (mu4e-alert-enable-mode-line-display)
   (mu4e-alert-set-default-style 'libnotify))
 
-;;;; Elfeed
+
+;;;;; Elfeed
 
 (use-package elfeed
   :preface
@@ -579,13 +605,6 @@
          ("R" . king/elfeed-search-mark-all-read)
          ("P" . king/elfeed-search-open-enclosure))
   :custom
-  (elfeed-feeds '(("https://www.phoronix.com/rss.php")
-                  ("https://fedoramagazine.org/feed")
-                  ("https://hup.hu/feedburner")
-                  ("https://www.indieretronews.com/feeds/posts/default")
-                  ("https://www.osnews.com/feed")
-                  ("https://pragmaticemacs.wordpress.com/feed")
-                  ("https://www.youtube.com/feeds/videos.xml?channel_id=UC8uT9cgJorJPWu7ITLGo9Ww")))
   (elfeed-db-directory "~/.emacs.d/elfeed/")
   :config
   (setq shr-width 80))
@@ -608,12 +627,60 @@
   (defface elfeed-search-youtube-title-face nil "YouTube entries")
   (push '(youtube elfeed-search-youtube-title-face) elfeed-search-face-alist))
 
-;(use-package elfeed-org
-;  :after elfeed
-;  :init
-;  (elfeed-org)
-;  :custom
-;  (rmh-elfeed-org-files '("~/orgfiles/elfeed.org")))
+(use-package elfeed-org
+  :after elfeed
+  ;:init
+  ;(elfeed-org)
+  :custom
+  (rmh-elfeed-org-files '("~/orgfiles/elfeed.org"))
+  :config
+  (elfeed-org))
+
+;;;;; Emms
+
+(use-package emms
+  :bind (("C-c p"  . emms)
+         ("C-c P"  . emms-browser)
+         ("<C-f1>" . emms-show)
+         ("<C-f2>" . emms-volume-lower)
+         ("<C-f3>" . emms-volume-raise)
+         ("<C-f5>" . emms-previous)
+         ("<C-f6>" . emms-next)
+         ("<C-f7>" . emms-pause)
+         ("<C-f8>" . emms-stop)
+         :map emms-playlist-mode-map
+         ("p" . previous-line)
+         ("n" . next-line))
+  :custom
+  (emms-info-asynchronously t)
+  (emms-volume-amixer-card 1)
+  (emms-volume-amixer-control "PCM")
+  (emms-playlist-buffer-name "*Music*")
+  (emms-player-list '(emms-player-mpv))
+  (emms-source-file-default-directory "/run/media/zoliky/Lara/Music")
+  (emms-source-file-directory-tree-function
+   'emms-source-file-directory-tree-find)
+  :config
+  (require 'emms-setup)
+  (require 'emms-history)
+  (require 'emms-volume)
+  (require 'emms-volume-amixer)
+  (require 'emms-mode-line)
+  (emms-all)
+  (emms-history-load)
+  (emms-mode-line nil))
+
+;;;; Custom functions
+
+;; Move the cursor to the first non-whitespace character of the line.
+;; If the cursor is already there, then move it to the beginning of the line.
+
+(defun king/smarter-beginning-of-line ()
+  (interactive)
+  (if (= (point) (progn (back-to-indentation) (point)))
+      (beginning-of-line)))
+
+(keymap-global-set "C-a" 'king/smarter-beginning-of-line)
 
 ;;;; Custom input methods
 
@@ -673,18 +740,6 @@
    ("\\female" ?♀)  ; FEMALE
    ("\\male"   ?♂)  ; MALE
    ("\\eur"    ?€)) ; EURO
-
-;;;; Custom functions
-
-;; Move the cursor to the first non-whitespace character of the line.
-;; If the cursor is already there, then move it to the beginning of the line.
-
-(defun king/smarter-beginning-of-line ()
-  (interactive)
-  (if (= (point) (progn (back-to-indentation) (point)))
-      (beginning-of-line)))
-
-(keymap-global-set "C-a" 'king/smarter-beginning-of-line)
 
 ;;;; Org mode
 ;;;;; Org
@@ -847,40 +902,6 @@
      ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
      ("\\paragraph{%s}"     . "\\paragraph*{%s}")
      ("\\subparagraph{%s}"  . "\\subparagraph*{%s}"))))
-
-;;;; Emms
-
-(use-package emms
-  :bind (("C-c p"  . emms)
-         ("C-c P"  . emms-browser)
-         ("<C-f1>" . emms-show)
-         ("<C-f2>" . emms-volume-lower)
-         ("<C-f3>" . emms-volume-raise)
-         ("<C-f5>" . emms-previous)
-         ("<C-f6>" . emms-next)
-         ("<C-f7>" . emms-pause)
-         ("<C-f8>" . emms-stop)
-         :map emms-playlist-mode-map
-         ("p" . previous-line)
-         ("n" . next-line))
-  :custom
-  (emms-info-asynchronously t)
-  (emms-volume-amixer-card 1)
-  (emms-volume-amixer-control "PCM")
-  (emms-playlist-buffer-name "*Music*")
-  (emms-player-list '(emms-player-mpv))
-  (emms-source-file-default-directory "/run/media/zoliky/Lara/Music")
-  (emms-source-file-directory-tree-function
-   'emms-source-file-directory-tree-find)
-  :config
-  (require 'emms-setup)
-  (require 'emms-history)
-  (require 'emms-volume)
-  (require 'emms-volume-amixer)
-  (require 'emms-mode-line)
-  (emms-all)
-  (emms-history-load)
-  (emms-mode-line nil))
 
 ;;;; Other
 
