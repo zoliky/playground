@@ -52,8 +52,6 @@
   ;; To disable collection of benchmark data after init is done.
   (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
-;(setq garbage-collection-messages t)
-
 ;;;; General configuration
 ;;;;; Defaults
 
@@ -199,7 +197,9 @@
 
 (use-package dired
   :ensure nil
+  :after all-the-icons-dired
   :bind ("C-x C-j" . dired-jump)
+  :hook (dired-mode . all-the-icons-dired-mode)
   :custom
   (dired-auto-revert-buffer t)
   (delete-by-moving-to-trash t)
@@ -224,6 +224,9 @@
 	      ("." . dired-hide-dotfiles-mode))
   :custom
   (dired-hide-dotfiles-verbose nil))
+
+(use-package all-the-icons-dired
+  :after all-the-icons)
 
 ;;;;;; Doom modeline
 
@@ -275,13 +278,6 @@
 (use-package ibuffer
   :ensure nil
   :bind ("C-x C-b" . ibuffer))
-
-(use-package ibuffer-project
-  :after ibuffer
-  :hook (ibuffer . (lambda ()
-                     (setq ibuffer-filter-groups (ibuffer-project-generate-filter-groups))
-                     (unless (eq ibuffer-sorting-mode 'project-file-relative)
-                       (ibuffer-do-sort-by-project-file-relative)))))
 
 (use-package all-the-icons-ibuffer
   :after (all-the-icons ibuffer)
