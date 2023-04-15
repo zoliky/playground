@@ -61,7 +61,10 @@
 		     (emacs-init-time))))
 
 ;; File used for storing customization information
-(setq custom-file (locate-user-emacs-file "custom.el"))
+;(setq custom-file (locate-user-emacs-file "custom.el"))
+
+;; Disable custom file
+(setq custom-file (make-temp-file "emacs-custom-"))
 
 ;; Better defaults
 (setq-default
@@ -91,12 +94,13 @@
 (use-package files
   :ensure nil
   :custom
-  (backup-directory-alist '(("." . "~/.emacs.d/backup")))
+  (backup-directory-alist `(("." . ,(concat user-emacs-directory "backup"))))
   (backup-by-copying t)               ; Always use copying to create backup files
   (delete-old-versions t)             ; Delete excess backup versions
   (kept-new-versions 6)               ; Number of newest versions to keep when a new backup is made
   (kept-old-versions 2)               ; Number of oldest versions to keep when a new backup is made
   (version-control t)                 ; Make numeric backup versions unconditionally
+  (create-lockfiles nil)              ; Stop creating .# files
   (auto-save-default nil)             ; Stop creating #autosave# files
   (mode-require-final-newline nil)    ; Don't add newlines at the end of files
   (large-file-warning-threshold nil)) ; Open large files without requesting confirmation
@@ -226,7 +230,7 @@
   (dired-hide-dotfiles-verbose nil))
 
 (use-package all-the-icons-dired
-  :after all-the-icons)
+  :after (dired all-the-icons))
 
 ;;;;;; Doom modeline
 
@@ -632,8 +636,6 @@
 
 (use-package elfeed-org
   :after elfeed
-  ;:init
-  ;(elfeed-org)
   :custom
   (rmh-elfeed-org-files '("~/orgfiles/elfeed.org"))
   :config
