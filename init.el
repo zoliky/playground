@@ -24,6 +24,9 @@
 
 ;; This file specifies how to initialize Emacs
 ;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html
+;;
+;; For improved navigation of this file, it is recommended to utilize the
+;; outshine package, which offers folding capabilities similar to Org-mode.
 
 ;;; Code:
 ;;;; Package management
@@ -279,6 +282,10 @@
                      (setq ibuffer-filter-groups (ibuffer-project-generate-filter-groups))
                      (unless (eq ibuffer-sorting-mode 'project-file-relative)
                        (ibuffer-do-sort-by-project-file-relative)))))
+
+(use-package all-the-icons-ibuffer
+  :after (all-the-icons ibuffer)
+  :hook (ibuffer-mode . all-the-icons-ibuffer-mode))
 
 ;;;;;; Indent guides
 
