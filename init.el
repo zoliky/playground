@@ -637,7 +637,7 @@
 (use-package elfeed-org
   :after elfeed
   :custom
-  (rmh-elfeed-org-files '("~/orgfiles/elfeed.org"))
+  (rmh-elfeed-org-files `(,(concat org-directory "/elfeed.org")))
   :config
   (elfeed-org))
 
