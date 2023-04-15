@@ -753,7 +753,9 @@
   :ensure nil
   :hook (org-mode . (lambda ()
                       (org-indent-mode)))
-  :bind (("C-c l" . org-store-link))
+  :bind (:map org-mode-map
+              ("C-c l" . org-store-link)
+              ("C-a"   . org-beginning-of-line))
   :custom
   (org-ellipsis " ▾")
   (org-tags-column 0)
