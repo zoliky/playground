@@ -100,7 +100,7 @@
   (kept-new-versions 6)               ; Number of newest versions to keep when a new backup is made
   (kept-old-versions 2)               ; Number of oldest versions to keep when a new backup is made
   (version-control t)                 ; Make numeric backup versions unconditionally
-  (create-lockfiles nil)              ; Stop creating .# files
+  (create-lockfiles nil)              ; Stop creating lock files
   (auto-save-default nil)             ; Stop creating #autosave# files
   (mode-require-final-newline nil)    ; Don't add newlines at the end of files
   (large-file-warning-threshold nil)) ; Open large files without requesting confirmation
@@ -612,7 +612,7 @@
          ("R" . king/elfeed-search-mark-all-read)
          ("P" . king/elfeed-search-open-enclosure))
   :custom
-  (elfeed-db-directory "~/.emacs.d/elfeed/")
+  (elfeed-db-directory (concat user-emacs-directory "elfeed"))
   :config
   (setq shr-width 80))
 
