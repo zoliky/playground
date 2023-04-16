@@ -199,6 +199,26 @@
   :config
   (consult-notes-denote-mode))
 
+;;;;;; Dashboard
+
+(use-package dashboard
+  :after all-the-icons
+  :custom
+  (dashboard-items '((recents  . 8)
+                     (projects . 5)))
+  (dashboard-set-footer nil)
+  (dashboard-set-init-info t)
+  (dashboard-center-content t)
+  (dashboard-set-file-icons t)
+  (dashboard-set-heading-icons t)
+  (dashboard-startup-banner 'logo)
+  (dashboard-projects-backend 'project-el)
+  :config
+  (dashboard-setup-startup-hook)
+  (setq initial-buffer-choice (lambda ()
+                                (get-buffer-create "*dashboard*")
+                                (dashboard-refresh-buffer))))
+
 ;;;;;; Dired
 
 (use-package dired
@@ -269,6 +289,24 @@
 ;   (setq exec-path-from-shell-arguments nil)
 ;   :config
 ;   (exec-path-from-shell-initialize))
+
+;;;;;; TempEl
+
+(use-package tempel
+  ;; Require trigger prefix before template name when completing.
+  ;; :custom
+  ;; (tempel-trigger-prefix "<")
+  :preface
+  (defun tempel-setup-capf ()
+    (setq-local completion-at-point-functions
+                (cons #'tempel-expand
+                      completion-at-point-functions)))
+  :bind (("M-+" . tempel-complete) ;; Alternative tempel-expand
+         ("M-*" . tempel-insert))
+  :custom
+  (tempel-path "~/.emacs.d/templates.eld")
+  :config
+  (add-hook 'org-mode-hook 'tempel-setup-capf))
 
 ;;;;;; Helpful
 
