@@ -78,6 +78,7 @@
  vc-follow-symlinks t                 ; Follow symlinks without requesting confirmation
  major-mode 'text-mode                ; Set the default major mode to text-mode
  ring-bell-function 'ignore           ; Disable the error beep sound
+ cursor-in-non-selected-windows nil   ; Hide the cursor in inactive windows
  inhibit-compacting-font-caches nil)  ; Prevent compacting font caches during garbage collection
 (savehist-mode t)                     ; Save the minibuffer history
 (show-paren-mode t)                   ; Enable visualization of matching parens
@@ -188,7 +189,8 @@
 
 (use-package consult
   :bind (("C-s"   . consult-line)
-         ("C-x b" . consult-buffer)))
+         ("C-x b" . consult-buffer)
+         ("C-x C-r" . consult-recent-file)))
 
 (use-package consult-notes
   :bind ("<f5>" . consult-notes)
@@ -229,6 +231,12 @@
   :custom
   (dired-hide-dotfiles-verbose nil))
 
+(use-package dired-open
+  :after dired
+  :custom
+  (dired-open-extensions '(("mkv" . "mpv")
+                           ("mp4" . "mpv"))))
+
 (use-package all-the-icons-dired
   :after (dired all-the-icons))
 
@@ -256,11 +264,11 @@
 
 ;;;;;; Exec path
 
-;; (use-package exec-path-from-shell
-;;   :init
-;;   (setq exec-path-from-shell-arguments nil)
-;;   :config
-;;   (exec-path-from-shell-initialize))
+;(use-package exec-path-from-shell
+;   :init
+;   (setq exec-path-from-shell-arguments nil)
+;   :config
+;   (exec-path-from-shell-initialize))
 
 ;;;;;; Helpful
 
@@ -324,12 +332,40 @@
 (use-package outshine
   :defer t)
 
+;;;;;; PDF Tools
+
+(use-package pdf-tools
+  :magic ("%PDF" . pdf-view-mode))
+
+(use-package pdf-view
+  :ensure nil
+  :after pdf-tools
+  :custom
+  (pdf-view-display-size 'fit-page)
+  (pdf-view-resize-factor 1.1)
+  ;; Avoid searching for unicodes to speed up pdf-tools.
+  (pdf-view-use-unicode-ligther nil))
+
 ;;;;;; Rainbow delimiters
 
 ;; Rainbow delimiters highlights delimiters such as parentheses,
 ;; brackets or braces according to their depth.
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
+
+;;;;;; Recent files
+
+;(use-package recentf
+;  :ensure nil
+;  :config
+;  (recentf-mode))
+;  :bind ("C-x C-r" . recentf-open-files)
+;  :init (recentf-mode)
+;  :custom
+;  (recentf-max-menu-items 15)
+;  (recentf-max-saved-items 200)
+  ;; Save recent files every 5 minutes to manage abnormal output.
+;  :config (run-at-time nil (* 5 60) 'recentf-save-list))
 
 ;;;;;; Try
 

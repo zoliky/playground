@@ -27,8 +27,8 @@
 
 ;;; Code:
 
-(setq gc-cons-threshold 402653184)
-(setq file-name-handler-alist nil)
+;(setq gc-cons-threshold 402653184)
+;(setq file-name-handler-alist nil)
 
 ;; Maximize the Emacs frame on startup
 (push '(fullscreen . maximized) default-frame-alist)
