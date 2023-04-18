@@ -115,7 +115,7 @@
 (set-face-attribute 'default nil :family "Hack" :height 180)
 
 ;; Variable-pitch
-;(set-face-attribute 'variable-pitch nil :family "Charis SIL Compact" :height 180)
+(set-face-attribute 'variable-pitch nil :family "Hack" :height 180)
 
 ;;;;; Spell checking
 
@@ -204,7 +204,7 @@
 (use-package dashboard
   :after all-the-icons
   :custom
-  (dashboard-items '((recents  . 8)
+  (dashboard-items '((recents  . 5)
                      (projects . 5)))
   (dashboard-set-footer nil)
   (dashboard-set-init-info t)
@@ -254,8 +254,10 @@
 (use-package dired-open
   :after dired
   :custom
-  (dired-open-extensions '(("mkv" . "mpv")
-                           ("mp4" . "mpv"))))
+  (dired-open-extensions '(("mkv"  . "mpv")
+                           ("mp4"  . "mpv")
+                           ("m4a"  . "mpv")
+                           ("flac" . "mpv"))))
 
 (use-package all-the-icons-dired
   :after (dired all-the-icons))
@@ -306,6 +308,7 @@
   :custom
   (tempel-path "~/.emacs.d/templates.eld")
   :config
+  (add-hook 'prog-mode-hook 'tempel-setup-capf)
   (add-hook 'org-mode-hook 'tempel-setup-capf))
 
 ;;;;;; Helpful
@@ -686,7 +689,7 @@
          ("R" . king/elfeed-search-mark-all-read)
          ("P" . king/elfeed-search-open-enclosure))
   :custom
-  (elfeed-db-directory (concat user-emacs-directory "elfeed"))
+  (elfeed-db-directory (concat user-emacs-directory "elfeed/"))
   :config
   (setq shr-width 80))
 
@@ -711,7 +714,7 @@
 (use-package elfeed-org
   :after elfeed
   :custom
-  (rmh-elfeed-org-files `(,(concat org-directory "/elfeed.org")))
+  (rmh-elfeed-org-files '("~/orgfiles/elfeed.org"))
   :config
   (elfeed-org))
 
@@ -915,6 +918,13 @@
   :hook (org-mode . org-superstar-mode)
   :config
   (org-superstar-configure-like-org-bullets))
+
+;;;;; Contacts
+
+(use-package org-contacts
+  :after org
+  :custom
+  (org-contacts-files (list (concat org-directory "/contacts.org"))))
 
 ;;;;; Denote
 

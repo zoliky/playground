@@ -27,14 +27,17 @@
 
 ;;; Code:
 
-;(setq gc-cons-threshold 402653184)
-;(setq file-name-handler-alist nil)
+(setq gc-cons-threshold 402653184)
+(setq file-name-handler-alist nil)
 
 ;; Maximize the Emacs frame on startup
 (push '(fullscreen . maximized) default-frame-alist)
 
 (push '(width  . (text-pixels . 1920)) default-frame-alist)
 (push '(height . (text-pixels . 1080)) default-frame-alist)
+
+(add-to-list 'default-frame-alist
+             '(background-color . "#fff2f3"))
 
 ;; Remove host name from titlebar information
 (setq frame-title-format '(multiple-frames "%b" ("" "%b - GNU Emacs")))
