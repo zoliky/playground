@@ -1,5 +1,3 @@
-;; -*- mode: lisp-data; -*-
-
 org-mode
 
 (title "#+title: " p n "#+author: Zoltan Kiraly" n "#+date: " (format-time-string "[%Y-%m-%d %a %H:%M]"))
@@ -13,3 +11,5 @@ emacs-lisp-mode
 c-mode
 
 (inc "#include <" (p (concat (file-name-base (or (buffer-file-name) (buffer-name))) ".h")) ">")
+
+

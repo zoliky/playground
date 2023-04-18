@@ -647,19 +647,18 @@
   (mu4e-alert-enable-mode-line-display)
   (mu4e-alert-set-default-style 'libnotify))
 
-
 ;;;;; Elfeed
 
 (use-package elfeed
   :preface
-  ;; Mark all feeds as read
   (defun king/elfeed-search-mark-all-read ()
+    "Mark all feeds as read"
     (interactive)
     (mark-whole-buffer)
     (elfeed-search-untag-all-unread))
 
-  ;; Open selected feeds in a browser
   (defun king/elfeed-search-browse-url (&optional use-generic-p)
+    "Open selected feeds in a browser"
     (interactive "P")
     (let ((entries (elfeed-search-selected)))
       (cl-loop for entry in entries
@@ -670,8 +669,8 @@
       (mapc #'elfeed-search-update-entry entries)
       (unless (or elfeed-search-remain-on-entry (use-region-p)))))
 
-  ;; Play podcasts and YouTube videos
   (defun king/elfeed-search-open-enclosure (&optional use-generic-p)
+    "Play podcasts and YouTube videos"
     (interactive "P")
     (let ((entries (elfeed-search-selected)))
       (cl-loop for entry in entries
@@ -921,10 +920,10 @@
 
 ;;;;; Contacts
 
-(use-package org-contacts
-  :after org
-  :custom
-  (org-contacts-files (list (concat org-directory "/contacts.org"))))
+;(use-package org-contacts
+;  :after org
+;  :custom
+;  (org-contacts-files (list (concat org-directory "/contacts.org"))))
 
 ;;;;; Denote
 
