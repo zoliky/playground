@@ -56,9 +56,9 @@
 ;;;;; Defaults
 
 (add-hook 'emacs-startup-hook
-	  (lambda ()
-	    (message "Emacs loaded in %s."
-		     (emacs-init-time))))
+          (lambda ()
+            (message "Emacs loaded in %s."
+                     (emacs-init-time))))
 
 ;; File used for storing customization information
 ;(setq custom-file (locate-user-emacs-file "custom.el"))
@@ -247,17 +247,9 @@
 (use-package dired-hide-dotfiles
   :hook (dired-mode . dired-hide-dotfiles-mode)
   :bind (:map dired-mode-map
-	      ("." . dired-hide-dotfiles-mode))
+              ("." . dired-hide-dotfiles-mode))
   :custom
   (dired-hide-dotfiles-verbose nil))
-
-(use-package dired-open
-  :after dired
-  :custom
-  (dired-open-extensions '(("mkv"  . "mpv")
-                           ("mp4"  . "mpv")
-                           ("m4a"  . "mpv")
-                           ("flac" . "mpv"))))
 
 (use-package all-the-icons-dired
   :after (dired all-the-icons))
@@ -272,6 +264,16 @@
   (doom-modeline-mu4e t)
   (doom-modeline-height 38))
 
+;;;;;; Duplicate thing
+
+(use-package duplicate-thing
+  :preface
+  (defun king/duplicate-thing-custom ()
+    (interactive)
+    (save-mark-and-excursion (duplicate-thing 1))
+    (next-line))
+  :bind ("C-S-d" . king/duplicate-thing-custom))
+
 ;;;;;; Editorconfig
 
 (use-package editorconfig
@@ -279,18 +281,13 @@
   :config
   (editorconfig-mode))
 
-;;;;;; Eglot
-
-(use-package eglot
-  :defer t)
-
 ;;;;;; Exec path
 
-;(use-package exec-path-from-shell
-;   :init
-;   (setq exec-path-from-shell-arguments nil)
-;   :config
-;   (exec-path-from-shell-initialize))
+(use-package exec-path-from-shell
+  :init
+  (setq exec-path-from-shell-arguments nil)
+  :config
+  (exec-path-from-shell-initialize))
 
 ;;;;;; TempEl
 
@@ -394,20 +391,6 @@
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
-;;;;;; Recent files
-
-;(use-package recentf
-;  :ensure nil
-;  :config
-;  (recentf-mode))
-;  :bind ("C-x C-r" . recentf-open-files)
-;  :init (recentf-mode)
-;  :custom
-;  (recentf-max-menu-items 15)
-;  (recentf-max-saved-items 200)
-  ;; Save recent files every 5 minutes to manage abnormal output.
-;  :config (run-at-time nil (* 5 60) 'recentf-save-list))
-
 ;;;;;; Try
 
 (use-package try
@@ -466,6 +449,7 @@
 ;;;;;; Which key
 
 (use-package which-key
+  :defer 0.2
   :custom
   (which-key-idle-delay 1)
   :config
