@@ -281,25 +281,6 @@
   :config
   (exec-path-from-shell-initialize))
 
-;;;;;; TempEl
-
-(use-package tempel
-  ;; Require trigger prefix before template name when completing.
-  ;; :custom
-  ;; (tempel-trigger-prefix "<")
-  :preface
-  (defun tempel-setup-capf ()
-    (setq-local completion-at-point-functions
-                (cons #'tempel-expand
-                      completion-at-point-functions)))
-  :bind (("M-+" . tempel-complete) ;; Alternative tempel-expand
-         ("M-*" . tempel-insert))
-  :custom
-  (tempel-path "~/.emacs.d/templates.eld")
-  :config
-  (add-hook 'prog-mode-hook 'tempel-setup-capf)
-  (add-hook 'org-mode-hook 'tempel-setup-capf))
-
 ;;;;;; Helpful
 
 (use-package helpful
@@ -308,12 +289,6 @@
   ([remap describe-command]  . helpful-command)
   ([remap describe-variable] . helpful-variable)
   ([remap describe-function] . helpful-callable))
-
-;;;;;; Icons
-
-(use-package all-the-icons
-  :custom
-  (all-the-icons-scale-factor 1))
 
 ;;;;;; Ibuffer
 
@@ -324,6 +299,12 @@
 (use-package all-the-icons-ibuffer
   :after (all-the-icons ibuffer)
   :hook (ibuffer-mode . all-the-icons-ibuffer-mode))
+
+;;;;;; Icons
+
+(use-package all-the-icons
+  :custom
+  (all-the-icons-scale-factor 1))
 
 ;;;;;; Indent guides
 
