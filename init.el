@@ -1,9 +1,9 @@
 ;;; init.el --- Initialization file -*- lexical-binding: t; -*-
 
 ;; Copyright (c) 2023 Zoltán Király
-;; Created: March 19, 2023
 
 ;; Author: Zoltán Király <zoliky@gmail.com>
+;; Created: March 19, 2023
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -25,10 +25,11 @@
 ;; This file specifies how to initialize Emacs
 ;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html
 ;;
-;; For improved navigation of this file, it is recommended to utilize the
-;; outshine package, which offers folding capabilities similar to Org-mode.
+;; To enhance navigation within this file, it is recommended to use the
+;; outshine package, which provides folding features similar to Org-mode.
 
 ;;; Code:
+
 ;;;; Package management
 
 ;; Initialize the package system
@@ -47,21 +48,12 @@
   :custom
   (use-package-always-ensure t))
 
-(use-package benchmark-init
-  :config
-  ;; To disable collection of benchmark data after init is done.
-  (add-hook 'after-init-hook 'benchmark-init/deactivate))
+;(use-package benchmark-init
+;  :config
+;  (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
 ;;;; General configuration
 ;;;;; Defaults
-
-(add-hook 'emacs-startup-hook
-          (lambda ()
-            (message "Emacs loaded in %s."
-                     (emacs-init-time))))
-
-;; File used for storing customization information
-;(setq custom-file (locate-user-emacs-file "custom.el"))
 
 ;; Disable custom file
 (setq custom-file (make-temp-file "emacs-custom-"))
@@ -252,7 +244,7 @@
   (dired-hide-dotfiles-verbose nil))
 
 (use-package all-the-icons-dired
-  :after (dired all-the-icons))
+  :after all-the-icons)
 
 ;;;;;; Doom modeline
 
