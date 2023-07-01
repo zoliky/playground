@@ -103,10 +103,10 @@
   :ensure nil
   :hook ((prog-mode conf-mode) . display-line-numbers-mode))
 
-;; Default
+;; Default font
 (set-face-attribute 'default nil :family "Hack" :height 180)
 
-;; Variable-pitch
+;; Variable-pitch font
 (set-face-attribute 'variable-pitch nil :family "Hack" :height 180)
 
 ;;;;; Spell checking
@@ -154,7 +154,6 @@
 ;;;;; General enhancements
 ;;;;;; Avy
 
-;; Avy allows to quickly jump to any visible position in a buffer
 (use-package avy
   :bind ("M-s" . avy-goto-char))
 
@@ -343,24 +342,8 @@
 (use-package outshine
   :defer t)
 
-;;;;;; PDF Tools
-
-(use-package pdf-tools
-  :magic ("%PDF" . pdf-view-mode))
-
-(use-package pdf-view
-  :ensure nil
-  :after pdf-tools
-  :custom
-  (pdf-view-display-size 'fit-page)
-  (pdf-view-resize-factor 1.1)
-  ;; Avoid searching for unicodes to speed up pdf-tools.
-  (pdf-view-use-unicode-ligther nil))
-
 ;;;;;; Rainbow delimiters
 
-;; Rainbow delimiters highlights delimiters such as parentheses,
-;; brackets or braces according to their depth.
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
@@ -433,12 +416,11 @@
 
 (use-package js2-mode
   :mode "\\.jsx?\\'")
+
 ;;;;;; Lua
 
-;; Major mode for editing Lua files
 (use-package lua-mode
   :mode "\\.lua\\'")
-
 
 ;;;;;; YAML
 
