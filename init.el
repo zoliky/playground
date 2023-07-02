@@ -28,8 +28,6 @@
 ;; To enhance navigation within this file, it is recommended to use the
 ;; outshine package, which provides folding features similar to Org-mode.
 ;;
-;; M-x outshine-mode
-;;
 ;; In this file, the use of one or two semicolons is reserved for comments,
 ;; indicating explanatory or descriptive text. On the other hand, when you
 ;; encounter three or more semicolons, they are used for sectioning purposes,
