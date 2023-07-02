@@ -28,10 +28,6 @@
 ;; To enhance navigation within this file, it is recommended to use the
 ;; outshine package, which provides folding features similar to Org-mode.
 ;;
-;; In this file, the use of one or two semicolons is reserved for comments,
-;; indicating explanatory or descriptive text. On the other hand, when you
-;; encounter three or more semicolons, they are used for sectioning purposes,
-;; marking divisions or subsections within the content.
 
 ;;; Code:
 
@@ -44,9 +40,18 @@
                                    ("gnu"    .  50)
                                    ("nongnu" .  25)))
 
+;; Ensure that use-package is installed
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
 (use-package use-package
   :custom
   (use-package-always-ensure t))
+
+;(use-package benchmark-init
+;  :config
+;  (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
 ;;;; General configuration
 ;;;;; Defaults
