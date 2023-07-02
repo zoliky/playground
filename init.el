@@ -27,6 +27,13 @@
 ;;
 ;; To enhance navigation within this file, it is recommended to use the
 ;; outshine package, which provides folding features similar to Org-mode.
+;;
+;; M-x outshine-mode
+;;
+;; In this file, the use of one or two semicolons is reserved for comments,
+;; indicating explanatory or descriptive text. On the other hand, when you
+;; encounter three or more semicolons, they are used for sectioning purposes,
+;; marking divisions or subsections within the content.
 
 ;;; Code:
 
@@ -40,9 +47,9 @@
                                    ("nongnu" .  25)))
 
 ;; Ensure that use-package is installed
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
+;;(unless (package-installed-p 'use-package)
+;;  (package-refresh-contents)
+;;  (package-install 'use-package))
 
 (use-package use-package
   :custom
@@ -55,7 +62,7 @@
 ;;;; General configuration
 ;;;;; Defaults
 
-;; Disable custom file
+;; Disable file used for storing customization information
 (setq custom-file (make-temp-file "emacs-custom-"))
 
 ;; Better defaults
@@ -102,6 +109,8 @@
 (use-package display-line-numbers
   :ensure nil
   :hook ((prog-mode conf-mode) . display-line-numbers-mode))
+
+;;;;; Font and text size
 
 ;; Default font
 (set-face-attribute 'default nil :family "Hack" :height 180)
