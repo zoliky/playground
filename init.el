@@ -44,18 +44,9 @@
                                    ("gnu"    .  50)
                                    ("nongnu" .  25)))
 
-;; Ensure that use-package is installed
-;;(unless (package-installed-p 'use-package)
-;;  (package-refresh-contents)
-;;  (package-install 'use-package))
-
 (use-package use-package
   :custom
   (use-package-always-ensure t))
-
-;(use-package benchmark-init
-;  :config
-;  (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
 ;;;; General configuration
 ;;;;; Defaults
