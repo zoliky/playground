@@ -1,6 +1,6 @@
 ;;; init.el --- Initialization file -*- lexical-binding: t; -*-
 
-;; Copyright (c) 2023 Zoltán Király
+;; Copyright (c) 2020-2023 Zoltán Király
 
 ;; Author: Zoltán Király <zoliky@gmail.com>
 ;; Created: March 19, 2023
@@ -27,13 +27,12 @@
 ;;
 ;; To enhance navigation within this file, it is recommended to use the
 ;; outshine package, which provides folding features similar to Org-mode.
-;;
 
 ;;; Code:
 
 ;;;; Package management
 
-;; Initialize the package system
+;; Configure package sources and priorities
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 (setq package-archive-priorities '(("melpa"  . 100)
@@ -49,17 +48,10 @@
   :custom
   (use-package-always-ensure t))
 
-;(use-package benchmark-init
-;  :config
-;  (add-hook 'after-init-hook 'benchmark-init/deactivate))
-
 ;;;; General configuration
 ;;;;; Defaults
 
-;; Disable file used for storing customization information
-(setq custom-file (make-temp-file "emacs-custom-"))
-
-;; Better defaults
+;; Configure various default settings and behavior
 (setq-default
  inhibit-startup-screen t             ; Disable the startup screen
  initial-scratch-message nil          ; Empty the initial *scratch* buffer
@@ -98,6 +90,9 @@
   (auto-save-default nil)             ; Stop creating #autosave# files
   (mode-require-final-newline nil)    ; Don't add newlines at the end of files
   (large-file-warning-threshold nil)) ; Open large files without requesting confirmation
+
+;; Disable file used for storing customization information
+(setq custom-file (make-temp-file "emacs-custom-"))
 
 ;; Enable line numbering
 (use-package display-line-numbers
