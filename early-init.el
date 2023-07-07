@@ -1,6 +1,6 @@
 ;;; early-init.el --- Early init file -*- lexical-binding: t; -*-
 
-;; Copyright (c) 2023 Zoltán Király
+;; Copyright (c) 2020-2023 Zoltán Király
 
 ;; Author: Zoltán Király <zoliky@gmail.com>
 ;; Created: March 19, 2023
@@ -27,22 +27,26 @@
 
 ;;; Code:
 
+;; Improve startup speed by setting a high GC threshold
 (setq gc-cons-threshold 402653184)
+
 (setq file-name-handler-alist nil)
 
 ;; Maximize the Emacs frame on startup
 (push '(fullscreen . maximized) default-frame-alist)
 
+;; Set the default frame size to 1920x1080 pixels
 (push '(width  . (text-pixels . 1920)) default-frame-alist)
 (push '(height . (text-pixels . 1080)) default-frame-alist)
 
+;; Customize background color to reduce glare on Emacs startup
 (add-to-list 'default-frame-alist
              '(background-color . "#fff2f3"))
 
 ;; Remove host name from titlebar information
 (setq frame-title-format '(multiple-frames "%b" ("" "%b - GNU Emacs")))
 
-;; Turn off mouse interface early in startup to avoid momentary display
+;; Disable mouse interface during startup to prevent momentary display
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
