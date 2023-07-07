@@ -39,7 +39,7 @@
                                    ("gnu"    .  50)
                                    ("nongnu" .  25)))
 
-;; Ensure that use-package is installed
+;; Ensure 'use-package' is installed
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
@@ -51,7 +51,7 @@
 ;;;; General configuration
 ;;;;; Defaults
 
-;; Configure various default settings and behavior
+;; Override various defaults
 (setq-default
  inhibit-startup-screen t             ; Disable the startup screen
  initial-scratch-message nil          ; Empty the initial *scratch* buffer
@@ -109,6 +109,7 @@
 
 ;;;;; Spell checking
 
+;; Configure ispell for multiple dictionaries
 (use-package ispell
   :ensure nil
   :defer 0.5
@@ -120,6 +121,7 @@
   (ispell-set-spellchecker-params)
   (ispell-hunspell-add-multi-dic "en_US,hu_HU,ro_RO"))
 
+;; Enable automatic spell checking and offer suggestions for misspelled words
 (use-package flyspell
   :ensure nil
   :after ispell
@@ -152,12 +154,13 @@
 ;;;;; General enhancements
 ;;;;;; Avy
 
+;; A package for efficient character-based navigation
 (use-package avy
   :bind ("M-s" . avy-goto-char))
 
 ;;;;;; Corfu
 
-;; Corfu is a completion UI for Emacs
+;; An interactive and predictive completion framework
 (use-package corfu
   :init
   (global-corfu-mode)
@@ -176,6 +179,7 @@
 
 ;;;;;; Consult
 
+;; Enhanced search and navigation commands
 (use-package consult
   :bind (("C-s"   . consult-line)
          ("C-x b" . consult-buffer)
@@ -190,6 +194,7 @@
 
 ;;;;;; Dashboard
 
+;; Customizable startup screen
 (use-package dashboard
   :after all-the-icons
   :custom
