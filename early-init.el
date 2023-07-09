@@ -27,7 +27,7 @@
 
 ;;; Code:
 
-;; Optimize startup time by increasing the garbage collection threshold
+;; Optimize startup time by increasing the garbage collection (GC) threshold
 (setq gc-cons-threshold 402653184)
 
 (setq file-name-handler-alist nil)
