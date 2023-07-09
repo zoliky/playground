@@ -27,7 +27,7 @@
 
 ;;; Code:
 
-;; Improve startup speed by setting a high GC threshold
+;; Optimize startup time by increasing the garbage collection threshold
 (setq gc-cons-threshold 402653184)
 
 (setq file-name-handler-alist nil)
@@ -39,14 +39,14 @@
 (push '(width  . (text-pixels . 1920)) default-frame-alist)
 (push '(height . (text-pixels . 1080)) default-frame-alist)
 
-;; Customize background color to reduce glare on Emacs startup
+;; Adjust background color to reduce glare during Emacs startup
 (add-to-list 'default-frame-alist
              '(background-color . "#fff2f3"))
 
 ;; Remove host name from titlebar information
 (setq frame-title-format '(multiple-frames "%b" ("" "%b - GNU Emacs")))
 
-;; Disable mouse interface during startup to prevent momentary display
+;; Disable mouse interface during startup
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)

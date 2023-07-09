@@ -39,7 +39,7 @@
                                    ("gnu"    .  50)
                                    ("nongnu" .  25)))
 
-;; Ensure 'use-package' is installed
+;; Ensure use-package is installed
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
@@ -936,10 +936,6 @@
      ("\\subparagraph{%s}"  . "\\subparagraph*{%s}"))))
 
 ;;;; Other
-
-;; Variables configured via the interactive customize interface
-;(when (file-exists-p custom-file)
-;  (load custom-file))
 
 (add-hook 'after-init-hook
           `(lambda ()
