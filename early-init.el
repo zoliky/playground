@@ -46,7 +46,7 @@
 ;; Remove host name from titlebar information
 (setq frame-title-format '(multiple-frames "%b" ("" "%b - GNU Emacs")))
 
-;; Disable mouse interface during startup
+;; Disable mouse interface early during startup to prevent momentary display
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
