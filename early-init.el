@@ -39,7 +39,7 @@
 (push '(width  . (text-pixels . 1920)) default-frame-alist)
 (push '(height . (text-pixels . 1080)) default-frame-alist)
 
-;; Adjust background color to reduce glare during Emacs startup
+;; Adjust the background color to reduce glare during Emacs startup
 (add-to-list 'default-frame-alist
              '(background-color . "#fff2f3"))
 
