@@ -155,6 +155,14 @@
 ;;;;;; Avy
 
 ;; A package for efficient character-based navigation
+;;
+;; Avy allows you to quickly jump to specific characters within a buffer
+;; using a series of keyboard shortcuts. Avy enhances navigation and
+;; editing efficiency by providing a way to target and jump to specific
+;; locations with minimal keystrokes. It offers a fast and precise way
+;; to navigate and select text in Emacs, making it useful for tasks such
+;; as jumping to occurrences, selecting regions, or quickly navigating
+;; through code or text.
 (use-package avy
   :bind ("M-s" . avy-goto-char))
 
