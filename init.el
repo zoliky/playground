@@ -99,7 +99,7 @@
   :ensure nil
   :hook ((prog-mode conf-mode) . display-line-numbers-mode))
 
-;;;;; Font and text size
+;;;;; Fonts
 
 ;; Default font
 (set-face-attribute 'default nil :family "Hack" :height 180)
@@ -194,7 +194,7 @@
 
 ;;;;;; Dashboard
 
-;; Customizable startup screen
+;; An extensible Emacs startup screen
 (use-package dashboard
   :after all-the-icons
   :custom
@@ -250,6 +250,7 @@
 
 ;;;;;; Doom modeline
 
+;; A modeline for Emacs inspired by the Doom theme collection
 (use-package doom-modeline
   :after all-the-icons
   :init
@@ -260,6 +261,7 @@
 
 ;;;;;; Duplicate thing
 
+;; A package to duplicate current line and selection.
 (use-package duplicate-thing
   :preface
   (defun king/duplicate-thing-custom ()
@@ -285,6 +287,8 @@
 
 ;;;;;; Helpful
 
+;; Helpful improves the built-in Emacs help system by providing
+;; more contextual information
 (use-package helpful
   :bind
   ([remap describe-key]      . helpful-key)
