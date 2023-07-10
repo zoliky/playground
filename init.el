@@ -44,6 +44,7 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
+;; Configure use-package
 (use-package use-package
   :custom
   (use-package-always-ensure t))
