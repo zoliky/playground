@@ -26,11 +26,11 @@
 
 ;;; Code:
 
+;; Reduce the frequency of garbage collection
 (setq gc-cons-threshold (* 128 1024 1024))
 
 (defvar file-name-handler-alist-old file-name-handler-alist)
 (setq file-name-handler-alist nil)
-
 (add-hook 'after-init-hook
           #'(lambda ()
               (setq file-name-handler-alist file-name-handler-alist-old)))
@@ -42,13 +42,13 @@
 (push '(width  . (text-pixels . 1920)) default-frame-alist)
 (push '(height . (text-pixels . 1080)) default-frame-alist)
 
-;; Remove host name from titlebar information
-(setq frame-title-format '(multiple-frames "%b" ("" "%b - GNU Emacs")))
-
 ;; Set background color to prevent startup glare
 (push '(background-color . "#fff2f3") default-frame-alist)
 
-;; Disable the menu bar, tool bar, and scroll bar 
+;; Remove host name from titlebar information
+(setq frame-title-format '(multiple-frames "%b" ("" "%b - GNU Emacs")))
+
+;; Disable the menu bar, tool bar, and scroll bar
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
