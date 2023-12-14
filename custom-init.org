@@ -1,0 +1,1363 @@
+#+TITLE: Zoltán Király's GNU Emacs Configuration
+#+AUTHOR: Zoltán Király
+#+EMAIL: zoliky@gmail.com
+#+DATE: <2020-11-10 Tue>
+
+* About
+
+Emacs is an extensible computing environment that I use mainly for its text editing and scheduling features.
+
+[[./static/orgmode.jpg]]
+
+* Table of Contents                                                     :TOC:
+- [[#about][About]]
+- [[#package-management][Package management]]
+- [[#general-configuration][General configuration]]
+  - [[#better-defaults][Better defaults]]
+  - [[#spell-checking][Spell checking]]
+- [[#packages][Packages]]
+  - [[#color-schemes][Color schemes]]
+    - [[#ef][Ef]]
+    - [[#modus][Modus]]
+  - [[#general-enhancements][General enhancements]]
+    - [[#avy][Avy]]
+    - [[#consult][Consult]]
+    - [[#corfu][Corfu]]
+    - [[#dashboard][Dashboard]]
+    - [[#dired][Dired]]
+    - [[#doom-modeline][Doom modeline]]
+    - [[#editorconfig][Editorconfig]]
+    - [[#exec-path][Exec path]]
+    - [[#helpful][Helpful]]
+    - [[#ibuffer][Ibuffer]]
+    - [[#icons][Icons]]
+    - [[#indent-guides][Indent guides]]
+    - [[#magit][Magit]]
+    - [[#move-text][Move text]]
+    - [[#olivetti][Olivetti]]
+    - [[#rainbow-delimiters][Rainbow delimiters]]
+    - [[#try][Try]]
+    - [[#vertico][Vertico]]
+    - [[#web-mode][Web mode]]
+    - [[#which-key][Which key]]
+  - [[#languages][Languages]]
+    - [[#html][HTML]]
+    - [[#lua][Lua]]
+    - [[#markdown][Markdown]]
+    - [[#toml][TOML]]
+    - [[#yaml][YAML]]
+- [[#applications][Applications]]
+  - [[#email][Email]]
+  - [[#elfeed][Elfeed]]
+  - [[#emms][Emms]]
+- [[#custom-key-bindings][Custom key bindings]]
+- [[#custom-functions][Custom functions]]
+- [[#custom-input-methods][Custom input methods]]
+- [[#org-mode][Org mode]]
+  - [[#agenda][Agenda]]
+  - [[#appear][Appear]]
+  - [[#bullets][Bullets]]
+  - [[#calendar][Calendar]]
+  - [[#capture][Capture]]
+  - [[#contacts][Contacts]]
+  - [[#crypt][Crypt]]
+  - [[#denote][Denote]]
+  - [[#export][Export]]
+  - [[#toc][Toc]]
+
+* Package management
+
+Initialize the package system.
+
+#+begin_src emacs-lisp
+  (require 'package)
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+  (setq package-archive-priorities '(("melpa"  . 100)
+                                     ("gnu"    .  50)
+                                     ("nongnu" .  25)))
+#+end_src
+
+Ensure that ~use-package~ is installed.
+
+#+begin_src emacs-lisp
+  (unless (package-installed-p 'use-package)
+    (package-refresh-contents)
+    (package-install 'use-package))
+
+  (use-package use-package
+    :init
+    (setq use-package-always-ensure t)
+    (use-package use-package-ensure-system-package
+      :ensure t))
+#+end_src
+
+* General configuration
+** Better defaults
+
+Override some of the defaults.
+
+#+begin_src emacs-lisp
+  (setq-default
+   inhibit-startup-screen t             ; Disable the startup screen
+   initial-scratch-message nil          ; Empty the initial *scratch* buffer
+   indent-tabs-mode nil                 ; Insert space characters instead of tabs
+   tab-width 2                          ; The number of spaces a tab is equal to
+   fill-column 78                       ; Line length above which to break a line
+   cursor-type 'bar                     ; Display the cursor as a vertical bar
+   column-number-mode t                 ; Display the column number in the mode line
+   vc-follow-symlinks t                 ; Follow symlinks without requesting confirmation
+   major-mode 'text-mode                ; Set the default major mode to text-mode
+   ring-bell-function 'ignore           ; Disable the error beep sound
+   cursor-in-non-selected-windows nil   ; Hide the cursor in non-selected windows
+   inhibit-compacting-font-caches nil)  ; Prevent compacting font caches during garbage collection
+  (savehist-mode t)                     ; Save the minibuffer history
+  (show-paren-mode t)                   ; Enable visualization of matching parens
+  (save-place-mode t)                   ; Jump to the last known position when reopening a file
+  (electric-pair-mode t)                ; Enable automatic brackets pairing
+  (global-hl-line-mode t)               ; Enable line highlighting in all buffers
+  (delete-selection-mode t)             ; Replace selected text when typing
+  (global-auto-revert-mode t)           ; Automatically reload externally modified files
+  (fset 'yes-or-no-p 'y-or-n-p)         ; Replace "yes/no" prompts with "y/n"
+  (prefer-coding-system 'utf-8)         ; Set default encoding to UTF-8
+  (set-language-environment 'utf-8)     ; Set default language environment to UTF-8
+#+end_src
+
+File-related customizations.
+
+#+begin_src emacs-lisp
+  (use-package files
+    :ensure nil
+    :custom
+    (backup-directory-alist `(("." . ,(concat user-emacs-directory "backup"))))
+    (backup-by-copying t)               ; Always use copying to create backup files
+    (delete-old-versions t)             ; Delete excess backup versions
+    (kept-new-versions 6)               ; Number of newest versions to keep when a new backup is made
+    (kept-old-versions 2)               ; Number of oldest versions to keep when a new backup is made
+    (version-control t)                 ; Make numeric backup versions unconditionally
+    (auto-save-default nil)             ; Stop creating #autosave# files
+    (delete-by-moving-to-trash t)       ; Move deleted files to the trash
+    (mode-require-final-newline nil)    ; Don't add newlines at the end of files
+    (large-file-warning-threshold nil)) ; Open large files without requesting confirmation
+#+end_src
+
+Enable line numbering.
+
+#+begin_src emacs-lisp
+  (use-package display-line-numbers
+    :ensure nil
+    :hook ((text-mode prog-mode conf-mode) . display-line-numbers-mode))
+#+end_src
+
+Improve the default scrolling behavior.
+
+#+begin_src emacs-lisp
+  (use-package mwheel
+    :ensure nil
+    :custom
+    (mouse-wheel-scroll-amount '(1 ((shift) . 1)))
+    (mouse-wheel-progressive-speed nil)
+    (mouse-wheel-follow-mouse 't)
+    :config
+    (setq scroll-step 1)
+    (setq scroll-conservatively 1000))
+#+end_src
+
+Fonts and text size.
+
+#+begin_src emacs-lisp
+  ;; Default
+  (set-face-attribute 'default nil :family "Hack" :height 180)
+
+  ;; Variable-pitch
+  (set-face-attribute 'variable-pitch nil :family "Hack" :height 180)
+
+  ;; Fixed-pitch
+  (set-face-attribute 'fixed-pitch nil :family "Hack")
+
+  ;; International Phonetic Alphabet
+  (set-fontset-font t 'phonetic (font-spec :family "DejaVu Sans Mono"))
+  (dolist (char (string-to-list "æθðŋʷʸˈˌ"))
+    (set-fontset-font nil char (font-spec :family "DejaVu Sans Mono")))
+#+end_src
+
+** Spell checking
+
+Configure the spell checker for multiple languages.
+
+Dependencies:
+
+- ~sudo dnf install hunspell~
+- ~sudo dnf install hunspell-en-US hunspell-hu hunspell-ro~
+
+#+begin_src emacs-lisp
+  (use-package ispell
+    :ensure nil
+    :custom
+    (ispell-program-name "hunspell")
+    ;; English (US), Hungarian, and Romanian
+    (ispell-dictionary "en_US,hu_HU,ro_RO")
+    :config
+    (ispell-set-spellchecker-params)
+    (ispell-hunspell-add-multi-dic "en_US,hu_HU,ro_RO"))
+#+end_src
+
+Enable automatic spell checking and offer suggestions for misspelled words.
+
+#+begin_src emacs-lisp
+  (use-package flyspell
+    :ensure nil
+    :after ispell
+    :bind ("C-c s" . flyspell-mode))
+
+  (use-package flyspell-correct
+    :after flyspell
+    :bind (:map flyspell-mode-map
+                ("C-;" . flyspell-correct-wrapper)))
+#+end_src
+
+* Packages
+** Color schemes
+*** Ef
+
+#+begin_src emacs-lisp
+  (use-package ef-themes
+    :init
+    (load-theme 'ef-summer t)
+    :bind ("<f9>" . ef-themes-select))
+#+end_src
+
+*** Modus
+
+#+begin_src emacs-lisp
+  (use-package modus-themes
+    :defer t)
+#+end_src
+
+** General enhancements
+*** Avy
+
+Avy provides an interface to quickly jump to any visible position in a buffer.
+
+#+begin_src emacs-lisp
+  (use-package avy
+    :bind ("M-s" . avy-goto-char))
+#+end_src
+
+*** Consult
+
+Consult enhances the built-in completion and search features of Emacs.
+
+#+begin_src emacs-lisp
+  (use-package consult
+    :bind (("C-s"   . consult-line)
+           ("C-x b" . consult-buffer)))
+
+  (use-package consult-notes
+    :bind ("<f5>" . consult-notes)
+    :custom
+    (consult-notes-denote-files-function (function denote-directory-text-only-files))
+    :config
+    (consult-notes-denote-mode))
+#+end_src
+
+*** Corfu
+
+Corfu is a completion UI for Emacs.
+
+#+begin_src emacs-lisp
+  (use-package corfu
+    :init
+    (global-corfu-mode)
+    :custom
+    (corfu-auto t)
+    (corfu-cycle t)
+    (corfu-auto-prefix 1)
+    (corfu-auto-delay 0.1)
+    (corfu-quit-no-match 'separator)
+    (corfu-exclude-modes '(org-mode mu4e-compose-mode)))
+
+  (use-package cape
+    :init
+    (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+    (add-to-list 'completion-at-point-functions #'cape-file))
+#+end_src
+
+*** Dashboard
+
+Dashboard is an extensible Emacs startup screen.
+
+#+begin_src emacs-lisp
+  (use-package dashboard
+    :after nerd-icons
+    :custom
+    (dashboard-items '((recents  .  5)
+                       (projects .  5)
+                       (agenda   . 10)))
+    (dashboard-set-footer nil)
+    (dashboard-set-init-info t)
+    (dashboard-center-content t)
+    (dashboard-set-file-icons t)
+    (dashboard-set-heading-icons t)
+    (dashboard-startup-banner 'logo)
+    (dashboard-projects-backend 'project-el)
+    :config
+    (dashboard-setup-startup-hook)
+    (setq initial-buffer-choice (lambda ()
+                                  (get-buffer-create "*dashboard*")
+                                  (dashboard-refresh-buffer))))
+#+end_src
+
+*** Dired
+
+Dired provides a convenient way to manage files and directories inside Emacs.
+
+#+begin_src emacs-lisp
+  (use-package dired
+    :ensure nil
+    :after nerd-icons-dired
+    :bind ("C-x C-j"  . dired-jump)
+    :hook (dired-mode . (lambda ()
+                          (nerd-icons-dired-mode)
+                          (dired-hide-details-mode)))
+    :custom
+    (dired-auto-revert-buffer t)
+    (dired-recursive-copies 'always)
+    (dired-recursive-deletes 'always)
+    (dired-hide-details-hide-symlink-targets nil)
+    (dired-hide-details-hide-information-lines nil)
+    (dired-listing-switches "-agho --group-directories-first"))
+
+  (use-package dired-narrow
+    :after dired
+    :bind (:map dired-mode-map
+                ("/" . dired-narrow)))
+
+  (use-package dired-subtree
+    :after dired
+    :bind (:map dired-mode-map
+                ("<backtab>" . dired-subtree-cycle)
+                ("<tab>"     . dired-subtree-toggle)))
+
+  (use-package dired-hide-dotfiles
+    :hook (dired-mode . dired-hide-dotfiles-mode)
+    :bind (:map dired-mode-map
+                ("." . dired-hide-dotfiles-mode))
+    :custom
+    (dired-hide-dotfiles-verbose nil))
+
+  (use-package nerd-icons-dired
+    :after nerd-icons)
+#+end_src
+
+*** Doom modeline
+
+Doom modeline is a modeline for GNU Emacs inspired by the Doom theme collection.
+
+#+begin_src emacs-lisp
+  (use-package doom-modeline
+    :after nerd-icons
+    :init
+    (doom-modeline-mode)
+    :custom
+    (doom-modeline-mu4e t)
+    (doom-modeline-height 38))
+#+end_src
+
+*** Editorconfig
+
+EditorConfig helps developers define consistent coding styles across various editors and IDEs.
+
+#+begin_src emacs-lisp
+  (use-package editorconfig
+    :defer t
+    :init
+    (editorconfig-mode))
+#+end_src
+
+*** Exec path
+
+Exec path helps ensure that environment variables inside Emacs look the same as in the user's shell.
+
+#+begin_src emacs-lisp
+  (use-package exec-path-from-shell
+    :init
+    (setq exec-path-from-shell-arguments nil)
+    :config
+    (exec-path-from-shell-initialize))
+#+end_src
+
+*** Helpful
+
+Helpful improves the built-in Emacs help system by providing more contextual information.
+
+#+begin_src emacs-lisp
+  (use-package helpful
+    :bind
+    ([remap describe-key]      . helpful-key)
+    ([remap describe-command]  . helpful-command)
+    ([remap describe-variable] . helpful-variable)
+    ([remap describe-function] . helpful-callable))
+#+end_src
+
+*** Ibuffer
+
+Ibuffer is a built-in replacement for ~list-buffers~.
+
+#+begin_src emacs-lisp
+  (use-package ibuffer
+    :ensure nil
+    :bind ("C-x C-b" . ibuffer))
+
+  (use-package nerd-icons-ibuffer
+    :after (nerd-icons ibuffer)
+    :hook (ibuffer-mode . nerd-icons-ibuffer-mode))
+#+end_src
+
+*** Icons
+
+A library for inserting developer icons.
+
+#+begin_src emacs-lisp
+  (use-package nerd-icons)
+#+end_src
+
+*** Indent guides
+
+Highlight the indentation level in Emacs buffers.
+
+#+begin_src emacs-lisp
+  (use-package highlight-indent-guides
+    :hook (prog-mode . highlight-indent-guides-mode)
+    :custom
+    (highlight-indent-guides-responsive 'top)
+    (highlight-indent-guides-method 'character))
+#+end_src
+
+*** Magit
+
+Magit is a Git interface for Emacs.
+
+#+begin_src emacs-lisp
+  (use-package magit
+    :bind ("C-c g" . magit-status))
+#+end_src
+
+*** Move text
+
+A package to move current line or region.
+
+#+begin_src emacs-lisp
+  (use-package move-text
+    :bind (("M-p" . move-text-up)
+           ("M-n" . move-text-down))
+    :config
+    (move-text-default-bindings))
+#+end_src
+
+*** Olivetti
+
+Olivetti is a package designed to create a distraction-free writing environment.
+
+#+begin_src emacs-lisp
+  (use-package olivetti
+    :hook ((org-mode          . olivetti-mode)
+           (markdown-mode     . olivetti-mode)
+           (mu4e-view-mode    . olivetti-mode)
+           (elfeed-show-mode  . olivetti-mode)
+           (mu4e-compose-mode . olivetti-mode))
+    :custom
+    (olivetti-body-width 80))
+#+end_src
+
+*** Rainbow delimiters
+
+Rainbow delimiters highlights delimiters such as parentheses, brackets or braces according to their depth.
+
+#+begin_src emacs-lisp
+  (use-package rainbow-delimiters
+    :hook (prog-mode . rainbow-delimiters-mode))
+#+end_src
+
+*** Try
+
+Try is a package that allows to try out Emacs packages without installing them.
+
+#+begin_src emacs-lisp
+  (use-package try
+    :defer t)
+#+end_src
+
+*** Vertico
+
+Vertico helps to rapidly complete file names, buffer names, or any other Emacs interactions requiring selecting an item from a list of possible choices.
+
+#+begin_src emacs-lisp
+  (use-package vertico
+    :init
+    (vertico-mode)
+    :custom
+    (vertico-cycle t))
+
+  (use-package vertico-directory
+    :ensure nil
+    :after vertico
+    :bind (:map vertico-map
+                ("RET"   . vertico-directory-enter)
+                ("DEL"   . vertico-directory-delete-char)
+                ("M-DEL" . vertico-directory-delete-word))
+    :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
+
+  (use-package orderless
+    :custom
+    (completion-styles '(orderless basic))
+    (completion-category-overrides '((file (styles basic partial-completion)))))
+
+  (use-package marginalia
+    :init
+    (marginalia-mode)
+    :custom
+    (marginalia-align 'right))
+
+  (use-package nerd-icons-completion
+    :after nerd-icons
+    :config
+    (nerd-icons-completion-mode))
+#+end_src
+
+*** Web mode
+
+Major mode for editing web templates.
+
+#+begin_src emacs-lisp
+  (use-package web-mode
+    :mode "\\.html\\'"
+    :custom
+    (web-mode-attr-indent-offset 2)
+    (web-mode-enable-css-colorization t)
+    (web-mode-enable-auto-closing t)
+    (web-mode-markup-indent-offset 2)
+    (web-mode-css-indent-offset 2)
+    (web-mode-code-indent-offset 2)
+    (web-mode-enable-current-element-highlight t))
+#+end_src
+
+*** Which key
+
+An Emacs package that displays available keybindings in a panel. For example, if you enter ~CTRL-x~ and wait for a second, the panel will expand with all of the available key bindings that follow ~CTRL-x~.
+
+#+begin_src emacs-lisp
+  (use-package which-key
+    :defer t
+    :init
+    (which-key-mode)
+    :custom
+    (which-key-idle-delay 1))
+#+end_src
+
+** Languages
+*** HTML
+
+Automatically rename paired HTML/XML tag.
+
+#+begin_src emacs-lisp
+  (use-package auto-rename-tag
+    :hook (web-mode . auto-rename-tag-mode))
+#+end_src
+
+*** Lua
+
+Major mode for editing Lua files.
+
+#+begin_src emacs-lisp
+  (use-package lua-mode
+    :mode "\\.lua\\'")
+#+end_src
+
+*** Markdown
+
+Major mode for editing Markdown files.
+
+#+begin_src emacs-lisp
+  (use-package markdown-mode
+    :init
+    (setq markdown-command "multimarkdown")
+    :hook (markdown-mode . (lambda () (display-line-numbers-mode -1)))
+    :mode (("README\\.md\\'" . gfm-mode)
+           ("\\.md\\'"       . markdown-mode)
+           ("\\.markdown\\'" . markdown-mode)))
+#+end_src
+
+*** TOML
+
+Major mode for editing TOML files.
+
+#+begin_src emacs-lisp
+  (use-package toml-mode
+    :mode "\\.toml\\'")
+#+end_src
+
+*** YAML
+
+Major mode for editing YAML files.
+
+#+begin_src emacs-lisp
+  (use-package yaml-mode
+    :mode "\\.yml\\'")
+#+end_src
+
+* Applications
+** Email
+
+Mu4e is an e-mail client that runs inside Emacs.
+
+Dependencies:
+
+- ~sudo dnf install isync maildir-utils~
+
+#+begin_src emacs-lisp
+  (use-package mu4e
+    :ensure nil
+    :ensure-system-package mu
+    :load-path "/usr/share/emacs/site-lisp/mu4e"
+    :bind (("C-c m" . mu4e)
+           :map mu4e-view-mode-map
+           ("n"         . next-line)
+           ("p"         . previous-line)
+           ("<tab>"     . org-next-link)
+           ("<backtab>" . org-previous-link)
+           ("<RET>"     . mu4e~view-browse-url-from-binding))
+    :hook (mu4e-compose-mode
+           . (lambda ()
+               (flyspell-mode)
+               (auto-fill-mode -1)
+               (display-line-numbers-mode -1)))
+    :custom
+    (mail-user-agent 'mu4e-user-agent)
+    (mu4e-get-mail-command "mbsync -c ~/.mbsyncrc -a")
+    (mu4e-update-interval 600)
+    (mu4e-split-view nil)
+    (mu4e-confirm-quit nil)
+    (mu4e-use-fancy-chars t)
+    (mu4e-view-show-images t)
+    (mu4e-view-prefer-html t)
+    (mu4e-view-show-addresses t)
+    (mu4e-hide-index-messages t)
+    (mu4e-attachment-dir "~/Downloads")
+    (mu4e-compose-dont-reply-to-self t)
+    (mu4e-change-filenames-when-moving t)
+    (mu4e-sent-messages-behavior 'delete)
+    (mu4e-index-update-error-warning nil)
+    (mu4e-html2text-command "w3m -dump -I utf-8 -O utf-8 -T text/html"))
+
+  (use-package mu4e-headers
+    :ensure nil
+    :hook (mu4e-headers-mode . (lambda () (eldoc-mode -1)))
+    :custom
+    (mu4e-headers-auto-update t)
+    (mu4e-headers-fields `((:human-date . 12)
+                           (:flags      .  6)
+                           (:from       . 22)
+                           (:subject    . ,(- (window-body-width) 50))))
+    :config
+    (setq mu4e-headers-attach-mark '("a" . "📎")))
+
+  (use-package message
+    :ensure nil
+    :custom
+    (message-kill-buffer-on-exit t)
+    (message-send-mail-function 'smtpmail-send-it))
+
+  (use-package smtpmail
+    :ensure nil
+    :custom
+    (smtpmail-smtp-service 587)
+    (smtpmail-smtp-server "smtp.gmail.com")
+    (smtpmail-auth-credentials "~/.authinfo.gpg")
+    (smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))))
+
+  (use-package org-mime
+    :defer t
+    :config
+    (setq org-mime-export-options '(:section-numbers nil
+                                    :with-author nil
+                                    :with-toc nil)))
+
+  (use-package mu4e-context
+    :ensure nil
+    :custom
+    (mu4e-context-policy 'pick-first)
+    (mu4e-compose-context-policy 'always-ask)
+    :config
+    (setq mu4e-contexts
+          (list
+           (make-mu4e-context
+            ;; Personal context
+            :name "personal"
+            :enter-func (lambda () (mu4e-message "Entering personal context"))
+            :match-func (lambda (msg)
+                          (when msg
+                            (mu4e-message-contact-field-matches
+                             msg '(:from :to :cc :bcc) "zoliky@gmail.com")))
+            :vars '((user-mail-address  . "zoliky@gmail.com")
+                    (user-full-name     . "Zoltan Kiraly")
+                    (mu4e-sent-folder   . "/gmail-zoliky/[Gmail].Sent Mail")
+                    (mu4e-drafts-folder . "/gmail-zoliky/[Gmail].Drafts")
+                    (mu4e-trash-folder  . "/gmail-zoliky/[Gmail].Trash")
+                    (smtpmail-queue-dir . "~/Maildir/gmail-zoliky/queue/cur")
+                    (smtpmail-smtp-user . "zoliky")
+                    (mu4e-maildir-shortcuts
+                     . ((:maildir "/gmail-zoliky/INBOX"             :key ?i)
+                        (:maildir "/gmail-zoliky/[Gmail].Starred"   :key ?r)
+                        (:maildir "/gmail-zoliky/[Gmail].Sent Mail" :key ?s)
+                        (:maildir "/gmail-zoliky/[Gmail].Drafts"    :key ?d)
+                        (:maildir "/gmail-zoliky/[Gmail].Trash"     :key ?t)))))
+           (make-mu4e-context
+            ;; Work context
+            :name "work"
+            :enter-func (lambda () (mu4e-message "Entering work context"))
+            :match-func (lambda (msg)
+                          (when msg
+                            (mu4e-message-contact-field-matches
+                             msg '(:from :to :cc :bcc) "zolikydev@gmail.com")))
+            :vars '((user-mail-address  . "zolikydev@gmail.com")
+                    (user-full-name     . "Zoltan Kiraly")
+                    (mu4e-sent-folder   . "/gmail-zolikydev/[Gmail].Sent Mail")
+                    (mu4e-drafts-folder . "/gmail-zolikydev/[Gmail].Drafts")
+                    (mu4e-trash-folder  . "/gmail-zolikydev/[Gmail].Trash")
+                    (smtpmail-queue-dir . "~/Maildir/gmail-zolikydev/queue/cur")
+                    (smtpmail-smtp-user . "zolikydev")
+                    (mu4e-maildir-shortcuts
+                     . ((:maildir "/gmail-zolikydev/INBOX"             :key ?i)
+                        (:maildir "/gmail-zolikydev/[Gmail].Starred"   :key ?r)
+                        (:maildir "/gmail-zolikydev/[Gmail].Sent Mail" :key ?s)
+                        (:maildir "/gmail-zolikydev/[Gmail].Drafts"    :key ?d)
+                        (:maildir "/gmail-zolikydev/[Gmail].Trash"     :key ?t))))))))
+#+end_src
+
+** Elfeed
+
+Elfeed is a news reader for Emacs.
+
+Dependencies:
+
+- ~sudo dnf install youtube-dl mpv~
+
+#+begin_src emacs-lisp
+  (use-package elfeed
+    :preface
+    ;; Mark all feeds as read
+    (defun king/elfeed-search-mark-all-read ()
+      (interactive)
+      (mark-whole-buffer)
+      (elfeed-search-untag-all-unread))
+
+    ;; Open selected feeds in a browser
+    (defun king/elfeed-search-browse-url (&optional use-generic-p)
+      (interactive "P")
+      (let ((entries (elfeed-search-selected)))
+        (cl-loop for entry in entries
+                 when (elfeed-entry-link entry)
+                 do (if use-generic-p
+                        (browse-url-generic (elfeed-entry-link entry))
+                      (browse-url (elfeed-entry-link entry))))
+        (mapc #'elfeed-search-update-entry entries)
+        (unless (or elfeed-search-remain-on-entry (use-region-p)))))
+
+    ;; Play podcasts and YouTube videos
+    (defun king/elfeed-search-open-enclosure (&optional use-generic-p)
+      (interactive "P")
+      (let ((entries (elfeed-search-selected)))
+        (cl-loop for entry in entries
+                 when (elfeed-entry-link entry)
+                 do (call-process-shell-command
+                     (format "mpv --force-window '%s'" (elfeed-entry-link entry)) nil 0))
+        (mapc #'elfeed-search-update-entry entries)
+        (unless (or elfeed-search-remain-on-entry (use-region-p))))
+      (message "Loading...")
+      (add-hook 'focus-out-hook (lambda () (message nil))))
+    :bind (("C-c e" . elfeed)
+           :map elfeed-search-mode-map
+           ("M" . elfeed-toggle-starred)
+           ("b" . king/elfeed-search-browse-url)
+           ("R" . king/elfeed-search-mark-all-read)
+           ("P" . king/elfeed-search-open-enclosure))
+    :custom
+    (elfeed-db-directory "~/.emacs.d/elfeed/")
+    :config
+    (setq shr-width 80))
+
+  (use-package elfeed-search
+    :ensure nil
+    :custom
+    (elfeed-search-title-max-width 100)
+    (elfeed-search-filter "@3-months-ago +unread ")
+    :config
+    ;; Star and unstar feeds
+    (defalias 'elfeed-toggle-starred
+      (elfeed-expose #'elfeed-search-toggle-all 'starred))
+    ;; Custom tag faces
+    (defface elfeed-search-starred-title-face nil "Starred feeds")
+    (push '(starred elfeed-search-starred-title-face) elfeed-search-face-alist)
+    (defface elfeed-search-podcast-title-face nil "Podcast entries")
+    (push '(podcast elfeed-search-podcast-title-face) elfeed-search-face-alist)
+    (defface elfeed-search-youtube-title-face nil "YouTube entries")
+    (push '(youtube elfeed-search-youtube-title-face) elfeed-search-face-alist))
+
+  (use-package elfeed-org
+    :after elfeed
+    :init
+    (elfeed-org)
+    :custom
+    (rmh-elfeed-org-files '("~/orgfiles/elfeed.org")))
+#+end_src
+
+** Emms
+
+Emms (Emacs Multimedia System) is an interactive media browser and music player for Emacs.
+
+Dependencies:
+
+- ~pip install tinytag~
+- ~sudo dnf install mpv~
+
+#+begin_src emacs-lisp
+  (use-package emms
+    :bind (("C-c u"  . emms)
+           ("C-c U"  . emms-browser)
+           ("<C-f1>" . emms-show)
+           ("<C-f2>" . emms-volume-lower)
+           ("<C-f3>" . emms-volume-raise)
+           ("<C-f5>" . emms-previous)
+           ("<C-f6>" . emms-next)
+           ("<C-f7>" . emms-pause)
+           ("<C-f8>" . emms-stop)
+           :map emms-playlist-mode-map
+           ("p" . previous-line)
+           ("n" . next-line))
+    :custom
+    (emms-info-asynchronously t)
+    (emms-volume-amixer-card 1)
+    (emms-volume-amixer-control "PCM")
+    (emms-playlist-buffer-name "*Music*")
+    (emms-player-list '(emms-player-mpv))
+    (emms-info-functions '(emms-info-tinytag))
+    (emms-source-file-default-directory "/run/media/zoliky/Lara/Music")
+    (emms-source-file-directory-tree-function
+     'emms-source-file-directory-tree-find)
+    :config
+    (require 'emms-setup)
+    (require 'emms-history)
+    (require 'emms-volume)
+    (require 'emms-volume-amixer)
+    (require 'emms-mode-line)
+    (emms-all)
+    (emms-history-load)
+    (emms-mode-line nil))
+#+end_src
+
+* Custom key bindings
+
+#+begin_src emacs-lisp
+  (keymap-global-unset "C-z")                 ; Disable C-z
+  (keymap-global-set "M-o" 'other-window)     ; Bind M-o to other-window
+  (keymap-global-set "M-z" 'zap-up-to-char)   ; Bind M-z to zap-up-to-char
+  (keymap-global-set "C-S-d" 'duplicate-line) ; Bind C-S-d to duplicate-line
+
+  ;; Disable secondary selection commands
+  (keymap-global-unset "M-<mouse-1>")
+  (keymap-global-unset "M-<mouse-2>")
+  (keymap-global-unset "M-<mouse-3>")
+  (keymap-global-unset "M-<drag-mouse-1>")
+  (keymap-global-unset "M-<down-mouse-1>")
+#+end_src
+
+* Custom functions
+
+Move the cursor to the first non-whitespace character of the line. If the cursor is already there, then move it to the beginning of the line.
+
+#+begin_src emacs-lisp
+  (defun king/smarter-beginning-of-line ()
+    (interactive)
+    (if (= (point) (progn (back-to-indentation) (point)))
+        (beginning-of-line)))
+
+  (keymap-global-set "C-a" 'king/smarter-beginning-of-line)
+#+end_src
+
+When splitting a window, switch to the new window.
+
+#+begin_src emacs-lisp
+  (defun king/split-window-below-and-switch ()
+    (interactive)
+    (split-window-below)
+    (balance-windows)
+    (other-window 1))
+
+  (defun king/split-window-right-and-switch ()
+    (interactive)
+    (split-window-right)
+    (balance-windows)
+    (other-window 1))
+
+  (keymap-global-set "C-x 2" 'king/split-window-below-and-switch)
+  (keymap-global-set "C-x 3" 'king/split-window-right-and-switch)
+#+end_src
+
+Mark deleted e-mail messages as read.
+
+#+begin_src emacs-lisp
+  (defun king/mu4e-mark-gmail-trash-as-read (&optional _)
+    (let* ((cmd "mu find maildir:/trash/ flag:unread --format=sexp 2>/dev/null")
+           (res (concat "(list" (shell-command-to-string cmd) ")"))
+           (msgs (car (read-from-string res))))
+      (unless (equal '(list) msgs)
+        (dolist (msg msgs)
+          (when-let ((docid (mu4e-message-field msg :docid)))
+            (unless (= docid 0)
+              (mu4e~proc-move docid nil "+S-u-N")))))))
+
+  (advice-add 'mu4e :before #'king/mu4e-mark-gmail-trash-as-read)
+#+end_src
+
+Resize large images in e-mail messages to fit the window.
+
+#+begin_src emacs-lisp
+  (defun mu4e-display-image (imgpath &optional maxwidth maxheight)
+    (let ((img (create-image imgpath nil nil
+                             :max-width maxwidth :max-height maxheight)))
+      (save-excursion
+        (insert "\n")
+        (let ((size (image-size img)))
+          (insert-char ?\n (max 0 (round (- (window-height) (or maxheight (cdr size)) 1) 2)))
+          (insert-char ?\. (max 0 (round (- (window-width)  (or maxwidth (car size))) 2)))
+          (insert-image img)))))
+#+end_src
+
+Use colors from the active theme palette.
+
+#+begin_src emacs-lisp
+  (defun king/colors-active-theme ()
+    (let ((next      "violetred")
+          (repeat    "violetred")
+          (waiting   "slateblue")
+          (postponed "chocolate")
+          (someday   "chocolate")
+          (delegated "slateblue")
+          (project   "royalblue")
+          (failed    "slategray")
+          (cancelled "slategray")
+          (starred   "violetred")
+          (podcast   "darkcyan")
+          (youtube   "chocolate"))
+      (when (and (featurep 'ef-themes) (ef-themes--list-enabled-themes))
+        (ef-themes-with-colors
+          (setq next      magenta-warmer
+                repeat    magenta-warmer
+                waiting   magenta-cooler
+                postponed yellow-warmer
+                someday   yellow-warmer
+                delegated magenta-cooler
+                project   blue
+                failed    fg-dim
+                cancelled fg-dim
+                starred   magenta-warmer
+                podcast   cyan-cooler
+                youtube   yellow-warmer)))
+      (setq org-todo-keyword-faces
+            `(("NEXT"      . (:foreground ,next      :weight bold))
+              ("REPEAT"    . (:foreground ,repeat    :weight bold))
+              ("WAITING"   . (:foreground ,waiting   :weight bold))
+              ("POSTPONED" . (:foreground ,postponed :weight bold))
+              ("SOMEDAY"   . (:foreground ,someday   :weight bold))
+              ("DELEGATED" . (:foreground ,delegated :weight bold))
+              ("PROJECT"   . (:foreground ,project   :weight bold))
+              ("FAILED"    . (:foreground ,failed    :weight bold))
+              ("CANCELLED" . (:foreground ,cancelled :weight bold))))
+
+      ;; Elfeed
+      (set-face-attribute 'elfeed-search-starred-title-face nil :foreground starred)
+      (set-face-attribute 'elfeed-search-podcast-title-face nil :foreground podcast)
+      (set-face-attribute 'elfeed-search-youtube-title-face nil :foreground youtube)
+
+      ;; Restart Org mode
+      (when (derived-mode-p 'org-mode)
+        (org-mode-restart))))
+
+  (king/colors-active-theme)
+  (add-hook 'ef-themes-post-load-hook 'king/colors-active-theme)
+#+end_src
+
+* Custom input methods
+
+Input methods provide convenient ways of entering non-ASCII characters from the keyboard.
+
+#+begin_src emacs-lisp
+  (quail-define-package
+   "custom-input-method" "" "" t
+   "Custom input method
+
+  Documentation goes here."
+   nil t nil nil nil nil nil nil nil nil t)
+
+  (quail-define-rules
+   ;; Phonetic symbols
+   ("\\uh" ?ə) ; UNSTRESSED SCHWA VOWEL
+   ("\\uH" ?ʌ) ; STRESSED SCHWA VOWEL
+   ("\\ii" ?ɪ) ; NEAR-CLOSE NEAR-FRONT UNROUNDED VOWEL
+   ("\\uu" ?ʊ) ; NEAR-CLOSE NEAR-BACK ROUNDED VOWEL
+   ("\\ee" ?ɛ) ; OPEN-MID FRONT UNROUNDED VOWEL
+   ("\\er" ?ɜ) ; OPEN-MID CENTRAL UNROUNDED VOWEL
+   ("\\oh" ?ɔ) ; OPEN-MID BACK ROUNDED VOWEL
+   ("\\ae" ?æ) ; NEAR-OPEN FRONT UNROUNDED VOWEL
+   ("\\ah" ?ɑ) ; OPEN BACK UNROUNDED VOWEL
+   ("\\th" ?θ) ; VOICELESS DENTAL FRICATIVE
+   ("\\tH" ?ð) ; VOICED DENTAL FRICATIVE
+   ("\\sh" ?ʃ) ; VOICELESS POSTALVEOLAR FRICATIVE
+   ("\\zs" ?ʒ) ; VOICED POSTALVEOLAR FRICATIVE
+   ("\\be" ?β) ; VOICED BILABIAL FRICATIVE
+   ("\\vv" ?ɣ) ; VOICED VELAR FRICATIVE
+   ("\\hh" ?ɥ) ; VOICED LABIAL-PALATAL APPROXIMANT
+   ("\\la" ?ʎ) ; VOICED PALATAL LATERAL APPROXIMANT
+   ("\\jj" ?ʝ) ; VOICED PALATAL FRICATIVE
+   ("\\mm" ?ɱ) ; VOICED LABIODENTAL NASAL
+   ("\\ts" ?ʧ) ; VOICELESS POSTALVEOLAR AFFRICATE
+   ("\\dz" ?ʤ) ; VOICED POSTALVEOLAR AFFRICATE
+   ("\\ny" ?ɲ) ; VOICED PALATAL NASAL
+   ("\\ng" ?ŋ) ; VOICED VELAR NASAL
+   ("\\rr" ?ɹ) ; VOICED ALVEOLAR APPROXIMANT
+   ("\\ta" ?ɾ) ; VOICED ALVEOLAR TAP
+   ("\\ir" ?ʁ) ; VOICED UVULAR FRICATIVE
+   ("\\dl" ?ɫ) ; VELARIZED ALVEOLAR LATERAL APPROXIMANT
+   ("\\as" ?ʰ) ; ASPIRATED
+   ("\\ps" ?ˈ) ; PRIMARY STRESS
+   ("\\ss" ?ˌ) ; SECONDARY STRESS
+   ("\\li" ?‿) ; LIAISON
+   ("\\ri" ?↗) ; RISING INFLECTION
+   ("\\fi" ?↘) ; FALLING INFLECTION
+   ("\\lw" ?ʷ) ; LABIAL HIGH ROUNDED
+   ("\\ly" ?ʸ) ; PALATAL HIGH UNROUNDED
+   ("\\st" ?̚) ; NO AUDIBLE RELEASE
+
+   ;; Common symbols
+   ("\\copy"   ?©)  ; COPYRIGHT
+   ("\\tm"     ?™)  ; TRADEMARK
+   ("\\mdot"   ?·)  ; INTERPUNCT
+   ("\\ha"     ?á)  ; A-ACUTE
+   ("\\endash" ?–)  ; EN DASH
+   ("\\emdash" ?—)  ; EM DASH
+   ("\\female" ?♀)  ; FEMALE
+   ("\\male"   ?♂)  ; MALE
+   ("\\eur"    ?€)) ; EURO
+#+end_src
+
+* Org mode
+
+#+begin_quote
+Org mode is a a to-do, agenda, project planner, literate programming, note-taking (and more!) application. It is widely considered the best text-based organizer ever — a feat only surpassed by the fact that people switch to Emacs just to use it.
+
+— Mickey Petersen, author of "Mastering Emacs"
+#+end_quote
+
+#+begin_src emacs-lisp
+  (use-package org
+    :ensure nil
+    :hook (org-mode . (lambda ()
+                        (org-indent-mode)
+                        (variable-pitch-mode -1)
+                        (display-line-numbers-mode -1)
+                        (set-input-method "custom-input-method")))
+    :bind ("C-c l" . org-store-link)
+    :custom
+    (org-ellipsis " ▾")
+    (org-tags-column 0)
+    (org-log-done 'time)
+    (org-startup-folded t)
+    (org-log-into-drawer t)
+    (org-clock-into-drawer t)
+    (org-log-reschedule 'time)
+    (org-image-actual-width nil)
+    (org-src-fontify-natively t)
+    (org-src-tab-acts-natively t)
+    (org-hide-emphasis-markers t)
+    (org-directory "~/orgfiles")
+    (org-export-with-tags nil)
+    (org-export-headline-levels 5)
+    (org-export-backends '(html latex))
+    (org-startup-with-inline-images t)
+    (org-modules '(org-crypt org-habit))
+    (org-tag-alist '(("crypt"    . ?c)
+                     ("temp"     . ?t)
+                     ("home"     . ?h)
+                     ("work"     . ?w)
+                     ("urgent"   . ?u)
+                     ("export"   . ?e)
+                     ("noexport" . ?n)
+                     ("expired"  . ?x)
+                     ("TOC"      . ?T)))
+    (org-tags-sort-function 'org-string-collate-lessp)
+    (org-tags-exclude-from-inheritance '("crypt"))
+    (org-todo-keywords '((sequence "TODO(t)"
+                                   "NEXT(n)"
+                                   "REPEAT(r)"
+                                   "WAITING(w)"
+                                   "POSTPONED(e)"
+                                   "SOMEDAY(s)"
+                                   "DELEGATED(o)"
+                                   "PROJECT(p)" "|"
+                                   "DONE(d)"
+                                   "FORWARDED(f)"
+                                   "CANCELLED(c)")
+                         (sequence "GOAL(g)" "|"
+                                   "ACHIEVED(a)"
+                                   "FAILED(x)")))
+    (org-todo-repeat-to-state "REPEAT")
+    (org-refile-allow-creating-parent-nodes 'confirm)
+    (org-refile-targets '((org-agenda-files . (:maxlevel . 4)))))
+
+  (use-package org-faces
+    :ensure nil
+    :custom-face
+    (org-todo  ((nil (:weight bold))))
+    (org-done  ((nil (:weight bold))))
+    (org-table ((nil (:inherit fixed-pitch))))
+    (org-block ((nil (:inherit fixed-pitch))))
+    (org-code  ((nil (:inherit (shadow fixed-pitch))))))
+
+  ;; Replace list hyphens with bullets
+  (font-lock-add-keywords
+   'org-mode
+   '(("^ *\\([-]\\) "
+      (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+#+end_src
+
+** Agenda
+
+#+begin_src emacs-lisp
+  (use-package org-agenda
+    :ensure nil
+    :bind ("C-c a" . org-agenda)
+    :custom
+    (org-agenda-files
+     (seq-filter #'file-exists-p
+                 (mapcar #'(lambda (file) (file-name-concat org-directory file))
+                         '("bookmarks.org"
+                           "calendar.org"
+                           "contacts.org"
+                           "personal.org"
+                           "work.org"
+                           "misc.org"
+                           "notes.org"
+                           "people.org"
+                           "refile.org"
+                           "elfeed.org"
+                           "english.org"
+                           "spanish.org"
+                           "private.org"))))
+    (org-agenda-include-diary t)
+    (org-habit-graph-column 80)
+    (org-habit-today-glyph ?⧖)
+    (org-habit-completed-glyph ?✓)
+    (org-agenda-window-setup 'current-window))
+#+end_src
+
+** Appear
+
+A package to toggle visibility of hidden Org elements.
+
+#+begin_src emacs-lisp
+  (use-package org-appear
+    :after org
+    :hook (org-mode . org-appear-mode))
+#+end_src
+
+** Bullets
+
+Prettify Org headings by replacing leading stars with UTF-8 bullets.
+
+#+begin_src emacs-lisp
+  (use-package org-superstar
+    :hook (org-mode . org-superstar-mode)
+    :config
+    (org-superstar-configure-like-org-bullets))
+#+end_src
+
+** Calendar
+
+#+begin_src emacs-lisp
+  (use-package calendar
+    :ensure nil
+    :custom
+    (calendar-mark-holidays-flag t))
+
+  (use-package holidays
+    :ensure nil
+    :custom
+    (holiday-bahai-holidays nil)
+    (holiday-christian-holidays
+     '((holiday-fixed  1  6     "Epiphany (Vízkereszt)")
+       (holiday-easter-etc -46  "Ash Wednesday (Hamvazószerda)")
+       (holiday-easter-etc -7   "Palm Sunday (Virágvasárnap)")
+       (holiday-easter-etc -2   "Holy Friday (Nagypéntek)")
+       (holiday-easter-etc  0   "Easter Sunday (Húsvétvasárnap)")
+       (holiday-easter-etc  1   "Easter Monday (Húsvéthétfő)")
+       (holiday-easter-etc 39   "Ascension (Áldozócsütörtök)")
+       (holiday-easter-etc 49   "Pentecost (Pünkösd)")
+       (holiday-easter-etc 56   "Trinity Sunday (Szentháromság Vasárnapja)")
+       (holiday-easter-etc 60   "Corpus Christi (Úrnapja)")
+       (holiday-greek-orthodox-easter)
+       (holiday-fixed  8 15     "Assumption (Nagyboldogasszony)")
+       (holiday-fixed 11  1     "All Saints' Day (Mindenszentek Napja)")
+       (holiday-fixed 11  2     "Day of the Dead (Hallotak Napja)")
+       (holiday-fixed 12 25     "Christmas Day (Karácsony Napja)")))
+    (holiday-general-holidays
+     '((holiday-fixed  1  1     "New Year's Day (Újév)")
+       (holiday-fixed  2 14     "Valentine's Day (Valentin Nap)")
+       (holiday-fixed  3  8     "International Women's Day (Nemzetközi Nőnap)")
+       (holiday-fixed 10 31     "Halloween (Észak-Amerikai Ünnep)")
+       (holiday-float 11  4  4  "Thanksgiving (Észak-Amerikai Ünnep)")))
+    (holiday-local-holidays
+     '((holiday-fixed  5  1     "Labor Day (A Munka Ünnepe)")
+       (holiday-float  5  0  1  "Mother's Day (Anyák Napja)")))
+    (holiday-hebrew-holidays nil)
+    (holiday-islamic-holidays nil)
+    (holiday-oriental-holidays nil))
+#+end_src
+
+** Capture
+
+Templates to quickly record tasks, notes, and other semi-structured information.
+
+#+begin_src emacs-lisp
+  (use-package org-capture
+    :ensure nil
+    :after org
+    :bind ("C-c c" . org-capture)
+    :preface
+    (defvar king/capture-template-bookmark
+      (concat "* [[%^{Link}][%^{Description}]]\n"
+              ":PROPERTIES:\n"
+              ":Created: %U\n"
+              ":END:\n") "Bookmark")
+    (defvar king/capture-template-contact
+      (concat "* %?\n"
+              ":PROPERTIES:\n"
+              ":Created: %U\n"
+              ":Birthday: yyyy-mm-dd\n"
+              ":Email:\n"
+              ":Mobile:\n"
+              ":Skype:\n"
+              ":Address:\n"
+              ":City:\n"
+              ":State:\n"
+              ":Country:\n"
+              ":PostalCode:\n"
+              ":Website:\n"
+              ":Note:\n"
+              ":END:\n") "Contact")
+    :custom
+    (org-capture-templates
+     `(
+       ;; Bookmark
+       ("b" "Bookmark"
+        entry (file+headline ,(concat org-directory "/refile.org") "Bookmarks"),
+        king/capture-template-bookmark)
+
+       ;; Contact
+       ("c" "Contact"
+        entry (file+headline ,(concat org-directory "/refile.org") "Contacts"),
+        king/capture-template-contact)
+
+       ;; Note
+       ("n" "Note"
+        entry (file+headline ,(concat org-directory "/refile.org") "Notes")
+        "* %?\n:PROPERTIES:\n:Created: %U\n:END:\n")
+
+       ;; Task
+       ("t" "Task"
+        entry (file+headline ,(concat org-directory "/refile.org") "Tasks")
+        "* %?\n:PROPERTIES:\n:Created: %U\n:END:\n"))))
+#+end_src
+
+** Contacts
+
+A contact manager for Org mode.
+
+#+begin_src emacs-lisp
+  (use-package org-contacts
+    :after org
+    :custom
+    (org-contacts-files (list (concat org-directory "/contacts.org"))))
+#+end_src
+
+** Crypt
+
+Encrypt and decrypt entries in Org mode.
+
+#+begin_src emacs-lisp
+  (use-package org-crypt
+    :ensure nil
+    :after org
+    :custom
+    ;; Public key
+    (org-crypt-key "182BC820D271E36BE128AD05D1F775A0A21D3351")
+    :config
+    (org-crypt-use-before-save-magic))
+#+end_src
+
+** Denote
+
+A simple note-taking tool, based on the idea that notes should follow a predictable and descriptive file-naming scheme.
+
+#+begin_src emacs-lisp
+  (use-package denote
+    :after org
+    :bind ("C-c d" . denote)
+    :hook (dired-mode . denote-dired-mode)
+    :custom
+    (denote-sort-keywords t)
+    (denote-directory "~/notes/")
+    (denote-allow-multi-word-keywords nil))
+#+end_src
+
+** Export
+
+A LaTeX back-end for the Org export engine.
+
+Dependencies:
+
+- ~sudo dnf install sil-charis-fonts~
+- ~sudo dnf install texlive-scheme-basic~
+- ~sudo dnf install tex-wrapfig tex-ulem tex-capt-of tex-nopageno~
+
+#+begin_src emacs-lisp
+  (use-package ox-latex
+    :ensure nil
+    :after org
+    :custom
+    (org-latex-compiler "xelatex")
+    :config
+    (add-to-list
+     'org-latex-classes
+     '("org-plain-latex"
+       "\\documentclass{article}
+       [NO-DEFAULT-PACKAGES]
+       [PACKAGES]
+       [EXTRA]"
+       ("\\section{%s}"       . "\\section*{%s}")
+       ("\\subsection{%s}"    . "\\subsection*{%s}")
+       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+       ("\\paragraph{%s}"     . "\\paragraph*{%s}")
+       ("\\subparagraph{%s}"  . "\\subparagraph*{%s}"))))
+#+end_src
+
+** Toc
+
+A package to automatically generate a table of contents based on the structure of the document.
+
+#+begin_src emacs-lisp
+  (use-package toc-org
+    :after org
+    :hook (org-mode . toc-org-enable)
+    :custom
+    (toc-org-max-depth 3))
+#+end_src
