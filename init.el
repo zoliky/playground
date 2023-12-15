@@ -25,6 +25,12 @@
 ;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File
 
 ;;; Code:
+
+;; Check to see if the minimum version requirement of Emacs is met
+;(let ((minver "29.1"))
+;  (when (version< emacs-version minver)
+;    (error "This configuration requires Emacs %s or higher." minver)))
+
 ;;;; Package management
 
 ;; Configure package sources and priorities
@@ -52,6 +58,7 @@
   (major-mode 'text-mode)              ; Set the default major mode to text-mode
   (ring-bell-function 'ignore)         ; Disable the beep sound triggered by various events
   (cursor-in-non-selected-windows nil) ; Hide the cursor in non-selected windows
+  (inhibit-compacting-font-caches nil) ; Prevent compacting font caches during garbage collection
   :config
   (savehist-mode t)                    ; Save the minibuffer history
   (save-place-mode t)                  ; Jump to the last known position when reopening a file
@@ -95,6 +102,9 @@
 
 ;; Variable-pitch font
 (set-face-attribute 'variable-pitch nil :family "Hack" :height 180)
+
+;; Fixed-pitch
+(set-face-attribute 'fixed-pitch nil :family "Hack")
 
 ;;;;; Spell checking
 
