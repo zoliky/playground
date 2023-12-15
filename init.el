@@ -884,7 +884,8 @@
   (org-agenda-include-diary t)
   (org-habit-graph-column 80)
   (org-habit-today-glyph ?⧖)
-  (org-habit-completed-glyph ?✓))
+  (org-habit-completed-glyph ?✓)
+  (org-agenda-window-setup 'current-window))
 
 ;;;;; Appear
 
