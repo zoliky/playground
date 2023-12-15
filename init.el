@@ -406,8 +406,6 @@
   (which-key-mode))
 
 ;;;;; Languages
-;;;;;; JavaScript
-
 ;;;;;; Lua
 
 (use-package lua-mode
@@ -422,7 +420,6 @@
 
 (use-package toml-mode
   :mode "\\.toml\\'")
-
 
 ;;;;;; Markdown
 
@@ -891,23 +888,16 @@
   :config
   (org-superstar-configure-like-org-bullets))
 
-;;;;; Contacts
-
-;(use-package org-contacts
-;  :after org
-;  :custom
-;  (org-contacts-files (list (concat org-directory "/contacts.org"))))
-
 ;;;;; Denote
 
 (use-package denote
-  :bind (("C-c d" . denote)
-	 ("C-c j" . denote-rename-file))
+  :after org
+  :bind ("C-c d" . denote)
   :hook (dired-mode . denote-dired-mode)
   :custom
   (denote-sort-keywords t)
-  (denote-allow-multi-word-keywords nil)
-  (denote-directory "~/tmp"))
+  (denote-directory "~/notes/")
+  (denote-allow-multi-word-keywords nil))
 
 ;;;;; Calendar
 
