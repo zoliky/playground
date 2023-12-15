@@ -723,9 +723,10 @@
             ("CANCELLED" . (:foreground ,cancelled :weight bold))))
 
     ;; Elfeed
-    ;(set-face-attribute 'elfeed-search-starred-title-face nil :foreground starred)
-    ;(set-face-attribute 'elfeed-search-podcast-title-face nil :foreground podcast)
-    ;(set-face-attribute 'elfeed-search-youtube-title-face nil :foreground youtube)
+    (custom-set-faces
+     `(elfeed-search-starred-title-face ((t :foreground ,starred)))
+     `(elfeed-search-podcast-title-face ((t :foreground ,podcast)))
+     `(elfeed-search-youtube-title-face ((t :foreground ,youtube))))
 
     ;; Restart Org mode
     (when (derived-mode-p 'org-mode)
