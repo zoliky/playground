@@ -76,6 +76,7 @@
   (version-control t)                 ; Make numeric backup versions unconditionally
   (create-lockfiles nil)              ; Stop creating lock files
   (auto-save-default nil)             ; Stop creating #autosave# files
+  (delete-by-moving-to-trash t)       ; Move deleted files to the trash
   (mode-require-final-newline nil)    ; Don't add newlines at the end of files
   (large-file-warning-threshold nil)) ; Open large files without requesting confirmation
 
@@ -126,7 +127,7 @@
 
 (use-package ef-themes
   :init
-  (load-theme 'ef-light t)
+  (load-theme 'ef-kassio t)
   :bind ("<f9>" . ef-themes-select))
 
 ;;;;;; Modus themes
@@ -171,7 +172,7 @@
 (use-package consult-notes
   :bind ("<f5>" . consult-notes)
   :custom
-  (consult-notes-denote-files-function (denote-directory-text-only-files))
+  (consult-notes-denote-files-function (function denote-directory-text-only-files))
   :config
   (consult-notes-denote-mode))
 
@@ -203,12 +204,15 @@
   :ensure nil
   :after nerd-icons-dired
   :bind ("C-x C-j" . dired-jump)
-  :hook (dired-mode . nerd-icons-dired-mode)
+  :hook (dired-mode . (lambda ()
+                        (nerd-icons-dired-mode)
+                        (dired-hide-details-mode)))
   :custom
   (dired-auto-revert-buffer t)
-  (delete-by-moving-to-trash t)
   (dired-recursive-copies 'always)
   (dired-recursive-deletes 'always)
+  (dired-hide-details-hide-symlink-targets nil)
+  (dired-hide-details-hide-information-lines nil)
   (dired-listing-switches "-agho --group-directories-first"))
 
 (use-package dired-narrow
@@ -228,6 +232,9 @@
               ("." . dired-hide-dotfiles-mode))
   :custom
   (dired-hide-dotfiles-verbose nil))
+
+(use-package nerd-icons-dired
+  :after nerd-icons)
 
 ;;;;;; Doom modeline
 
@@ -290,10 +297,6 @@
 ;;;;;; Icons
 
 (use-package nerd-icons)
-
-(use-package nerd-icons-dired
-  :after nerd-icons)
-
 
 ;;;;;; Indent guides
 
