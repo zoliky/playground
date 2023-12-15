@@ -257,17 +257,6 @@
   (doom-modeline-mu4e t)
   (doom-modeline-height 38))
 
-;;;;;; Duplicate thing
-
-;; A package to duplicate current line and selection.
-(use-package duplicate-thing
-  :preface
-  (defun king/duplicate-thing-custom ()
-    (interactive)
-    (save-mark-and-excursion (duplicate-thing 1))
-    (next-line))
-  :bind ("C-S-d" . king/duplicate-thing-custom))
-
 ;;;;;; Editorconfig
 
 (use-package editorconfig
@@ -677,6 +666,20 @@
   (emms-all)
   (emms-history-load)
   (emms-mode-line nil))
+
+;;;; Custom key bindings
+
+(keymap-global-unset "C-z")                 ; Disable C-z
+(keymap-global-set "M-o" 'other-window)     ; Bind M-o to other-window
+(keymap-global-set "M-z" 'zap-up-to-char)   ; Bind M-z to zap-up-to-char
+(keymap-global-set "C-S-d" 'duplicate-line) ; Bind C-S-d to duplicate-line
+
+;; Disable secondary selection commands
+(keymap-global-unset "M-<mouse-1>")
+(keymap-global-unset "M-<mouse-2>")
+(keymap-global-unset "M-<mouse-3>")
+(keymap-global-unset "M-<drag-mouse-1>")
+(keymap-global-unset "M-<down-mouse-1>")
 
 ;;;; Custom functions
 
