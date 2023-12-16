@@ -152,25 +152,6 @@
 (use-package avy
   :bind ("M-s" . avy-goto-char))
 
-;;;;;; Corfu
-
-;; An interactive and predictive completion framework
-(use-package corfu
-  :init
-  (global-corfu-mode)
-  :custom
-  (corfu-auto t)
-  (corfu-cycle t)
-  (corfu-auto-prefix 1)
-  (corfu-auto-delay 0.1)
-  (corfu-quit-no-match 'separator)
-  (corfu-exclude-modes '(org-mode mu4e-compose-mode)))
-
-(use-package cape
-  :init
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-  (add-to-list 'completion-at-point-functions #'cape-file))
-
 ;;;;;; Consult
 
 ;; Enhanced search and navigation commands
