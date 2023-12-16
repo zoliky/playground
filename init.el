@@ -264,7 +264,17 @@
 
 (use-package ibuffer
   :ensure nil
-  :bind ("C-x C-b" . ibuffer))
+  :init
+  (add-hook 'ibuffer-mode-hook
+            #'(lambda ()
+                (ibuffer-switch-to-saved-filter-groups "Custom")))
+  :bind ("C-x C-b" . ibuffer)
+  :custom
+  (ibuffer-saved-filter-groups
+   '(("Custom"
+      ("Org"
+       (mode . org-mode)))))
+  (ibuffer-show-empty-filter-groups nil))
 
 (use-package nerd-icons-ibuffer
   :after (nerd-icons ibuffer)
