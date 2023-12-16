@@ -41,7 +41,7 @@
                                    ("nongnu" .  25)))
 
 ;; Treat every package as though it had specified using :ensure t
-(use-package use-package-ensure
+(use-package use-package
   :custom
   (use-package-always-ensure t))
 
@@ -286,7 +286,6 @@
 
 (use-package magit
   :bind ("C-c g" . magit-status))
-
 
 ;;;;;; Move text
 
@@ -721,7 +720,6 @@
 
 (king/colors-active-theme)
 (add-hook 'ef-themes-post-load-hook 'king/colors-active-theme)
-
 
 ;;;; Custom input methods
 
