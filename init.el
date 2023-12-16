@@ -41,8 +41,9 @@
                                    ("nongnu" .  25)))
 
 ;; Treat every package as though it had specified using :ensure t
-;; TODO: This should be in use-package use-package :init section
-(setq use-package-always-ensure t)
+(use-package use-package-ensure
+  :custom
+  (use-package-always-ensure t))
 
 ;;;; General configuration
 ;;;;; Defaults
@@ -120,16 +121,11 @@
   (ispell-set-spellchecker-params)
   (ispell-hunspell-add-multi-dic "en_US,hu_HU,ro_RO"))
 
-;; Enable automatic spell checking and offer suggestions for misspelled words
+;; Enable automatic spell checking
 (use-package flyspell
   :ensure nil
   :after ispell
   :bind ("C-c s" . flyspell-mode))
-
-(use-package flyspell-correct
-  :after flyspell
-  :bind (:map flyspell-mode-map
-              ("C-;" . flyspell-correct-wrapper)))
 
 ;;;; Packages
 ;;;;; Color schemes
