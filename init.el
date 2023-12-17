@@ -826,7 +826,8 @@
 (use-package org
   :ensure nil
   :hook (org-mode . (lambda ()
-                      (org-indent-mode)))
+                      (org-indent-mode)
+                      (set-input-method "custom-input-method")))
   :bind (:map org-mode-map
               ("C-c l" . org-store-link)
               ("C-a"   . org-beginning-of-line))
@@ -964,6 +965,17 @@
   (holiday-islamic-holidays nil)
   (holiday-oriental-holidays nil))
 
+;;;;; Crypt
+
+(use-package org-crypt
+  :ensure nil
+  :after org
+  :custom
+  ;; Public key
+  (org-crypt-key "182BC820D271E36BE128AD05D1F775A0A21D3351")
+  :config
+  (org-crypt-use-before-save-magic))
+
 ;;;;; Export
 
 (use-package ox-latex
@@ -984,6 +996,14 @@
      ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
      ("\\paragraph{%s}"     . "\\paragraph*{%s}")
      ("\\subparagraph{%s}"  . "\\subparagraph*{%s}"))))
+
+;;;;; Toc
+
+(use-package toc-org
+  :after org
+  :hook (org-mode . toc-org-enable)
+  :custom
+  (toc-org-max-depth 3))
 
 ;;;; Other
 
