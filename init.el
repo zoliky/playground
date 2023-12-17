@@ -54,6 +54,7 @@
   (inhibit-startup-screen t)           ; Disable the startup screen
   (indent-tabs-mode nil)               ; Insert space characters instead of tabs
   (tab-width 2)                        ; The number of spaces a tab is equal to
+  (fill-column 78)                     ; Line length above which to break a line
   (cursor-type 'bar)                   ; Display the cursor as a vertical bar
   (column-number-mode t)               ; Display the column number in the mode line
   (major-mode 'text-mode)              ; Set the default major mode to text-mode
@@ -169,9 +170,9 @@
 (use-package dashboard
   :after nerd-icons
   :custom
-  (dashboard-items '((recents  . 5)
-                     (projects . 5)
-                     (agenda   . 5)))
+  (dashboard-items '((recents  .  5)
+                     (projects .  5)
+                     (agenda   . 10)))
   (dashboard-set-footer nil)
   (dashboard-set-init-info t)
   (dashboard-center-content t)
@@ -678,6 +679,35 @@
       (beginning-of-line)))
 
 (keymap-global-set "C-a" 'king/smarter-beginning-of-line)
+
+;; When splitting a window, switch to the new window.
+
+(defun king/split-window-below-and-switch ()
+  (interactive)
+  (split-window-below)
+  (balance-windows)
+  (other-window 1))
+
+(defun king/split-window-right-and-switch ()
+  (interactive)
+  (split-window-right)
+  (balance-windows)
+  (other-window 1))
+
+(keymap-global-set "C-x 2" 'king/split-window-below-and-switch)
+(keymap-global-set "C-x 3" 'king/split-window-right-and-switch)
+
+;; Resize large images in e-mail messages to fit the window.
+
+(defun mu4e-display-image (imgpath &optional maxwidth maxheight)
+  (let ((img (create-image imgpath nil nil
+                           :max-width maxwidth :max-height maxheight)))
+    (save-excursion
+      (insert "\n")
+      (let ((size (image-size img)))
+        (insert-char ?\n (max 0 (round (- (window-height) (or maxheight (cdr size)) 1) 2)))
+        (insert-char ?\. (max 0 (round (- (window-width)  (or maxwidth (car size))) 2)))
+        (insert-image img)))))
 
 ;; Use colors from the active theme palette
 (defun king/colors-active-theme ()
