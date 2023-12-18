@@ -133,14 +133,13 @@
 ;;;;;; Ef themes
 
 (use-package ef-themes
-  :init
-  (load-theme 'ef-kassio t)
   :bind ("<f9>" . ef-themes-select))
 
 ;;;;;; Modus themes
 
 (use-package modus-themes
-  :defer t)
+  :init
+  (load-theme 'modus-operandi t))
 
 ;;;;; General enhancements
 ;;;;;; Avy
@@ -964,6 +963,57 @@
   (holiday-hebrew-holidays nil)
   (holiday-islamic-holidays nil)
   (holiday-oriental-holidays nil))
+
+;;;;; Capture
+
+(use-package org-capture
+  :ensure nil
+  :after org
+  :bind ("C-c c" . org-capture)
+  :preface
+  (defvar king/capture-template-bookmark
+    (concat "* [[%^{Link}][%^{Description}]]\n"
+            ":PROPERTIES:\n"
+            ":Created: %U\n"
+            ":END:\n") "Bookmark")
+  (defvar king/capture-template-contact
+    (concat "* %?\n"
+            ":PROPERTIES:\n"
+            ":Created: %U\n"
+            ":Birthday: yyyy-mm-dd\n"
+            ":Email:\n"
+            ":Mobile:\n"
+            ":Skype:\n"
+            ":Address:\n"
+            ":City:\n"
+            ":State:\n"
+            ":Country:\n"
+            ":PostalCode:\n"
+            ":Website:\n"
+            ":Note:\n"
+            ":END:\n") "Contact")
+  :custom
+  (org-capture-templates
+   `(
+     ;; Bookmark
+     ("b" "Bookmark"
+      entry (file+headline ,(concat org-directory "/refile.org") "Bookmarks"),
+      king/capture-template-bookmark)
+
+     ;; Contact
+     ("c" "Contact"
+      entry (file+headline ,(concat org-directory "/refile.org") "Contacts"),
+      king/capture-template-contact)
+
+     ;; Note
+     ("n" "Note"
+      entry (file+headline ,(concat org-directory "/refile.org") "Notes")
+      "* %?\n:PROPERTIES:\n:Created: %U\n:END:\n")
+
+     ;; Task
+     ("t" "Task"
+      entry (file+headline ,(concat org-directory "/refile.org") "Tasks")
+      "* %?\n:PROPERTIES:\n:Created: %U\n:END:\n"))))
 
 ;;;;; Crypt
 
