@@ -845,7 +845,7 @@
   (org-directory "~/orgfiles")
   (org-export-with-tags nil)
   (org-export-headline-levels 5)
-  (org-export-backends '(html latex))
+  (org-export-backends '(latex))
   (org-startup-with-inline-images t)
   (org-modules '(org-crypt org-habit))
   (org-tag-alist '(("crypt"    . ?c)
@@ -908,6 +908,7 @@
 ;;;;; Appear
 
 (use-package org-appear
+  :after org
   :hook (org-mode . org-appear-mode))
 
 ;;;;; Bullets
