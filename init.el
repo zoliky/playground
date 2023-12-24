@@ -243,11 +243,12 @@
 
 ;;;;;; Exec path
 
-(use-package exec-path-from-shell
-  :init
-  (setq exec-path-from-shell-arguments nil)
-  :config
-  (exec-path-from-shell-initialize))
+;(use-package exec-path-from-shell
+;  :init
+;  (setq exec-path-from-shell-arguments nil)
+;  :config
+;  (setq exec-path-from-shell-debug t)
+;  (exec-path-from-shell-initialize))
 
 ;;;;;; Helpful
 
