@@ -1,8 +1,8 @@
 ;;; init.el --- Initialization file -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2020-2023 Zoltán Király
+;; Copyright (C) 2020-2024 Zoltán Király
 
-;; Author: Zoltán Király <zoltan.public@fastmail.com>
+;; Author: Zoltán Király <zoltanpublic@fastmail.com>
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -133,13 +133,14 @@
 ;;;;;; Ef themes
 
 (use-package ef-themes
+  :init
+  (load-theme 'ef-summer t)
   :bind ("<f9>" . ef-themes-select))
 
 ;;;;;; Modus themes
 
 (use-package modus-themes
-  :init
-  (load-theme 'modus-operandi t))
+  :defer t)
 
 ;;;;; General enhancements
 ;;;;;; Avy
