@@ -2,7 +2,7 @@
 
 ;; Copyright (C) 2020-2024 Zoltán Király
 
-;; Author: Zoltán Király <zoltaninfo@fastmail.com>
+;; Author: Zoltán Király <zoltanpub@fastmail.com>
 
 ;; This file is NOT part of GNU Emacs.
 
