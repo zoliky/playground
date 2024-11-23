@@ -423,11 +423,9 @@
 
 (use-package mu4e
   :ensure nil
-  :load-path "/usr/share/emacs/site-lisp/mu4e"
+  :load-path "/usr/local/share/emacs/site-lisp/mu4e"
   :bind (("C-c m" . mu4e)
          :map mu4e-view-mode-map
-         ("n"         . next-line)
-         ("p"         . previous-line)
          ("<tab>"     . org-next-link)
          ("<backtab>" . org-previous-link)
          ("<RET>"     . mu4e~view-browse-url-from-binding))
@@ -450,13 +448,21 @@
   (mu4e-attachment-dir "~/Downloads")
   (mu4e-compose-dont-reply-to-self t)
   (mu4e-change-filenames-when-moving t)
-  (mu4e-sent-messages-behavior 'delete)
   (mu4e-index-update-error-warning nil)
-  (mu4e-html2text-command "w3m -dump -I utf-8 -O utf-8 -T text/html"))
+  (mu4e-html2text-command "w3m -dump -I utf-8 -O utf-8 -T text/html")
+  (user-mail-address "public@zoltankiraly.com")
+  (user-full-name "Zoltan Kiraly")
+  (mu4e-maildir "~/.mail/mxroute/")
+  (mu4e-sent-folder "/mxroute/Sent")
+  (mu4e-drafts-folder "/mxroute/Drafts")
+  (mu4e-trash-folder "/mxroute/Trash")
+  (mu4e-maildir-shortcuts '((:maildir "/mxroute/INBOX"  :key ?i)
+                            (:maildir "/mxroute/Sent"   :key ?s)
+                            (:maildir "/mxroute/Drafts" :key ?d)
+                            (:maildir "/mxroute/Trash"  :key ?t))))
 
 (use-package mu4e-headers
   :ensure nil
-  :after mu4e
   :hook (mu4e-headers-mode . (lambda () (eldoc-mode -1)))
   :custom
   (mu4e-headers-auto-update t)
@@ -465,90 +471,40 @@
                          (:from       . 22)
                          (:subject)))
   :config
-  (setq mu4e-headers-attach-mark '("a" . "📎")))
+  (setq mu4e-headers-attach-mark '("a" . "📎"))
+  (setq mu4e-headers-new-mark '("N" . "N")))
+
+(use-package mu4e-bookmarks
+  :ensure nil
+  :custom
+  (mu4e-bookmarks `((:name "Unread messages" :query "flag:unread AND NOT flag:trashed AND NOT maildir:/mxroute/Spam" :key ?u)
+                    (:name "Today's messages" :query "date:today..now AND NOT flag:trashed AND NOT maildir:/mxroute/Spam" :key ?t)
+                    (:name "Last 7 days" :query "date:7d..now AND NOT flag:trashed AND NOT maildir:/mxroute/Spam" :hide-unread t :key ?w))))
 
 (use-package message
   :ensure nil
-  :after mu4e
   :custom
   (message-kill-buffer-on-exit t)
   (message-send-mail-function 'smtpmail-send-it))
 
 (use-package smtpmail
   :ensure nil
-  :after mu4e
   :custom
-  (smtpmail-smtp-service 587)
-  (smtpmail-smtp-server "smtp.gmail.com")
-  (smtpmail-auth-credentials "~/.authinfo.gpg")
-  (smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))))
+  (smtpmail-smtp-server "mail.zoltankiraly.com")
+  (smtpmail-smtp-service 465)
+  (smtpmail-stream-type 'ssl)
+  (smtpmail-auth-credentials "~/.authinfo.gpg"))
 
-(use-package org-mime
-  :defer t
-  :config
-  (setq org-mime-export-options '(:section-numbers nil
-                                  :with-author nil
-                                  :with-toc nil)))
-
-(use-package mu4e-context
-  :ensure nil
-  :after mu4e
-  :custom
-  (mu4e-context-policy 'pick-first)
-  (mu4e-compose-context-policy 'always-ask)
-  :config
-  (setq mu4e-contexts
-        (list
-         (make-mu4e-context
-          ;; Personal context
-          :name "personal"
-          :enter-func (lambda () (mu4e-message "Entering personal context"))
-          :match-func (lambda (msg)
-                        (when msg
-                          (mu4e-message-contact-field-matches
-                           msg '(:from :to :cc :bcc) "zoliky@gmail.com")))
-          :vars '((user-mail-address  . "zoliky@gmail.com")
-                  (user-full-name     . "Zoltan Kiraly")
-                  (mu4e-sent-folder   . "/gmail-zoliky/[Gmail].Sent Mail")
-                  (mu4e-drafts-folder . "/gmail-zoliky/[Gmail].Drafts")
-                  (mu4e-trash-folder  . "/gmail-zoliky/[Gmail].Trash")
-                  (smtpmail-queue-dir . "~/Maildir/gmail-zoliky/queue/cur")
-                  (smtpmail-smtp-user . "zoliky")
-                  (mu4e-maildir-shortcuts
-                   . ((:maildir "/gmail-zoliky/INBOX"             :key ?i)
-                      (:maildir "/gmail-zoliky/[Gmail].Starred"   :key ?r)
-                      (:maildir "/gmail-zoliky/[Gmail].Sent Mail" :key ?s)
-                      (:maildir "/gmail-zoliky/[Gmail].Drafts"    :key ?d)
-                      (:maildir "/gmail-zoliky/[Gmail].Trash"     :key ?t)))))
-         (make-mu4e-context
-          ;; Work context
-          :name "work"
-          :enter-func (lambda () (mu4e-message "Entering work context"))
-          :match-func (lambda (msg)
-                        (when msg
-                          (mu4e-message-contact-field-matches
-                           msg '(:from :to :cc :bcc) "zolikydev@gmail.com")))
-          :vars '((user-mail-address  . "zolikydev@gmail.com")
-                  (user-full-name     . "Zoltan Kiraly")
-                  (mu4e-sent-folder   . "/gmail-zolikydev/[Gmail].Sent Mail")
-                  (mu4e-drafts-folder . "/gmail-zolikydev/[Gmail].Drafts")
-                  (mu4e-trash-folder  . "/gmail-zolikydev/[Gmail].Trash")
-                  (smtpmail-queue-dir . "~/Maildir/gmail-zolikydev/queue/cur")
-                  (smtpmail-smtp-user . "zolikydev")
-                  (mu4e-maildir-shortcuts
-                   . ((:maildir "/gmail-zolikydev/INBOX"             :key ?i)
-                      (:maildir "/gmail-zolikydev/[Gmail].Starred"   :key ?r)
-                      (:maildir "/gmail-zolikydev/[Gmail].Sent Mail" :key ?s)
-                      (:maildir "/gmail-zolikydev/[Gmail].Drafts"    :key ?d)
-                      (:maildir "/gmail-zolikydev/[Gmail].Trash"     :key ?t))))))))
+(setf (plist-get (alist-get 'trash mu4e-marks) :action)
+      (lambda (docid msg target)
+        (mu4e--server-move docid (mu4e--mark-check-target target) "-N")))
 
 (use-package mu4e-alert
-  :after mu4e
+  :hook ((after-init . mu4e-alert-enable-mode-line-display))
   :custom
   ;; Notify only of unread emails in the inbox
   (mu4e-alert-interesting-mail-query "flag:unread maildir:/INBOX/")
   :config
-  (mu4e-alert-enable-mode-line-display)
   (mu4e-alert-set-default-style 'libnotify))
 
 ;;;;; Elfeed
