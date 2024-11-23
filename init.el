@@ -237,10 +237,9 @@
 
 ;;;;;; Editorconfig
 
-;(use-package editorconfig
-;  :defer 0.5
-;  :config
-;  (editorconfig-mode))
+(use-package editorconfig
+  :config
+  (editorconfig-mode))
 
 ;;;;;; Exec path
 
