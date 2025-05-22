@@ -392,11 +392,6 @@
   (which-key-mode))
 
 ;;;;; Languages
-;;;;;; Lua
-
-(use-package lua-mode
-  :mode "\\.lua\\'")
-
 ;;;;;; YAML
 
 (use-package yaml-mode
