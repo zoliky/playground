@@ -224,17 +224,6 @@
 (use-package nerd-icons-dired
   :after nerd-icons)
 
-;;;;;; Doom modeline
-
-;; A modeline for Emacs inspired by the Doom theme collection
-;(use-package doom-modeline
-;  :after nerd-icons
-;  :init
-;  (doom-modeline-mode)
-;  :custom
-;  (doom-modeline-mu4e t)
-;  (doom-modeline-height 38))
-
 ;;;;;; Editorconfig
 
 (use-package editorconfig
