@@ -161,13 +161,11 @@
          ("C-x b"   . consult-buffer)
          ("C-x C-r" . consult-recent-file)))
 
-;; TODO: Replace consult-notes with consult-denote
-;;(use-package consult-notes
-;;  :bind ("<f5>" . consult-notes)
-;;  :custom
-;;  (consult-notes-denote-files-function (function denote-directory-text-only-files))
-;;  :config
-;;  (consult-notes-denote-mode))
+(use-package consult-notes
+  :bind ("<f5>" . consult-notes)
+  :config
+  (setq consult-notes-denote-files-function (function denote-directory-text-only-files))
+  (consult-notes-denote-mode))
 
 ;;;;;; Dashboard
 
@@ -311,11 +309,6 @@
          (mu4e-compose-mode . olivetti-mode))
   :custom
   (olivetti-body-width 80))
-
-;;;;;; Outshine
-
-(use-package outshine
-  :defer t)
 
 ;;;;;; Rainbow delimiters
 
