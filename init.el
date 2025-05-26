@@ -925,7 +925,6 @@
             ":Birthday: yyyy-mm-dd\n"
             ":Email:\n"
             ":Mobile:\n"
-            ":Skype:\n"
             ":Address:\n"
             ":City:\n"
             ":State:\n"
