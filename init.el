@@ -27,9 +27,9 @@
 ;;; Code:
 
 ;; Check to see if the minimum version requirement of Emacs is met
-;(let ((minver "29.1"))
-;  (when (version< emacs-version minver)
-;    (error "This configuration requires Emacs %s or higher." minver)))
+(let ((minver "30.1"))
+  (when (version< emacs-version minver)
+    (error "This configuration requires Emacs %s or higher." minver)))
 
 ;;;; Package management
 
@@ -233,15 +233,6 @@
   :ensure nil
   :config
   (editorconfig-mode))
-
-;;;;;; Exec path
-
-;(use-package exec-path-from-shell
-;  :init
-;  (setq exec-path-from-shell-arguments nil)
-;  :config
-;  (setq exec-path-from-shell-debug t)
-;  (exec-path-from-shell-initialize))
 
 ;;;;;; Helpful
 
