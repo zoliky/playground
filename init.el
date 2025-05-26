@@ -962,8 +962,7 @@
   :ensure nil
   :after org
   :custom
-  ;; Public key
-  (org-crypt-key "182BC820D271E36BE128AD05D1F775A0A21D3351")
+  (org-crypt-key nil)
   :config
   (org-crypt-use-before-save-magic))
 
