@@ -2,7 +2,7 @@
 
 ;; Copyright (C) 2020-2024 Zoltán Király
 
-;; Author: Zoltán Király <email@email>
+;; Author: Zoltán Király <public@zoltankiraly.com>
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -130,6 +130,10 @@
 
 ;;;; Packages
 ;;;;; Color schemes
+;;;;;; Doric themes
+(use-package doric-themes
+  :defer t)
+
 ;;;;;; Ef themes
 
 (use-package ef-themes
@@ -157,12 +161,13 @@
          ("C-x b"   . consult-buffer)
          ("C-x C-r" . consult-recent-file)))
 
-(use-package consult-notes
-  :bind ("<f5>" . consult-notes)
-  :custom
-  (consult-notes-denote-files-function (function denote-directory-text-only-files))
-  :config
-  (consult-notes-denote-mode))
+;; TODO: Replace consult-notes with consult-denote
+;;(use-package consult-notes
+;;  :bind ("<f5>" . consult-notes)
+;;  :custom
+;;  (consult-notes-denote-files-function (function denote-directory-text-only-files))
+;;  :config
+;;  (consult-notes-denote-mode))
 
 ;;;;;; Dashboard
 
@@ -227,6 +232,7 @@
 ;;;;;; Editorconfig
 
 (use-package editorconfig
+  :ensure nil
   :config
   (editorconfig-mode))
 
@@ -374,6 +380,7 @@
 ;;;;;; Which key
 
 (use-package which-key
+  :ensure nil
   :defer 0.2
   :custom
   (which-key-idle-delay 1)
