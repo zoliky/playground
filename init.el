@@ -27,7 +27,7 @@
 ;;; Code:
 ;;;; Package management
 
-;; Configure package sources and priorities
+;; Configure package archives and priorities
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 (setq package-archive-priorities '(("melpa"  . 100)
