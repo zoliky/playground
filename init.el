@@ -40,28 +40,28 @@
 ;;;; General configuration
 ;;;;; Defaults
 
-;; Override various defaults
+;; Override various Emacs defaults
 (use-package emacs
   :ensure nil
   :custom
   (inhibit-startup-screen t)           ; Disable the startup screen
-  (indent-tabs-mode nil)               ; Insert space characters instead of tabs
+  (indent-tabs-mode nil)               ; Use spaces instead of tab characters
   (tab-width 2)                        ; The number of spaces a tab is equal to
-  (fill-column 78)                     ; Line length above which to break a line
+  (fill-column 78)                     ; Set maximum line width before wrapping
   (cursor-type 'bar)                   ; Display the cursor as a vertical bar
   (column-number-mode t)               ; Display the column number in the mode line
-  (major-mode 'text-mode)              ; Set the default major mode to text-mode
-  (ring-bell-function 'ignore)         ; Disable the beep sound triggered by various events
-  (cursor-in-non-selected-windows nil) ; Hide the cursor in non-selected windows
+  (major-mode 'text-mode)              ; Set default major mode to text-mode
+  (ring-bell-function 'ignore)         ; Disable audible bell
+  (cursor-in-non-selected-windows nil) ; Hide cursor in non-selected windows
   (inhibit-compacting-font-caches nil) ; Prevent compacting font caches during garbage collection
   :config
   (savehist-mode t)                    ; Save the minibuffer history
-  (save-place-mode t)                  ; Jump to the last known position when reopening a file
+  (save-place-mode t)                  ; Restore cursor position when reopening files
   (electric-pair-mode t)               ; Enable automatic brackets pairing
   (global-hl-line-mode t)              ; Enable line highlighting in all buffers
   (delete-selection-mode t)            ; Replace selected text when typing
-  (global-auto-revert-mode t)          ; Automatically reload externally modified files
-  (fset 'yes-or-no-p 'y-or-n-p)        ; Replace "yes/no" prompts with "y/n"
+  (global-auto-revert-mode t)          ; Reload files changed on disk
+  (fset 'yes-or-no-p 'y-or-n-p)        ; Use y/n instead of yes/no prompts
   (prefer-coding-system 'utf-8)        ; Set default encoding to UTF-8
   (set-language-environment 'utf-8)    ; Set default language environment to UTF-8
   )
@@ -82,7 +82,7 @@
   (mode-require-final-newline nil)    ; Don't add newlines at the end of files
   (large-file-warning-threshold nil)) ; Open large files without requesting confirmation
 
-;; Disable file used for storing customization information
+;; Disable persistent customization
 (setq custom-file (make-temp-file "emacs-custom-"))
 
 ;; Enable line numbering
@@ -98,7 +98,7 @@
 ;; Variable-pitch font
 (set-face-attribute 'variable-pitch nil :family "Hack" :height 180)
 
-;; Fixed-pitch
+;; Fixed-pitch font
 (set-face-attribute 'fixed-pitch nil :family "Hack")
 
 ;;;;; Spell checking
