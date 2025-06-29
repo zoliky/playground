@@ -104,12 +104,12 @@
 ;;;;; Spell checking
 
 ;; Configure ispell for multiple dictionaries
+;; English (US), Hungarian, and Romanian
 (use-package ispell
   :ensure nil
   :defer 0.5
   :custom
   (ispell-program-name "hunspell")
-  ;; English (US), Hungarian, and Romanian
   (ispell-dictionary "en_US,hu_HU,ro_RO")
   :config
   (ispell-set-spellchecker-params)
