@@ -25,12 +25,6 @@
 ;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File
 
 ;;; Code:
-
-;; Check to see if the minimum version requirement of Emacs is met
-(let ((minver "30.1"))
-  (when (version< emacs-version minver)
-    (error "This configuration requires Emacs %s or higher." minver)))
-
 ;;;; Package management
 
 ;; Configure package sources and priorities
@@ -40,16 +34,15 @@
                                    ("gnu"    .  50)
                                    ("nongnu" .  25)))
 
-;; Treat every package as though it had specified using :ensure t
-(use-package use-package
-  :custom
-  (use-package-always-ensure t))
+;; Assume :ensure t for all use-package declarations
+(setq use-package-always-ensure t)
 
 ;;;; General configuration
 ;;;;; Defaults
 
 ;; Override various defaults
 (use-package emacs
+  :ensure nil
   :custom
   (inhibit-startup-screen t)           ; Disable the startup screen
   (indent-tabs-mode nil)               ; Insert space characters instead of tabs
