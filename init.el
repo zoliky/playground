@@ -1,6 +1,6 @@
 ;;; init.el --- Initialization file -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2020-2024 Zoltán Király
+;; Copyright (C) 2020-2025 Zoltán Király
 
 ;; Author: Zoltán Király <public@zoltankiraly.com>
 
@@ -123,10 +123,6 @@
 
 ;;;; Packages
 ;;;;; Color schemes
-;;;;;; Doric themes
-(use-package doric-themes
-  :defer t)
-
 ;;;;;; Ef themes
 
 (use-package ef-themes
@@ -812,7 +808,6 @@
    (seq-filter #'file-exists-p
                (mapcar #'(lambda (file) (file-name-concat org-directory file))
                        '("bookmarks.org"
-                         "calendar.org"
                          "contacts.org"
                          "personal.org"
                          "work.org"
