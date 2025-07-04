@@ -63,7 +63,7 @@
   (global-auto-revert-mode t)          ; Reload files changed on disk
   (fset 'yes-or-no-p 'y-or-n-p)        ; Use y/n instead of yes/no prompts
   (prefer-coding-system 'utf-8)        ; Set default encoding to UTF-8
-  (set-language-environment "UTF-8")    ; Set default language environment to UTF-8
+  (set-language-environment "UTF-8")   ; Set default language environment to UTF-8
   )
 
 ;; File-related customizations
