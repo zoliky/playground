@@ -1,8 +1,8 @@
 ;;; early-init.el --- Early init file -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2020-2024 Zoltán Király
+;; Copyright (C) 2020-2025 Zoltán Király
 
-;; Author: Zoltán Király <zoltanpublic@fastmail.com>
+;; Author: Zoltán Király <public@zoltankiraly.com>
 
 ;; This file is NOT part of GNU Emacs.
 
