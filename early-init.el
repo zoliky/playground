@@ -29,6 +29,7 @@
 ;; Reduce the frequency of garbage collection
 (setq gc-cons-threshold (* 128 1024 1024))
 
+;; Temporarily disable file-name handlers to speed up startup
 (defvar file-name-handler-alist-old file-name-handler-alist)
 (setq file-name-handler-alist nil)
 (add-hook 'after-init-hook
