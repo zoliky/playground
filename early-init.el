@@ -26,10 +26,10 @@
 
 ;;; Code:
 
-;; Increase garbage collection threshold to reduce GC frequency during startup
+;; Temporarily increase garbage collection threshold for faster startup
 (setq gc-cons-threshold (* 128 1024 1024))
 
-;; Temporarily disable file-name handlers to speed up startup
+;; Temporarily disable file-name handlers for faster startup
 (defvar file-name-handler-alist-old file-name-handler-alist)
 (setq file-name-handler-alist nil)
 (add-hook 'after-init-hook
@@ -39,7 +39,7 @@
 ;; Maximize the Emacs frame on startup
 (push '(fullscreen . maximized) default-frame-alist)
 
-;; Set initial frame size to 1920x1080 text-pixels
+;; Set initial frame size to 1920x1080 text pixels
 (push '(width  . (text-pixels . 1920)) default-frame-alist)
 (push '(height . (text-pixels . 1080)) default-frame-alist)
 
