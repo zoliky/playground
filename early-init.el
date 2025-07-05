@@ -26,7 +26,7 @@
 
 ;;; Code:
 
-;; Reduce the frequency of garbage collection
+;; Increase garbage collection threshold to reduce GC frequency during startup
 (setq gc-cons-threshold (* 128 1024 1024))
 
 ;; Temporarily disable file-name handlers to speed up startup
