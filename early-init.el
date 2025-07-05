@@ -42,7 +42,7 @@
 (push '(width  . (text-pixels . 1920)) default-frame-alist)
 (push '(height . (text-pixels . 1080)) default-frame-alist)
 
-;; Set background color to prevent startup glare
+;; Set initial background color to prevent startup glare
 (push '(background-color . "#fff2f3") default-frame-alist)
 
 ;; Remove host name from titlebar information
