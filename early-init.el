@@ -38,7 +38,7 @@
 ;; Maximize the Emacs frame on startup
 (push '(fullscreen . maximized) default-frame-alist)
 
-;; Set default frame size to 1920x1080 pixels
+;; Set default text area size to 1920x1080 pixels
 (push '(width  . (text-pixels . 1920)) default-frame-alist)
 (push '(height . (text-pixels . 1080)) default-frame-alist)
 
