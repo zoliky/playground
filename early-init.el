@@ -26,7 +26,7 @@
 
 ;;; Code:
 
-;; Temporarily increase garbage collection threshold for faster startup
+;; Temporarily increase garbage collection threshold to reduce startup pauses
 (setq gc-cons-threshold (* 128 1024 1024))
 
 ;; Temporarily disable file-name handlers for faster startup
