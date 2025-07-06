@@ -53,7 +53,6 @@
   (major-mode 'text-mode)              ; Set default major mode to text-mode
   (ring-bell-function 'ignore)         ; Disable audible bell
   (cursor-in-non-selected-windows nil) ; Hide cursor in non-selected windows
-  (inhibit-compacting-font-caches nil) ; Prevent compacting font caches during garbage collection
   :config
   (savehist-mode t)                    ; Save the minibuffer history
   (save-place-mode t)                  ; Restore cursor position when reopening files
