@@ -51,14 +51,14 @@
   (cursor-type 'bar)                   ; Display the cursor as a vertical bar
   (column-number-mode t)               ; Display the column number in the mode line
   (major-mode 'text-mode)              ; Set default major mode to text-mode
-  (ring-bell-function 'ignore)         ; Disable both visual and audible bell
+  (ring-bell-function 'ignore)         ; Disable visual and audible bell
   (cursor-in-non-selected-windows nil) ; Hide cursor in non-selected windows
   :config
   (savehist-mode t)                    ; Save the minibuffer history
   (save-place-mode t)                  ; Restore cursor position when reopening files
   (electric-pair-mode t)               ; Auto-insert matching delimiters
   (global-hl-line-mode t)              ; Highlight the current line
-  (delete-selection-mode t)            ; Replace selected text when typing
+  (delete-selection-mode t)            ; Replace selection when typing
   (global-auto-revert-mode t)          ; Automatically reload files changed on disk
   (fset 'yes-or-no-p 'y-or-n-p)        ; Use y/n instead of yes/no prompts
   (prefer-coding-system 'utf-8)        ; Prefer UTF-8 for files, buffers, and processes
