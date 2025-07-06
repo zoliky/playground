@@ -63,6 +63,9 @@
   (fset 'yes-or-no-p 'y-or-n-p)        ; Use y/n instead of yes/no prompts
   (prefer-coding-system 'utf-8)        ; Set default encoding to UTF-8
   (set-language-environment "UTF-8")   ; Set default language environment to UTF-8
+  :bind
+  ( :map global-map
+    ("C-z" . nil))                     ; Disable C-z
   )
 
 ;; File-related customizations
@@ -575,7 +578,7 @@
 
 ;;;; Custom key bindings
 
-(keymap-global-unset "C-z")                 ; Disable C-z
+;(keymap-global-unset "C-z")                 ; Disable C-z
 (keymap-global-set "M-o" 'other-window)     ; Bind M-o to other-window
 (keymap-global-set "M-z" 'zap-up-to-char)   ; Bind M-z to zap-up-to-char
 (keymap-global-set "C-S-d" 'duplicate-line) ; Bind C-S-d to duplicate-line
