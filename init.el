@@ -61,8 +61,7 @@
   (delete-selection-mode t)            ; Replace selected text when typing
   (global-auto-revert-mode t)          ; Automatically reload files changed on disk
   (fset 'yes-or-no-p 'y-or-n-p)        ; Use y/n instead of yes/no prompts
-  (prefer-coding-system 'utf-8)        ; Set default encoding to UTF-8
-  (set-language-environment "UTF-8")   ; Set default language environment to UTF-8
+  (prefer-coding-system 'utf-8)        ; Prefer UTF-8 for files, buffers, and processes
   :bind
   ( :map global-map
     ("C-z" . nil))                     ; Disable C-z
