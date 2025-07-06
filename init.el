@@ -72,8 +72,8 @@
   (backup-directory-alist `(("." . ,(concat user-emacs-directory "backup"))))
   (backup-by-copying t)               ; Always use copying to create backup files
   (delete-old-versions t)             ; Delete excess backup versions
-  (kept-new-versions 6)               ; Number of newest versions to keep when a new backup is made
-  (kept-old-versions 2)               ; Number of oldest versions to keep when a new backup is made
+  (kept-new-versions 6)               ; Number of newest backup versions to keep
+  (kept-old-versions 2)               ; Number of oldest backup versions to keep
   (version-control t)                 ; Make numeric backup versions unconditionally
   (create-lockfiles nil)              ; Stop creating lock files
   (auto-save-default nil)             ; Stop creating #autosave# files
