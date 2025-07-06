@@ -83,7 +83,7 @@
   (mode-require-final-newline nil)    ; Don't automatically add a newline at end of file
   (large-file-warning-threshold nil)) ; Never warn when opening large files
 
-;; Disable persistent customization
+;; Prevent Emacs from writing custom settings to disk
 (setq custom-file (make-temp-file "emacs-custom-"))
 
 ;; Enable line numbering
