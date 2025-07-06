@@ -57,7 +57,7 @@
   (savehist-mode t)                    ; Save the minibuffer history
   (save-place-mode t)                  ; Restore cursor position when reopening files
   (electric-pair-mode t)               ; Enable automatic brackets pairing
-  (global-hl-line-mode t)              ; Enable line highlighting in all buffers
+  (global-hl-line-mode t)              ; Highlight the current line in all buffers
   (delete-selection-mode t)            ; Replace selected text when typing
   (global-auto-revert-mode t)          ; Automatically reload files changed on disk
   (fset 'yes-or-no-p 'y-or-n-p)        ; Use y/n instead of yes/no prompts
