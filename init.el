@@ -51,7 +51,7 @@
   (cursor-type 'bar)                   ; Display the cursor as a vertical bar
   (column-number-mode t)               ; Display the column number in the mode line
   (major-mode 'text-mode)              ; Set default major mode to text-mode
-  (ring-bell-function 'ignore)         ; Disable audible bell
+  (ring-bell-function 'ignore)         ; Disable both visual and audible bell
   (cursor-in-non-selected-windows nil) ; Hide cursor in non-selected windows
   :config
   (savehist-mode t)                    ; Save the minibuffer history
