@@ -46,7 +46,7 @@
 ;; Set initial background color to prevent startup glare
 (push '(background-color . "#fff2f3") default-frame-alist)
 
-;; Set frame title to buffer name
+;; Customize titlebar to show buffer name without hostname
 (setq frame-title-format '(multiple-frames "%b" ("" "%b - GNU Emacs")))
 
 ;; Disable the menu bar, tool bar, and scroll bar
