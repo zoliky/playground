@@ -78,7 +78,7 @@
   (create-lockfiles nil)              ; Don't create lock files
   (auto-save-default nil)             ; Don't create #autosave# files
   (delete-by-moving-to-trash t)       ; Move deleted files to the trash
-  (mode-require-final-newline nil)    ; Don't add newlines at the end of files
+  (mode-require-final-newline nil)    ; Don't automatically add a newline at end of file
   (large-file-warning-threshold nil)) ; Never warn when opening large files
 
 ;; Disable persistent customization
