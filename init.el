@@ -74,12 +74,12 @@
   (delete-old-versions t)             ; Delete excess backup versions
   (kept-new-versions 6)               ; Number of newest backup versions to keep
   (kept-old-versions 2)               ; Number of oldest backup versions to keep
-  (version-control t)                 ; Make numeric backup versions unconditionally
-  (create-lockfiles nil)              ; Stop creating lock files
-  (auto-save-default nil)             ; Stop creating #autosave# files
+  (version-control t)                 ; Always use numeric backup versions
+  (create-lockfiles nil)              ; Don't create lock files
+  (auto-save-default nil)             ; Don't create #autosave# files
   (delete-by-moving-to-trash t)       ; Move deleted files to the trash
   (mode-require-final-newline nil)    ; Don't add newlines at the end of files
-  (large-file-warning-threshold nil)) ; Open large files without requesting confirmation
+  (large-file-warning-threshold nil)) ; Never warn when opening large files
 
 ;; Disable persistent customization
 (setq custom-file (make-temp-file "emacs-custom-"))
