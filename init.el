@@ -56,7 +56,7 @@
   :config
   (savehist-mode t)                    ; Save the minibuffer history
   (save-place-mode t)                  ; Restore cursor position when reopening files
-  (electric-pair-mode t)               ; Enable automatic brackets pairing
+  (electric-pair-mode t)               ; Enable automatic insertion of matching delimiters
   (global-hl-line-mode t)              ; Highlight the current line globally
   (delete-selection-mode t)            ; Replace selected text when typing
   (global-auto-revert-mode t)          ; Automatically reload files changed on disk
