@@ -50,7 +50,7 @@
   (fill-column 78)                     ; Column beyond which automatic wrapping happens
   (cursor-type 'bar)                   ; Show cursor as a vertical bar
   (column-number-mode t)               ; Show the column number in the mode line
-  (major-mode 'text-mode)              ; Set default major mode to text-mode
+  (major-mode 'text-mode)              ; Use text-mode as the default major mode for new buffers
   (ring-bell-function 'ignore)         ; Disable visual and audible bell
   (cursor-in-non-selected-windows nil) ; Hide cursor in non-selected windows
   :config
