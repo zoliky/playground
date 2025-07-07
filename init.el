@@ -69,7 +69,7 @@
   :ensure nil
   :custom
   (backup-directory-alist `(("." . ,(concat user-emacs-directory "backup"))))
-  (backup-by-copying t)               ; Always use copying to create backup files
+  (backup-by-copying t)               ; Use copying when creating backup files
   (delete-old-versions t)             ; Delete excess backup versions
   (kept-new-versions 6)               ; Number of newest backup versions to keep
   (kept-old-versions 2)               ; Number of oldest backup versions to keep
