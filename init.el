@@ -113,7 +113,7 @@
   (ispell-set-spellchecker-params)
   (ispell-hunspell-add-multi-dic "en_US,hu_HU,ro_RO"))
 
-;; Enable automatic on-the-fly spell checking
+;; Bind "C-c s" to toggle automatic spell checking
 (use-package flyspell
   :ensure nil
   :after ispell
