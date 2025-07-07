@@ -47,7 +47,7 @@
   (inhibit-startup-screen t)           ; Disable the startup screen
   (indent-tabs-mode nil)               ; Insert spaces instead of TAB characters
   (tab-width 2)                        ; Number of columns a TAB character takes up on screen
-  (fill-column 78)                     ; Maximum line length before automatic wrapping
+  (fill-column 78)                     ; Maximum line width before automatic line wrapping happens
   (cursor-type 'bar)                   ; Display the cursor as a vertical bar
   (column-number-mode t)               ; Display the column number in the mode line
   (major-mode 'text-mode)              ; Set default major mode to text-mode
