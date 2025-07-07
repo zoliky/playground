@@ -54,7 +54,7 @@
   (ring-bell-function 'ignore)         ; Disable all bell sounds and flashes
   (cursor-in-non-selected-windows nil) ; Hide cursor in non-selected windows
   :config
-  (savehist-mode t)                    ; Save the minibuffer history
+  (savehist-mode t)                    ; Save minibuffer history when exiting Emacs
   (save-place-mode t)                  ; Restore cursor position when reopening files
   (electric-pair-mode t)               ; Auto-insert matching delimiters
   (global-hl-line-mode t)              ; Highlight the current line
