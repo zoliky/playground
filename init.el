@@ -90,7 +90,7 @@
 
 ;;;;; Fonts
 
-;; Set default font for all text
+;; Set default font
 (set-face-attribute 'default nil :family "Hack" :height 180)
 
 ;; Set font for variable-pitch (proportional) text
