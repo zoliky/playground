@@ -77,7 +77,7 @@
   (create-lockfiles nil)              ; Don't create lockfiles
   (auto-save-default nil)             ; Don't create #autosave# files
   (delete-by-moving-to-trash t)       ; Move deleted files to the trash
-  (mode-require-final-newline nil)    ; Don't automatically add a newline at end of file
+  (mode-require-final-newline nil)    ; Disable final newline added by some major modes
   (large-file-warning-threshold nil)) ; Never warn when opening large files
 
 ;; Prevent Emacs from writing custom settings to disk
