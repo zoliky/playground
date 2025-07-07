@@ -83,7 +83,7 @@
 ;; Prevent Emacs from writing custom settings to disk
 (setq custom-file (make-temp-file "emacs-custom-"))
 
-;; Enable line numbering
+;; Enable line numbering in certain modes
 (use-package display-line-numbers
   :ensure nil
   :hook ((prog-mode conf-mode) . display-line-numbers-mode))
