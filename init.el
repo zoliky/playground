@@ -73,7 +73,7 @@
   (delete-old-versions t)             ; Delete excess backup versions
   (kept-new-versions 6)               ; Number of newest backup versions to keep
   (kept-old-versions 2)               ; Number of oldest backup versions to keep
-  (version-control t)                 ; Always use numeric backup versions
+  (version-control t)                 ; Use numeric backup versions
   (create-lockfiles nil)              ; Don't create lockfiles
   (auto-save-default nil)             ; Don't create #autosave# files
   (delete-by-moving-to-trash t)       ; Move deleted files to the trash
