@@ -101,8 +101,8 @@
 
 ;;;;; Spell checking
 
-;; Configure ispell for multiple dictionaries
-;; English (US), Hungarian, and Romanian
+;; Configure ispell to use Hunspell for spell checking
+;; with English (US), Hungarian, and Romanian dictionaries
 (use-package ispell
   :ensure nil
   :defer 0.5
