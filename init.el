@@ -55,7 +55,7 @@
   (cursor-in-non-selected-windows nil) ; Hide cursor in non-selected windows
   :config
   (savehist-mode t)                    ; Save minibuffer history when exiting Emacs
-  (which-key-mode t)
+  (which-key-mode t)                   ; Display available keybindings in minibuffer
   (save-place-mode t)                  ; Restore cursor position when reopening files
   (editorconfig-mode t)
   (electric-pair-mode t)               ; Auto-insert matching delimiters
