@@ -55,6 +55,7 @@
   (cursor-in-non-selected-windows nil) ; Hide cursor in non-selected windows
   :config
   (savehist-mode t)                    ; Save minibuffer history when exiting Emacs
+  (which-key-mode t)
   (save-place-mode t)                  ; Restore cursor position when reopening files
   (electric-pair-mode t)               ; Auto-insert matching delimiters
   (global-hl-line-mode t)              ; Highlight the current line
@@ -334,28 +335,18 @@
 ;;;;;; Web mode
 
 (use-package web-mode
-   :mode "\\.html\\'"
-   :custom
-   (web-mode-attr-indent-offset 2)
-   (web-mode-enable-css-colorization t)
-   (web-mode-enable-auto-closing t)
-   (web-mode-markup-indent-offset 2)
-   (web-mode-css-indent-offset 2)
-   (web-mode-code-indent-offset 2)
-   (web-mode-enable-current-element-highlight t))
+  :mode "\\.html\\'"
+  :custom
+  (web-mode-attr-indent-offset 2)
+  (web-mode-enable-css-colorization t)
+  (web-mode-enable-auto-closing t)
+  (web-mode-markup-indent-offset 2)
+  (web-mode-css-indent-offset 2)
+  (web-mode-code-indent-offset 2)
+  (web-mode-enable-current-element-highlight t))
 
 (use-package auto-rename-tag
-   :hook (web-mode . auto-rename-tag-mode))
-
-;;;;;; Which key
-
-(use-package which-key
-  :ensure nil
-  :defer 0.2
-  :custom
-  (which-key-idle-delay 1)
-  :config
-  (which-key-mode))
+  :hook (web-mode . auto-rename-tag-mode))
 
 ;;;;; Languages
 ;;;;;; YAML
