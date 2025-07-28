@@ -57,7 +57,6 @@
   (savehist-mode t)                    ; Save minibuffer history when exiting Emacs
   (which-key-mode t)                   ; Display available keybindings in minibuffer
   (save-place-mode t)                  ; Restore cursor position when reopening files
-  (editorconfig-mode t)
   (electric-pair-mode t)               ; Auto-insert matching delimiters
   (global-hl-line-mode t)              ; Highlight the current line
   (delete-selection-mode t)            ; Replace selection when typing
