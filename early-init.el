@@ -49,7 +49,7 @@
 ;; Customize titlebar to show buffer name without hostname
 (setq frame-title-format '(multiple-frames "%b" ("" "%b - GNU Emacs")))
 
-;; Disable the menu bar, tool bar, and scroll bars
+;; Disable GUI elements to keep the interface minimal
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
