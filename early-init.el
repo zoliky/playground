@@ -26,10 +26,11 @@
 
 ;;; Code:
 
-;; Temporarily increase garbage collection threshold to reduce startup pauses
+;; Temporarily increase GC threshold to reduce startup pauses
 (setq gc-cons-threshold (* 128 1024 1024))
 
 ;; Temporarily disable file-name handlers for faster startup
+;; Restore them after init
 (defvar file-name-handler-alist-old file-name-handler-alist)
 (setq file-name-handler-alist nil)
 (add-hook 'after-init-hook
