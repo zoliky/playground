@@ -40,29 +40,29 @@
 ;;;; General configuration
 ;;;;; Defaults
 
-;; Override various Emacs defaults
+;; Override and customize various Emacs defaults
 (use-package emacs
   :ensure nil
   :custom
   (inhibit-startup-screen t)           ; Disable the startup screen
-  (indent-tabs-mode nil)               ; Insert spaces instead of TAB characters
-  (tab-width 2)                        ; Number of columns a TAB character takes up on screen
-  (fill-column 78)                     ; Column beyond which automatic wrapping happens
-  (cursor-type 'bar)                   ; Show cursor as a vertical bar
-  (column-number-mode t)               ; Show the column number in the mode line
-  (major-mode 'text-mode)              ; Use text-mode as the default major mode for new buffers
-  (ring-bell-function 'ignore)         ; Disable all bell sounds and flashes
-  (cursor-in-non-selected-windows nil) ; Hide cursor in non-selected windows
+  (indent-tabs-mode nil)               ; Use spaces instead of TAB characters
+  (tab-width 2)                        ; Set the width of a TAB character to 2 spaces
+  (fill-column 78)                     ; Wrap lines automatically at column 78
+  (cursor-type 'bar)                   ; Display the cursor as a vertical bar
+  (column-number-mode t)               ; Show the current column in the mode line
+  (major-mode 'text-mode)              ; Default major mode for new buffers is text-mode
+  (ring-bell-function 'ignore)         ; Disable all audible and visual bell alerts
+  (cursor-in-non-selected-windows nil) ; Hide the cursor in inactive windows
   :config
-  (savehist-mode t)                    ; Save minibuffer history when exiting Emacs
-  (which-key-mode t)                   ; Display available keybindings in minibuffer
+  (savehist-mode t)                    ; Persist minibuffer history between sessions
+  (which-key-mode t)                   ; Show available keybindings in the minibuffer
   (save-place-mode t)                  ; Restore cursor position when reopening files
-  (electric-pair-mode t)               ; Auto-insert matching delimiters
-  (global-hl-line-mode t)              ; Highlight the current line
-  (delete-selection-mode t)            ; Replace selection when typing
-  (global-auto-revert-mode t)          ; Automatically reload files changed on disk
-  (fset 'yes-or-no-p 'y-or-n-p)        ; Use y/n instead of yes/no prompts
-  (prefer-coding-system 'utf-8)        ; Prefer UTF-8 for files, buffers, and processes
+  (electric-pair-mode t)               ; Automatically insert matching delimiters
+  (global-hl-line-mode t)              ; Highlight the current line globally
+  (delete-selection-mode t)            ; Replace selected text when typing
+  (global-auto-revert-mode t)          ; Auto-reload files that change on disk
+  (fset 'yes-or-no-p 'y-or-n-p)        ; Shorten prompts to y/n instead of yes/no
+  (prefer-coding-system 'utf-8)        ; Use UTF-8 by default for files and buffers
   )
 
 ;; File-related customizations
