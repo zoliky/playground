@@ -26,11 +26,10 @@
 
 ;;; Code:
 
-;; Temporarily increase GC threshold to reduce startup pauses
+;; Temporarily increase the garbage collection threshold to reduce pauses
 (setq gc-cons-threshold (* 128 1024 1024))
 
-;; Temporarily disable file-name handlers for faster startup
-;; Restore them after init
+;; Disable file-name handlers during startup to speed up initialization
 (defvar file-name-handler-alist-old file-name-handler-alist)
 (setq file-name-handler-alist nil)
 (add-hook 'after-init-hook
@@ -40,17 +39,17 @@
 ;; Maximize the Emacs frame on startup
 (push '(fullscreen . maximized) default-frame-alist)
 
-;; Set initial frame size to 1920x1080 in text pixels
+;; Set initial frame size in text pixels
 (push '(width  . (text-pixels . 1920)) default-frame-alist)
 (push '(height . (text-pixels . 1080)) default-frame-alist)
 
-;; Set initial background color to prevent startup glare
+;; Set initial background color to reduce startup glare
 (push '(background-color . "#fff2f3") default-frame-alist)
 
-;; Customize titlebar to show buffer name without hostname
+;; Customize the titlebar to display only the buffer name
 (setq frame-title-format '(multiple-frames "%b" ("" "%b - GNU Emacs")))
 
-;; Disable GUI elements to keep the interface minimal
+;; Disable GUI elements for a minimal interface
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
