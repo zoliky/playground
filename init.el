@@ -51,7 +51,6 @@
   (cursor-type 'bar)                   ; Display the cursor as a vertical bar
   (column-number-mode t)               ; Show the current column in the mode line
   (major-mode 'text-mode)              ; Default major mode for new buffers is text-mode
-  (ring-bell-function 'ignore)         ; Disable all audible and visual bell alerts
   (cursor-in-non-selected-windows nil) ; Hide the cursor in inactive windows
   :config
   (savehist-mode t)                    ; Persist minibuffer history between sessions
