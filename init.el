@@ -823,7 +823,7 @@
    '((holiday-fixed  1  6     "Epiphany (Vízkereszt)")
      (holiday-easter-etc -46  "Ash Wednesday (Hamvazószerda)")
      (holiday-easter-etc -7   "Palm Sunday (Virágvasárnap)")
-     (holiday-easter-etc -2   "Holy Friday (Nagypéntek)")
+     (holiday-easter-etc -2   "Good Friday (Nagypéntek)")
      (holiday-easter-etc  0   "Easter Sunday (Húsvétvasárnap)")
      (holiday-easter-etc  1   "Easter Monday (Húsvéthétfő)")
      (holiday-easter-etc 39   "Ascension (Áldozócsütörtök)")
@@ -833,7 +833,7 @@
      (holiday-greek-orthodox-easter)
      (holiday-fixed  8 15     "Assumption (Nagyboldogasszony)")
      (holiday-fixed 11  1     "All Saints' Day (Mindenszentek Napja)")
-     (holiday-fixed 11  2     "Day of the Dead (Hallotak Napja)")
+     (holiday-fixed 11  2     "All Souls' Day (Halottak Napja)")
      (holiday-fixed 12 25     "Christmas Day (Karácsony Napja)")))
   (holiday-general-holidays
    '((holiday-fixed  1  1     "New Year's Day (Újév)")
