@@ -124,9 +124,8 @@
 ;;;;;; Ef themes
 
 (use-package ef-themes
-  :init
-  (load-theme 'ef-summer t)
-  :bind ("<f9>" . ef-themes-select))
+  :config
+  (modus-themes-load-theme 'ef-summer))
 
 ;;;;;; Modus themes
 
@@ -324,22 +323,6 @@
   :after nerd-icons
   :config
   (nerd-icons-completion-mode))
-
-;;;;;; Web mode
-
-(use-package web-mode
-  :mode "\\.html\\'"
-  :custom
-  (web-mode-attr-indent-offset 2)
-  (web-mode-enable-css-colorization t)
-  (web-mode-enable-auto-closing t)
-  (web-mode-markup-indent-offset 2)
-  (web-mode-css-indent-offset 2)
-  (web-mode-code-indent-offset 2)
-  (web-mode-enable-current-element-highlight t))
-
-(use-package auto-rename-tag
-  :hook (web-mode . auto-rename-tag-mode))
 
 ;;;;; Languages
 ;;;;;; YAML
@@ -563,11 +546,11 @@
 (keymap-global-set "C-S-d" 'duplicate-line) ; Bind C-S-d to duplicate-line
 
 ;; Disable secondary selection commands
-(keymap-global-unset "M-<mouse-1>")
-(keymap-global-unset "M-<mouse-2>")
-(keymap-global-unset "M-<mouse-3>")
-(keymap-global-unset "M-<drag-mouse-1>")
-(keymap-global-unset "M-<down-mouse-1>")
+;;(keymap-global-unset "M-<mouse-1>")
+;;(keymap-global-unset "M-<mouse-2>")
+;;(keymap-global-unset "M-<mouse-3>")
+;;(keymap-global-unset "M-<drag-mouse-1>")
+;;(keymap-global-unset "M-<down-mouse-1>")
 
 ;;;; Custom functions
 
@@ -611,56 +594,56 @@
         (insert-image img)))))
 
 ;; Use colors from the active theme palette
-(defun king/colors-active-theme ()
-  (let ((next      "violetred")
-        (repeat    "violetred")
-        (waiting   "slateblue")
-        (postponed "chocolate")
-        (someday   "chocolate")
-        (delegated "slateblue")
-        (project   "royalblue")
-        (failed    "slategray")
-        (cancelled "slategray")
-        (starred   "violetred")
-        (podcast   "darkcyan")
-        (youtube   "chocolate"))
-    (when (and (featurep 'ef-themes) (ef-themes--list-enabled-themes))
-      (ef-themes-with-colors
-        (setq next      magenta-warmer
-              repeat    magenta-warmer
-              waiting   magenta-cooler
-              postponed yellow-warmer
-              someday   yellow-warmer
-              delegated magenta-cooler
-              project   blue
-              failed    fg-dim
-              cancelled fg-dim
-              starred   magenta-warmer
-              podcast   cyan-cooler
-              youtube   yellow-warmer)))
-    (setq org-todo-keyword-faces
-          `(("NEXT"      . (:foreground ,next      :weight bold))
-            ("REPEAT"    . (:foreground ,repeat    :weight bold))
-            ("WAITING"   . (:foreground ,waiting   :weight bold))
-            ("POSTPONED" . (:foreground ,postponed :weight bold))
-            ("SOMEDAY"   . (:foreground ,someday   :weight bold))
-            ("DELEGATED" . (:foreground ,delegated :weight bold))
-            ("PROJECT"   . (:foreground ,project   :weight bold))
-            ("FAILED"    . (:foreground ,failed    :weight bold))
-            ("CANCELLED" . (:foreground ,cancelled :weight bold))))
+;;(defun king/colors-active-theme ()
+;;  (let ((next      "violetred")
+;;        (repeat    "violetred")
+;;        (waiting   "slateblue")
+;;        (postponed "chocolate")
+;;        (someday   "chocolate")
+;;        (delegated "slateblue")
+;;        (project   "royalblue")
+;;        (failed    "slategray")
+;;        (cancelled "slategray")
+;;        (starred   "violetred")
+;;        (podcast   "darkcyan")
+;;        (youtube   "chocolate"))
+;;    (when (and (featurep 'ef-themes) (ef-themes--list-enabled-themes))
+;;      (ef-themes-with-colors
+;;        (setq next      magenta-warmer
+;;              repeat    magenta-warmer
+;;              waiting   magenta-cooler
+;;              postponed yellow-warmer
+;;              someday   yellow-warmer
+;;              delegated magenta-cooler
+;;              project   blue
+;;              failed    fg-dim
+;;              cancelled fg-dim
+;;              starred   magenta-warmer
+;;              podcast   cyan-cooler
+;;              youtube   yellow-warmer)))
+;;    (setq org-todo-keyword-faces
+;;          `(("NEXT"      . (:foreground ,next      :weight bold))
+;;            ("REPEAT"    . (:foreground ,repeat    :weight bold))
+;;            ("WAITING"   . (:foreground ,waiting   :weight bold))
+;;            ("POSTPONED" . (:foreground ,postponed :weight bold))
+;;            ("SOMEDAY"   . (:foreground ,someday   :weight bold))
+;;            ("DELEGATED" . (:foreground ,delegated :weight bold))
+;;            ("PROJECT"   . (:foreground ,project   :weight bold))
+;;            ("FAILED"    . (:foreground ,failed    :weight bold))
+;;            ("CANCELLED" . (:foreground ,cancelled :weight bold))))
 
     ;; Elfeed
-    (custom-set-faces
-     `(elfeed-search-starred-title-face ((t :foreground ,starred)))
-     `(elfeed-search-podcast-title-face ((t :foreground ,podcast)))
-     `(elfeed-search-youtube-title-face ((t :foreground ,youtube))))
+;;    (custom-set-faces
+;;     `(elfeed-search-starred-title-face ((t :foreground ,starred)))
+;;     `(elfeed-search-podcast-title-face ((t :foreground ,podcast)))
+;;     `(elfeed-search-youtube-title-face ((t :foreground ,youtube))))
 
     ;; Restart Org mode
-    (when (derived-mode-p 'org-mode)
-      (org-mode-restart))))
+;;    (when (derived-mode-p 'org-mode)
+;;      (org-mode-restart))))
 
-(king/colors-active-theme)
-(add-hook 'ef-themes-post-load-hook 'king/colors-active-theme)
+;;(king/colors-active-theme)
+;;(add-hook 'ef-themes-post-load-hook 'king/colors-active-theme)
 
 ;;;; Custom input methods
 
@@ -799,7 +782,7 @@
                          "elfeed.org"
                          "english.org"
                          "spanish.org"
-                         "private.org"))))
+                         "private.org")))
   (org-agenda-include-diary t)
   (org-habit-graph-column 80)
   (org-habit-today-glyph ?⧖)
