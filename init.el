@@ -782,7 +782,7 @@
                          "english.org"
                          "spanish.org"
                          "wellness.org"
-                         "private.org")))
+                         "private.org"))))
   (org-agenda-include-diary t)
   (org-habit-graph-column 80)
   (org-habit-today-glyph ?⧖)
