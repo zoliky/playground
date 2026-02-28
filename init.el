@@ -40,7 +40,7 @@
 ;;;; General configuration
 ;;;;; Defaults
 
-;; Override and customize various Emacs defaults
+;; Override and customize Emacs defaults
 (use-package emacs
   :ensure nil
   :custom
@@ -73,12 +73,12 @@
   (delete-old-versions t)             ; Delete excess backup versions
   (kept-new-versions 6)               ; Number of newest backup versions to keep
   (kept-old-versions 2)               ; Number of oldest backup versions to keep
-  (version-control t)                 ; Use numeric backup versions
+  (version-control t)                 ; Use numbered backups
   (create-lockfiles nil)              ; Don't create lockfiles
-  (auto-save-default nil)             ; Don't create #autosave# files
-  (delete-by-moving-to-trash t)       ; Move deleted files to the trash
+  (auto-save-default nil)             ; Don't create #auto-save# files
+  (delete-by-moving-to-trash t)       ; Move deleted files to trash
   (mode-require-final-newline nil)    ; Disable final newline added by some major modes
-  (large-file-warning-threshold nil)) ; Never warn when opening large files
+  (large-file-warning-threshold nil)) ; Don't warn when opening large files
 
 ;; Prevent Emacs from writing custom settings to disk
 (setq custom-file (make-temp-file "emacs-custom-"))
