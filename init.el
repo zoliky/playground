@@ -146,12 +146,6 @@
          ("C-x b"   . consult-buffer)
          ("C-x C-r" . consult-recent-file)))
 
-(use-package consult-notes
-  :bind ("<f5>" . consult-notes)
-  :config
-  (setq consult-notes-denote-files-function (function denote-directory-text-only-files))
-  (consult-notes-denote-mode))
-
 ;;;;;; Dashboard
 
 ;; An extensible Emacs startup screen
