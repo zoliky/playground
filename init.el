@@ -539,11 +539,11 @@
 (keymap-global-set "C-S-d" 'duplicate-line) ; Bind C-S-d to duplicate-line
 
 ;; Disable secondary selection commands
-;;(keymap-global-unset "M-<mouse-1>")
-;;(keymap-global-unset "M-<mouse-2>")
-;;(keymap-global-unset "M-<mouse-3>")
-;;(keymap-global-unset "M-<drag-mouse-1>")
-;;(keymap-global-unset "M-<down-mouse-1>")
+(keymap-global-unset "M-<mouse-1>")
+(keymap-global-unset "M-<mouse-2>")
+(keymap-global-unset "M-<mouse-3>")
+(keymap-global-unset "M-<drag-mouse-1>")
+(keymap-global-unset "M-<down-mouse-1>")
 
 ;;;; Custom functions
 
@@ -804,7 +804,7 @@
   :hook (dired-mode . denote-dired-mode)
   :custom
   (denote-sort-keywords t)
-  (denote-directory "~/notes/")
+  (denote-directory (expand-file-name "~/notes/"))
   (denote-allow-multi-word-keywords nil))
 
 ;;;;; Calendar
