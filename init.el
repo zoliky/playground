@@ -80,7 +80,7 @@
   (mode-require-final-newline nil)    ; Disable final newline added by some major modes
   (large-file-warning-threshold nil)) ; Don't warn when opening large files
 
-;; Keep settings customized through the Emacs GUI out of init.el
+;; Prevent GUI customizations from cluttering init.el by using a temporary file
 (setq custom-file (make-temp-file "emacs-custom-"))
 
 ;; Enable line numbers only in certain modes
