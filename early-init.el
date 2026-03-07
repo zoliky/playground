@@ -54,7 +54,7 @@
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 
-;; Suppress warnings and errors during asynchronous native compilation
+;; Suppress warnings and errors from asynchronous native compilation
 (when (native-comp-available-p)
   (setq native-comp-async-report-warnings-errors nil))
 
