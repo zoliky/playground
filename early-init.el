@@ -1,6 +1,6 @@
 ;;; early-init.el --- Early init file -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2020-2025 Zoltán Király
+;; Copyright (C) 2020-2026 Zoltán Király
 
 ;; Author: Zoltán Király <public@zoltankiraly.com>
 
