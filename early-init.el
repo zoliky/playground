@@ -26,10 +26,10 @@
 
 ;;; Code:
 
-;; Temporarily delay garbage collection during startup
+;; Temporarily increase GC threshold to speed up initialization
 (setq gc-cons-threshold (* 128 1024 1024))
 
-;; Disable file-name handlers during startup to speed up initialization
+;; Disable file-name handlers during startup for faster init
 (defvar file-name-handler-alist-old file-name-handler-alist)
 (setq file-name-handler-alist nil)
 (add-hook 'after-init-hook
@@ -46,7 +46,7 @@
 ;; Set initial background color to reduce startup glare
 (push '(background-color . "#fff2f3") default-frame-alist)
 
-;; Customize the titlebar to display only the buffer name
+;; Show only the buffer name in the titlebar
 (setq frame-title-format '(multiple-frames "%b" ("" "%b - GNU Emacs")))
 
 ;; Disable GUI elements for a minimal interface
