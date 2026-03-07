@@ -27,14 +27,14 @@
 ;;; Code:
 ;;;; Package management
 
-;; Configure package archives and priorities
+;; Set up package archives and priorities
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 (setq package-archive-priorities '(("melpa"  . 100)
                                    ("gnu"    .  50)
                                    ("nongnu" .  25)))
 
-;; Assume :ensure t for all use-package declarations
+;; Enable automatic installation for use-package declarations
 (setq use-package-always-ensure t)
 
 ;;;; General configuration
@@ -47,14 +47,14 @@
   (inhibit-startup-screen t)           ; Skip the startup screen
   (indent-tabs-mode nil)               ; Indent with spaces instead of TABs
   (tab-width 2)                        ; Display TAB characters as 2 spaces
-  (fill-column 78)                     ; Wrap lines automatically at column 78
+  (fill-column 78)                     ; Wrap lines at column 78
   (cursor-type 'bar)                   ; Use a vertical bar cursor
-  (column-number-mode t)               ; Show column number in the mode line
+  (column-number-mode t)               ; Display column number in mode line
   (major-mode 'text-mode)              ; Default mode for new buffers
   (cursor-in-non-selected-windows nil) ; Hide cursor in inactive windows
   :config
   (savehist-mode t)                    ; Persist minibuffer history
-  (which-key-mode t)                   ; Show available keybindings while typing
+  (which-key-mode t)                   ; Show available keybindings
   (save-place-mode t)                  ; Restore cursor position in visited files
   (electric-pair-mode t)               ; Auto-insert matching delimiters
   (global-hl-line-mode t)              ; Highlight the current line
@@ -80,10 +80,10 @@
   (mode-require-final-newline nil)    ; Disable final newline added by some major modes
   (large-file-warning-threshold nil)) ; Don't warn when opening large files
 
-;; Prevent GUI customizations from cluttering init.el by using a temporary file
+;; Use a temporary file for custom-set-variables to keep init.el clean
 (setq custom-file (make-temp-file "emacs-custom-"))
 
-;; Enable line numbers only in certain modes
+;; Show line numbers in specific modes only
 (use-package display-line-numbers
   :ensure nil
   :hook ((prog-mode conf-mode) . display-line-numbers-mode))
@@ -935,6 +935,7 @@
 
 ;;;; Other
 
+;; Reset GC threshold after startup
 (add-hook 'after-init-hook
           `(lambda ()
              ;(setq gc-cons-threshold 800000)
