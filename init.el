@@ -44,24 +44,24 @@
 (use-package emacs
   :ensure nil
   :custom
-  (inhibit-startup-screen t)           ; Disable the startup screen
-  (indent-tabs-mode nil)               ; Use spaces instead of TAB characters
-  (tab-width 2)                        ; Set the width of a TAB character to 2 spaces
+  (inhibit-startup-screen t)           ; Skip the startup screen
+  (indent-tabs-mode nil)               ; Indent with spaces instead of TABs
+  (tab-width 2)                        ; Display TAB characters as 2 spaces
   (fill-column 78)                     ; Wrap lines automatically at column 78
-  (cursor-type 'bar)                   ; Display the cursor as a vertical bar
-  (column-number-mode t)               ; Show the current column in the mode line
-  (major-mode 'text-mode)              ; Default major mode for new buffers is text-mode
-  (cursor-in-non-selected-windows nil) ; Hide the cursor in inactive windows
+  (cursor-type 'bar)                   ; Use a vertical bar cursor
+  (column-number-mode t)               ; Show column number in the mode line
+  (major-mode 'text-mode)              ; Default mode for new buffers
+  (cursor-in-non-selected-windows nil) ; Hide cursor in inactive windows
   :config
-  (savehist-mode t)                    ; Persist minibuffer history between sessions
-  (which-key-mode t)                   ; Show available keybindings in the minibuffer
-  (save-place-mode t)                  ; Restore cursor position when reopening files
-  (electric-pair-mode t)               ; Automatically insert matching delimiters
-  (global-hl-line-mode t)              ; Highlight the current line globally
+  (savehist-mode t)                    ; Persist minibuffer history
+  (which-key-mode t)                   ; Show available keybindings while typing
+  (save-place-mode t)                  ; Restore cursor position in visited files
+  (electric-pair-mode t)               ; Auto-insert matching delimiters
+  (global-hl-line-mode t)              ; Highlight the current line
   (delete-selection-mode t)            ; Replace selected text when typing
-  (global-auto-revert-mode t)          ; Auto-reload files that change on disk
-  (fset 'yes-or-no-p 'y-or-n-p)        ; Shorten prompts to y/n instead of yes/no
-  (prefer-coding-system 'utf-8)        ; Use UTF-8 by default for files and buffers
+  (global-auto-revert-mode t)          ; Reload files changed on disk
+  (fset 'yes-or-no-p 'y-or-n-p)        ; Accept y/n answers instead of yes/no
+  (prefer-coding-system 'utf-8)        ; Prefer UTF-8 for files and buffers
   )
 
 ;; File-related customizations
