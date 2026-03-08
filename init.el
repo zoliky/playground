@@ -45,12 +45,13 @@
   :ensure nil
   :custom
   (inhibit-startup-screen t)           ; Skip the startup screen
-  (indent-tabs-mode nil)               ; Indent with spaces instead of TABs
+  (indent-tabs-mode nil)               ; Use spaces instead of TAB characters for indentation
   (tab-width 2)                        ; Display TAB characters as 2 spaces
   (fill-column 78)                     ; Wrap lines at column 78
   (cursor-type 'bar)                   ; Use a vertical bar cursor
+  (use-short-answers t)                ; Accept y/n answers instead of yes/no
   (column-number-mode t)               ; Display column number in mode line
-  (cursor-in-non-selected-windows nil) ; Hide cursor in inactive windows
+  (cursor-in-non-selected-windows nil) ; Hide cursor in non-selected windows
   :config
   (savehist-mode t)                    ; Persist minibuffer history
   (which-key-mode t)                   ; Show available keybindings
@@ -59,8 +60,7 @@
   (global-hl-line-mode t)              ; Highlight the current line
   (delete-selection-mode t)            ; Replace selected text when typing
   (global-auto-revert-mode t)          ; Reload files changed on disk
-  (fset 'yes-or-no-p 'y-or-n-p)        ; Accept y/n answers instead of yes/no
-  (prefer-coding-system 'utf-8)        ; Prefer UTF-8 for files and buffers
+  (prefer-coding-system 'utf-8)        ; Prefer UTF-8 encoding by default
   )
 
 ;; File-related customizations
