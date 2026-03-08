@@ -27,7 +27,7 @@
 ;;; Code:
 ;;;; Package management
 
-;; Set up package archives and priorities
+;; Configure package archives and priorities
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 (setq package-archive-priorities '(("melpa"  . 100)
@@ -50,7 +50,6 @@
   (fill-column 78)                     ; Wrap lines at column 78
   (cursor-type 'bar)                   ; Use a vertical bar cursor
   (column-number-mode t)               ; Display column number in mode line
-  (major-mode 'text-mode)              ; Default mode for new buffers
   (cursor-in-non-selected-windows nil) ; Hide cursor in inactive windows
   :config
   (savehist-mode t)                    ; Persist minibuffer history
@@ -83,7 +82,7 @@
 ;; Use a temporary file for custom-set-variables to keep init.el clean
 (setq custom-file (make-temp-file "emacs-custom-"))
 
-;; Show line numbers in specific modes only
+;; Enable line numbers in programming and configuration modes
 (use-package display-line-numbers
   :ensure nil
   :hook ((prog-mode conf-mode) . display-line-numbers-mode))
@@ -112,7 +111,7 @@
   (ispell-set-spellchecker-params)
   (ispell-hunspell-add-multi-dic "en_US,hu_HU,ro_RO"))
 
-;; Bind "C-c s" to toggle automatic spell checking
+;; Toggle automatic spell checking with "C-c s"
 (use-package flyspell
   :ensure nil
   :after ispell
