@@ -44,7 +44,7 @@
 (use-package emacs
   :ensure nil
   :custom
-  (inhibit-startup-screen t)           ; Skip the startup screen
+  (inhibit-startup-screen t)           ; Do not display the startup screen
   (indent-tabs-mode nil)               ; Use spaces instead of TAB characters
   (tab-width 2)                        ; Display TAB characters as 2 spaces
   (fill-column 78)                     ; Wrap lines at column 78
