@@ -45,7 +45,7 @@
   :ensure nil
   :custom
   (inhibit-startup-screen t)           ; Do not display the startup screen
-  (indent-tabs-mode nil)               ; Use spaces instead of TAB characters
+  (indent-tabs-mode nil)               ; Indent with spaces instead of tabs
   (tab-width 2)                        ; Display TAB characters as 2 spaces
   (fill-column 78)                     ; Wrap lines at column 78
   (cursor-type 'bar)                   ; Use a vertical bar cursor
@@ -75,7 +75,7 @@
   (version-control t)                 ; Use numbered backups
   (create-lockfiles nil)              ; Don't create lockfiles
   (auto-save-default nil)             ; Don't create #auto-save# files
-  (delete-by-moving-to-trash t)       ; Move deleted files to trash
+  (delete-by-moving-to-trash t)       ; Move deleted files to system trash
   (mode-require-final-newline nil)    ; Disable final newline added by some major modes
   (large-file-warning-threshold nil)) ; Don't warn when opening large files
 
