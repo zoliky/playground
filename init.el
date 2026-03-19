@@ -89,13 +89,13 @@
 
 ;;;;; Fonts
 
-;; Set default font
+;; Default font
 (set-face-attribute 'default nil :family "Hack" :height 180)
 
-;; Set font for variable-pitch (proportional) text
+;; Variable-pitch (proportional) font
 (set-face-attribute 'variable-pitch nil :family "Hack" :height 180)
 
-;; Set font for fixed-pitch (monospace) text in variable-pitch buffers
+;; Fixed-pitch (monospace) font in variable-pitch buffers
 (set-face-attribute 'fixed-pitch nil :family "Hack")
 
 ;;;;; Spell checking
