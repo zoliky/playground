@@ -45,7 +45,7 @@
   :ensure nil
   :custom
   (inhibit-startup-screen t)           ; Do not display the startup screen
-  (indent-tabs-mode nil)               ; Indent with spaces instead of tabs
+  (indent-tabs-mode nil)               ; Use spaces only for indentation
   (tab-width 2)                        ; Display TAB characters as 2 spaces
   (fill-column 78)                     ; Wrap lines at column 78
   (cursor-type 'bar)                   ; Use a vertical bar cursor
