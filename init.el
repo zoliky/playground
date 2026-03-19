@@ -79,7 +79,7 @@
   (mode-require-final-newline nil)    ; Don't force a final newline
   (large-file-warning-threshold nil)) ; Open large files without confirmation
 
-;; Use a temporary file for custom-set-variables to keep init.el clean
+;; Prevent Emacs from writing customizations to init.el
 (setq custom-file (make-temp-file "emacs-custom-"))
 
 ;; Enable line numbers in programming and configuration modes
