@@ -77,7 +77,7 @@
   (auto-save-default nil)             ; Don't create #auto-save# files
   (delete-by-moving-to-trash t)       ; Move deleted files to system trash
   (mode-require-final-newline nil)    ; Don't force a final newline
-  (large-file-warning-threshold nil)) ; Don't warn when opening large files
+  (large-file-warning-threshold nil)) ; Open large files without confirmation
 
 ;; Use a temporary file for custom-set-variables to keep init.el clean
 (setq custom-file (make-temp-file "emacs-custom-"))
