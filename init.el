@@ -100,7 +100,7 @@
 
 ;;;;; Spell checking
 
-;; Configure ispell to use Hunspell
+;; Use Hunspell with multiple dictionaries
 (use-package ispell
   :ensure nil
   :defer 0.5
