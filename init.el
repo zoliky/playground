@@ -46,7 +46,7 @@
   :custom
   (inhibit-startup-screen t)           ; Do not display the startup screen
   (indent-tabs-mode nil)               ; Use spaces only for indentation
-  (tab-width 2)                        ; Display TAB characters as 2 spaces
+  (tab-width 2)                        ; Display tabs as 2 spaces
   (fill-column 78)                     ; Wrap lines at column 78
   (cursor-type 'bar)                   ; Use a vertical bar cursor
   (use-short-answers t)                ; Accept y/n answers instead of yes/no
@@ -76,7 +76,7 @@
   (create-lockfiles nil)              ; Don't create lockfiles
   (auto-save-default nil)             ; Don't create #auto-save# files
   (delete-by-moving-to-trash t)       ; Move deleted files to system trash
-  (mode-require-final-newline nil)    ; Disable final newline added by some major modes
+  (mode-require-final-newline nil)    ; Don't force a final newline
   (large-file-warning-threshold nil)) ; Don't warn when opening large files
 
 ;; Use a temporary file for custom-set-variables to keep init.el clean
