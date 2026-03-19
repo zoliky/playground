@@ -95,7 +95,7 @@
 ;; Variable-pitch (proportional) font
 (set-face-attribute 'variable-pitch nil :family "Hack" :height 180)
 
-;; Fixed-pitch (monospace) font in variable-pitch buffers
+;; Fixed-pitch (monospace) font
 (set-face-attribute 'fixed-pitch nil :family "Hack")
 
 ;;;;; Spell checking
