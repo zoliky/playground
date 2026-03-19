@@ -133,7 +133,7 @@
 ;;;;; General enhancements
 ;;;;;; Avy
 
-;; A package for efficient character-based navigation
+;; Efficient character-based navigation
 (use-package avy
   :bind ("M-s" . avy-goto-char))
 
