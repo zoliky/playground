@@ -29,7 +29,7 @@
 ;; Temporarily increase GC threshold to speed up initialization
 (setq gc-cons-threshold (* 128 1024 1024))
 
-;; Temporarily disable file-name handlers during startup for faster initialization
+;; Temporarily disable file-name handlers for faster initialization
 (defvar file-name-handler-alist-old file-name-handler-alist)
 (setq file-name-handler-alist nil)
 (add-hook 'after-init-hook

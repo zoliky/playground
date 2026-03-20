@@ -27,14 +27,14 @@
 ;;; Code:
 ;;;; Package management
 
-;; Configure package archives and priorities
+;; Package archives and priorities
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 (setq package-archive-priorities '(("melpa"  . 100)
                                    ("gnu"    .  50)
                                    ("nongnu" .  25)))
 
-;; Enable automatic installation for use-package declarations
+;; Auto-install external packages via use-package
 (setq use-package-always-ensure t)
 
 ;;;; General configuration
