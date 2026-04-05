@@ -800,9 +800,7 @@
   :bind ("C-c d" . denote)
   :hook (dired-mode . denote-dired-mode)
   :custom
-  (denote-sort-keywords t)
-  (denote-directory (expand-file-name "~/notes/"))
-  (denote-allow-multi-word-keywords nil))
+  (denote-directory (expand-file-name "~/notes/")))
 
 ;;;;; Calendar
 
