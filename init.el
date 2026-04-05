@@ -154,8 +154,6 @@
   (dashboard-items '((recents  .  5)
                      (projects .  5)
                      (agenda   . 10)))
-  (dashboard-set-footer nil)
-  (dashboard-set-init-info t)
   (dashboard-center-content t)
   (dashboard-set-file-icons t)
   (dashboard-set-heading-icons t)
