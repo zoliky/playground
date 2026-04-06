@@ -320,11 +320,6 @@
 (use-package yaml-mode
   :mode "\\.yml\\'")
 
-;;;;;; TOML
-
-(use-package toml-mode
-  :mode "\\.toml\\'")
-
 ;;;;;; Markdown
 
 (use-package markdown-mode
